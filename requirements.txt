@@ -1,0 +1,17 @@
+# Anthropic SDK — Claude API (Sonnet 4.6)
+anthropic>=0.30.0
+
+# HTTP client
+httpx>=0.27.0
+
+# Tavily search client — verify plan/tier and rate limits at build time
+tavily-python>=0.3.0
+
+# Environment variable loading
+python-dotenv>=1.0.0
+
+# Lint and format
+ruff>=0.4.0
+
+# Tests
+pytest>=8.0.0
