@@ -2,44 +2,102 @@
 
 > Feature-freeze / build-complete target: **June 18–19**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
+> Team: 3 builders — names assigned after team check-in.
 
-The build is sequenced slice-first: sneaker/streetwear end-to-end, then contemporary
-fashion adapted from the same pipeline.
+The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
+demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
-## Slice 1 — Sneaker/streetwear (committed deliverable)
+---
 
-Build the full pipeline end-to-end:
+## Role split
 
-- Seed corpus (~75 images, hand-curated and schema-extracted at build time)
-- Retrieval agent (Tavily + Are.na + publication search, max 4 iterations)
-- Per-image schema extractor (sneaker/streetwear dimensions)
-- Editorial synthesizer (sneaker/streetwear reference patterns)
-- Caching layer
-- React UI (Are.na-referenced, image-forward)
+| Role | Scope |
+|---|---|
+| **Role 1** | Frontend (React UI) + repo oversight |
+| **Role 2** | Retrieval pipeline (agent loop, Tavily, Are.na, caching, seed corpus) |
+| **Role 3** | Claude integration (schema extractor, editorial synthesizer, prompt engineering) |
 
-## Slice 2 — Contemporary fashion (stretch goal)
+> Names TBD after team check-in. Role 1 includes frontend and repo oversight.
 
-Adapt the slice-1 pipeline with:
+---
 
-- Swapped fixed schema (contemporary fashion dimensions)
-- Swapped source list (contemporary fashion publications)
-- Updated agent search-strategy prompts
-- Updated synthesis prompts and reference patterns
-- Seed corpus (~75 images)
+## Phase 1 — Foundation (now → June 9)
 
-Architecture, retrieval logic, extraction pipeline, output layout, and voice spec do not
-change between slices — built once. Estimated effort: ~25–40% of slice 1.
+**Role 1**
+- [ ] Set up React project (Vite + TypeScript)
+- [ ] Wire `.env` and confirm API keys load
+- [ ] Branch protection + collaborator access on GitHub
+- [ ] Establish PR workflow for the team
 
-**Risk framing:** if timeline pressure hits, sneaker/streetwear is the committed
-deliverable. Contemporary fashion can be shown as an extension of the same approach.
+**Role 2**
+- [ ] Tavily integration: scoped queries against publication list
+- [ ] Are.na API integration: channel queries
+- [ ] Basic retrieval function: query in, image URLs + metadata out
+- [ ] Verify ArchDaily API status; fall back to scoped Tavily if dead
 
-## June 19–24 — Demo prep
+**Role 3**
+- [ ] Claude client setup (Anthropic SDK, Sonnet 4.6)
+- [ ] Per-image schema extractor: image in, structured schema attributes out (sneaker/streetwear dimensions)
+- [ ] Schema output validated against `docs/schema.md` controlled vocabulary
 
-- Build slide deck
-- Write presentation speech
-- Rehearse
-- Harden demo path
-- Pre-warm demo queries
+---
 
-> Demo Day is the performance deadline. The build must finish well before June 19 to
-> leave real time for deck, speech, and rehearsal.
+## Phase 2 — Slice 1 end-to-end (June 9–15)
+
+**Role 1**
+- [ ] Brief submission UI (sub-slice selector + free-text input)
+- [ ] Agent visibility log component (streaming reasoning during load)
+- [ ] Output layout: brief summary + pattern blocks stacked
+- [ ] Per-pattern component: title, description, image grid (project + designer + year)
+- [ ] Are.na-referenced visual style: clean, minimal, image-forward
+
+**Role 2**
+- [ ] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
+- [ ] Self-assessment logic: corpus representative? gaps? off-context noise?
+- [ ] Caching layer: keyed by sub-slice + normalized brief
+- [ ] Seed corpus slice 1: ~75 sneaker/streetwear images, hand-curated
+
+**Role 3**
+- [ ] Seed corpus extraction: run extractor over all ~75 seed images, store results
+- [ ] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
+- [ ] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
+- [ ] Sneaker/streetwear reference patterns wired in
+- [ ] End-to-end test query: brief in, saturation output out
+
+---
+
+## Phase 3 — Integration + slice 2 (June 15–18)
+
+**Role 1**
+- [ ] Connect frontend to live pipeline (brief → results)
+- [ ] Loading state with agent log visible
+- [ ] Polish: typography, spacing, image attribution display
+- [ ] Cross-browser / responsive check
+- [ ] Slice 2 UI: swap sub-slice selector label only (no layout changes)
+
+**Role 2**
+- [ ] Seed corpus slice 2: ~75 contemporary fashion images, hand-curated
+- [ ] Swap publication list for slice 2 (Dezeen, Frame, Wallpaper, Sight Unseen)
+- [ ] Verify caching works across both slices
+
+**Role 3**
+- [ ] Seed corpus extraction: run extractor over slice 2 seed images
+- [ ] Swap schema to contemporary fashion dimensions
+- [ ] Update synthesis prompt with slice 2 reference patterns
+- [ ] End-to-end test query for slice 2
+
+> **Risk framing:** if timeline pressure hits, sneaker/streetwear (slice 1) is the
+> committed deliverable. Slice 2 can be shown as an extension of the same approach.
+
+---
+
+## Phase 4 — Demo prep (June 19–23)
+
+- [ ] Pre-warm 3–5 demo queries per slice (cache hits = fast load on the day)
+- [ ] Harden demo path: one clean run, no edge cases exposed
+- [ ] Build slide deck
+- [ ] Write and rehearse presentation speech
+- [ ] Dry run with full team
+
+> Demo Day is the **performance** deadline. Build must be complete by June 18–19 to
+> leave real time for prep.
