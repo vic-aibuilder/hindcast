@@ -64,7 +64,7 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [ ] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
 - [ ] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
 - [ ] Sneaker/streetwear reference patterns wired in
-- [ ] End-to-end test query: brief in, saturation output out
+- [ ] Manual end-to-end run: verify full pipeline produces valid output
 - [ ] Write tests for synthesizer output structure
 
 ---
