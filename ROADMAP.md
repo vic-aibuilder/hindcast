@@ -26,14 +26,12 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [ ] Wire `.env` and confirm API keys load
 - [ ] Branch protection + collaborator access on GitHub
 - [ ] Establish PR workflow for the team
-- [ ] Write tests for frontend components (React Testing Library)
 
 **Role 2 — Gary**
 - [ ] Tavily integration: scoped queries against publication list
 - [ ] Are.na API integration: channel queries
 - [ ] Basic retrieval function: query in, image URLs + metadata out
 - [ ] Verify ArchDaily API status; fall back to scoped Tavily if dead
-- [ ] Write tests for retrieval functions
 
 **Role 3 — Christian**
 - [ ] Claude client setup (Anthropic SDK, Sonnet 4.6)
@@ -57,7 +55,6 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [ ] Self-assessment logic: corpus representative? gaps? off-context noise?
 - [ ] Caching layer: keyed by sub-slice + normalized brief
 - [ ] Seed corpus slice 1: ~75 sneaker/streetwear images, hand-curated
-- [ ] Write tests for agent loop and caching layer
 
 **Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over all ~75 seed images, store results
