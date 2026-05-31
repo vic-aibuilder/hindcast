@@ -11,13 +11,11 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ## Role split
 
-| Role | Scope |
-|---|---|
-| **Role 1** | Frontend (React UI) + repo oversight |
-| **Role 2** | Retrieval pipeline (agent loop, Tavily, Are.na, caching, seed corpus) |
-| **Role 3** | Claude integration (schema extractor, editorial synthesizer, prompt engineering) |
-
-> Names TBD after team check-in. Role 1 includes frontend and repo oversight.
+| Role | Owner | Scope |
+|---|---|---|
+| **Role 1** | Victor | Frontend (React UI) + repo oversight |
+| **Role 2** | Gary | Retrieval pipeline (agent loop, Tavily, Are.na, caching, seed corpus) |
+| **Role 3** | Christian | Claude integration (schema extractor, editorial synthesizer, prompt engineering) |
 
 ---
 
