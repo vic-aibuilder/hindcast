@@ -2,7 +2,7 @@
 
 > Feature-freeze / build-complete target: **June 18–19**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
-> Team: 3 builders — names assigned after team check-in.
+> Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
@@ -11,76 +11,76 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ## Role split
 
-| Role | Scope |
-|---|---|
-| **Role 1** | Frontend (React UI) + repo oversight |
-| **Role 2** | Retrieval pipeline (agent loop, Tavily, Are.na, caching, seed corpus) |
-| **Role 3** | Claude integration (schema extractor, editorial synthesizer, prompt engineering) |
-
-> Names TBD after team check-in. Role 1 includes frontend and repo oversight.
+| Role | Owner | Scope |
+|---|---|---|
+| **Role 1 — Victor** | Victor | Frontend (React UI) + repo oversight |
+| **Role 2 — Gary** | Gary | Retrieval pipeline (agent loop, Tavily, Are.na, caching, seed corpus) |
+| **Role 3 — Christian** | Christian | Claude integration (schema extractor, editorial synthesizer, prompt engineering) |
 
 ---
 
 ## Phase 1 — Foundation (now → June 9)
 
-**Role 1**
+**Role 1 — Victor**
 - [ ] Set up React project (Vite + TypeScript)
 - [ ] Wire `.env` and confirm API keys load
 - [ ] Branch protection + collaborator access on GitHub
 - [ ] Establish PR workflow for the team
 
-**Role 2**
+**Role 2 — Gary**
 - [ ] Tavily integration: scoped queries against publication list
 - [ ] Are.na API integration: channel queries
 - [ ] Basic retrieval function: query in, image URLs + metadata out
 - [ ] Verify ArchDaily API status; fall back to scoped Tavily if dead
 
-**Role 3**
+**Role 3 — Christian**
 - [ ] Claude client setup (Anthropic SDK, Sonnet 4.6)
 - [ ] Per-image schema extractor: image in, structured schema attributes out (sneaker/streetwear dimensions)
 - [ ] Schema output validated against `docs/schema.md` controlled vocabulary
+- [ ] Write tests for schema extractor
 
 ---
 
 ## Phase 2 — Slice 1 end-to-end (June 9–15)
 
-**Role 1**
+**Role 1 — Victor**
 - [ ] Brief submission UI (sub-slice selector + free-text input)
 - [ ] Agent visibility log component (streaming reasoning during load)
 - [ ] Output layout: brief summary + pattern blocks stacked
 - [ ] Per-pattern component: title, description, image grid (project + designer + year)
 - [ ] Are.na-referenced visual style: clean, minimal, image-forward
 
-**Role 2**
+**Role 2 — Gary**
 - [ ] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
 - [ ] Self-assessment logic: corpus representative? gaps? off-context noise?
 - [ ] Caching layer: keyed by sub-slice + normalized brief
 - [ ] Seed corpus slice 1: ~75 sneaker/streetwear images, hand-curated
 
-**Role 3**
+**Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over all ~75 seed images, store results
 - [ ] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
 - [ ] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
 - [ ] Sneaker/streetwear reference patterns wired in
-- [ ] End-to-end test query: brief in, saturation output out
+- [ ] Manual end-to-end run: verify full pipeline produces valid output
+- [ ] Write tests for synthesizer output structure
 
 ---
 
 ## Phase 3 — Integration + slice 2 (June 15–18)
 
-**Role 1**
+**Role 1 — Victor**
 - [ ] Connect frontend to live pipeline (brief → results)
 - [ ] Loading state with agent log visible
 - [ ] Polish: typography, spacing, image attribution display
 - [ ] Cross-browser / responsive check
 - [ ] Slice 2 UI: swap sub-slice selector label only (no layout changes)
 
-**Role 2**
+**Role 2 — Gary**
 - [ ] Seed corpus slice 2: ~75 contemporary fashion images, hand-curated
 - [ ] Swap publication list for slice 2 (Dezeen, Frame, Wallpaper, Sight Unseen)
 - [ ] Verify caching works across both slices
 
-**Role 3**
+**Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over slice 2 seed images
 - [ ] Swap schema to contemporary fashion dimensions
 - [ ] Update synthesis prompt with slice 2 reference patterns

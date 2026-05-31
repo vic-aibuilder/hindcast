@@ -64,7 +64,12 @@ If a PR touches any of the following, stop and raise with the team:
 
 Examples: `feat/tavily-retrieval`, `fix/schema-extractor-keys`, `chore/update-roadmap`
 
-**PR titles:** start with a capital letter, short, describes what changed.
-Examples: `Add Tavily retrieval function`, `Fix schema extractor returning wrong keys`
+**PR titles:** `type: short description` — lowercase type, colon, space, then description.
+- `feat:` — new functionality
+- `fix:` — bug fix
+- `docs:` — documentation only
+- `chore:` — config, tooling, dependencies
+
+Examples: `feat: add Tavily retrieval function`, `fix: schema extractor returning wrong keys`, `docs: assign roles in roadmap`
 
 **Never commit directly to `main`.** Always branch, open a PR, get at least one review.
