@@ -44,8 +44,10 @@ SYSTEM_PROMPT = (
 )
 
 # ---------------------------------------------------------------------------
-# Controlled vocabulary — Schema v2.3 (added: blonde wood, chrome rail, matte black rail,
-# bleached white / bright white, architectural plant — from Alex Mustonen calibration doc)
+# Controlled vocabulary — Schema v2.4
+# v2.3: blonde wood, chrome rail, matte black rail, bleached white / bright white,
+#        architectural plant — from Alex Mustonen calibration doc
+# v2.4: layout_archetype, typography_signage, brand_expression_density — base cats 8–10
 # ---------------------------------------------------------------------------
 
 VOCABULARY: dict[str, dict[str, list[str]]] = {
@@ -201,6 +203,44 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "compelling",
         ],
     },
+    "layout_archetype": {
+        "layout": [
+            "open plan / gallery",
+            "linear path",
+            "grid",
+            "found-space",
+            "labyrinthine",
+            "single room",
+        ],
+        "circulation": ["open", "directed", "theatrical", "free"],
+        "density": ["sparse / gallery", "edited", "dense retail"],
+    },
+    "typography_signage": {
+        "signage_density": ["none", "minimal", "moderate", "heavy"],
+        "logo_treatment": [
+            "logo-as-architecture",
+            "logo-as-graphic",
+            "logo-restrained",
+            "logo-absent",
+        ],
+        "typography_style": [
+            "serif",
+            "sans-serif",
+            "monospace",
+            "hand-lettered",
+            "none visible",
+        ],
+    },
+    "brand_expression_density": {
+        "density": ["very high", "high", "moderate", "low", "minimal"],
+        "mode": [
+            "material-embedded",
+            "graphic",
+            "logo-dominant",
+            "atmosphere-driven",
+            "product-driven",
+        ],
+    },
 }
 
 # Dimensions that accept multiple values (all others take exactly one value)
@@ -241,7 +281,7 @@ def _build_tool() -> dict[str, Any]:
         "name": "extract_schema_attributes",
         "description": (
             "Extract visual schema attributes from a brand or retail interior image "
-            "using Schema v2.2 controlled vocabulary. Score only what is visibly "
+            "using Schema v2.4 controlled vocabulary. Score only what is visibly "
             "present. Return empty arrays for list fields when the element is absent."
         ),
         "input_schema": {
@@ -254,6 +294,9 @@ def _build_tool() -> dict[str, Any]:
                 "texture",
                 "opacity",
                 "atmosphere_warmth",
+                "layout_archetype",
+                "typography_signage",
+                "brand_expression_density",
             ],
             "additionalProperties": False,
             "properties": {
@@ -368,6 +411,62 @@ def _build_tool() -> dict[str, Any]:
                         "abstract_qualities": _arr_prop(
                             v["atmosphere_warmth"]["abstract_qualities"],
                             "Atmospheric qualities applicable to this space",
+                        ),
+                    },
+                },
+                "layout_archetype": {
+                    "type": "object",
+                    "description": "Base Category 8 — Layout Archetype.",
+                    "required": ["layout", "circulation", "density"],
+                    "additionalProperties": False,
+                    "properties": {
+                        "layout": _str_prop(
+                            v["layout_archetype"]["layout"],
+                            "Primary organizational logic of the floor plan",
+                        ),
+                        "circulation": _str_prop(
+                            v["layout_archetype"]["circulation"],
+                            "How visitor movement is choreographed",
+                        ),
+                        "density": _str_prop(
+                            v["layout_archetype"]["density"],
+                            "How tightly the space is occupied",
+                        ),
+                    },
+                },
+                "typography_signage": {
+                    "type": "object",
+                    "description": "Base Category 9 — Typography / Signage.",
+                    "required": ["signage_density", "logo_treatment", "typography_style"],
+                    "additionalProperties": False,
+                    "properties": {
+                        "signage_density": _str_prop(
+                            v["typography_signage"]["signage_density"],
+                            "How much text and logotype is visible in the space",
+                        ),
+                        "logo_treatment": _str_prop(
+                            v["typography_signage"]["logo_treatment"],
+                            "How the brand logo is deployed spatially",
+                        ),
+                        "typography_style": _str_prop(
+                            v["typography_signage"]["typography_style"],
+                            "Dominant typeface register when type is present",
+                        ),
+                    },
+                },
+                "brand_expression_density": {
+                    "type": "object",
+                    "description": "Base Category 10 — Brand Expression Density.",
+                    "required": ["density", "mode"],
+                    "additionalProperties": False,
+                    "properties": {
+                        "density": _str_prop(
+                            v["brand_expression_density"]["density"],
+                            "Intensity of brand expression across the space",
+                        ),
+                        "mode": _str_prop(
+                            v["brand_expression_density"]["mode"],
+                            "Primary channel through which brand expression operates",
                         ),
                     },
                 },

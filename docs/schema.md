@@ -4,6 +4,7 @@
 **Built from:** full meeting transcript (May 28, 2026)
 **Reconciled:** May 30, 2026 — updated to locked sub-slice + scope decisions
 **v2.3 update:** Jun 1, 2026 — vocabulary additions from Alex Mustonen calibration document: `blonde wood`, `chrome rail`, `matte black rail` (Material/metal), `bleached white / bright white` (Material/wall_finish), `architectural plant` (Form/statement_form), `sparse product display` (Contemporary Fashion/display density)
+**v2.4 update:** Jun 1, 2026 — three new base categories added (8–10): Layout Archetype, Typography/Signage, Brand Expression Density. Schema now covers ten shared base categories.
 **Companion doc:** Hindcast Builder Brief v4
 
 > **What changed from v2.1 → v2.2.** Sub-slice 1 relabeled from "footwear flagship" to **sneaker/streetwear** (flagship qualifier dropped). Second sub-slice locked as **contemporary fashion** (elevated/designer end), replacing the deferred "apparel/womenswear" placeholder. Scope-decision section resolved: time window stays **2025–present**; density carried by all five boroughs + no flagship qualifier rather than by widening the window. Seven-category base unchanged.
@@ -139,6 +140,41 @@ Material also carries pattern and color sub-attributes — Alex noted these "pla
 | **Formality** | raw, casual, semi-formal, formal | |
 | **Reference** | gallery, museum, laboratory, residential, industrial, hospitality, archive, stadium, nature | *"It feels like a museum"; Adidas "like walking into a stadium"* |
 | **Abstract qualities** | inviting, accessible, engaging, memorable, compelling | *Alex's words for the spaces Snarkitecture wants to make* |
+
+---
+
+## Base Category 8 — Layout Archetype
+
+> Captures the organizing spatial logic of the store — how the floor plan is structured and how a visitor moves through it.
+
+| Dimension | Controlled vocabulary | Notes |
+|---|---|---|
+| **Layout** | open plan / gallery, linear path, grid, found-space, labyrinthine, single room | The primary organizational logic of the floor plan |
+| **Circulation** | open, directed, theatrical, free | How movement is choreographed or left to the visitor |
+| **Density** | sparse / gallery, edited, dense retail | How tightly the space is occupied by program, fixture, and product |
+
+---
+
+## Base Category 9 — Typography / Signage
+
+> Scores visible brand language — logos, type, and text — as a spatial element rather than a graphic design judgment.
+
+| Dimension | Controlled vocabulary | Notes |
+|---|---|---|
+| **Signage density** | none, minimal, moderate, heavy | How much text and logotype is visible in the space |
+| **Logo treatment** | logo-as-architecture, logo-as-graphic, logo-restrained, logo-absent | Whether the logo is built into the space, applied as a graphic, kept restrained, or absent entirely |
+| **Typography style** | serif, sans-serif, monospace, hand-lettered, none visible | The dominant typeface register when type is present |
+
+---
+
+## Base Category 10 — Brand Expression Density
+
+> Scores how aggressively the brand announces itself through the space — distinct from signage in that it includes material choices, atmosphere, and spatial storytelling, not just visible graphics.
+
+| Dimension | Controlled vocabulary | Notes |
+|---|---|---|
+| **Density** | very high, high, moderate, low, minimal | How intensely the brand is expressed; a high-density space reads as brand-world-building, a minimal space lets product speak |
+| **Mode** | material-embedded, graphic, logo-dominant, atmosphere-driven, product-driven | The primary channel through which brand expression operates |
 
 ---
 

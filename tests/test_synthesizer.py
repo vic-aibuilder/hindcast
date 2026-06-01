@@ -193,6 +193,7 @@ class TestAggregate:
         expected = {
             "material", "form_geometry", "color", "lighting",
             "texture", "opacity", "atmosphere_warmth",
+            "layout_archetype", "typography_signage", "brand_expression_density",
         }
         assert set(agg["categories"].keys()) == expected
 

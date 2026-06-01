@@ -32,6 +32,9 @@ ALL_CATEGORIES = [
     "texture",
     "opacity",
     "atmosphere_warmth",
+    "layout_archetype",
+    "typography_signage",
+    "brand_expression_density",
 ]
 
 MATERIAL_LIST_DIMS = [
@@ -92,6 +95,20 @@ def _clean_result() -> dict:
             "formality": "casual",
             "reference": "hospitality",
             "abstract_qualities": ["inviting", "engaging"],
+        },
+        "layout_archetype": {
+            "layout": "open plan / gallery",
+            "circulation": "open",
+            "density": "edited",
+        },
+        "typography_signage": {
+            "signage_density": "minimal",
+            "logo_treatment": "logo-restrained",
+            "typography_style": "sans-serif",
+        },
+        "brand_expression_density": {
+            "density": "moderate",
+            "mode": "atmosphere-driven",
         },
     }
 
@@ -157,6 +174,26 @@ class TestVocabularyStructure:
             "formality",
             "reference",
             "abstract_qualities",
+        }
+
+    def test_layout_archetype_has_all_dimensions(self):
+        assert set(VOCABULARY["layout_archetype"].keys()) == {
+            "layout",
+            "circulation",
+            "density",
+        }
+
+    def test_typography_signage_has_all_dimensions(self):
+        assert set(VOCABULARY["typography_signage"].keys()) == {
+            "signage_density",
+            "logo_treatment",
+            "typography_style",
+        }
+
+    def test_brand_expression_density_has_all_dimensions(self):
+        assert set(VOCABULARY["brand_expression_density"].keys()) == {
+            "density",
+            "mode",
         }
 
     def test_all_vocab_lists_are_non_empty(self):
@@ -350,6 +387,9 @@ class TestToolSchema:
             "texture",
             "opacity",
             "atmosphere_warmth",
+            "layout_archetype",
+            "typography_signage",
+            "brand_expression_density",
         }
 
     def test_material_dims_are_arrays_in_tool(self):
@@ -388,3 +428,28 @@ class TestToolSchema:
             assert cat_schema.get("additionalProperties") is False, (
                 f"{cat} object in tool schema is missing additionalProperties: false"
             )
+
+    def test_layout_archetype_dims_are_strings_in_tool(self):
+        props = _TOOL["input_schema"]["properties"]["layout_archetype"]["properties"]
+        for dim in ("layout", "circulation", "density"):
+            assert props[dim]["type"] == "string", f"layout_archetype.{dim} should be string"
+
+    def test_typography_signage_dims_are_strings_in_tool(self):
+        props = _TOOL["input_schema"]["properties"]["typography_signage"]["properties"]
+        for dim in ("signage_density", "logo_treatment", "typography_style"):
+            assert props[dim]["type"] == "string", f"typography_signage.{dim} should be string"
+
+    def test_brand_expression_density_dims_are_strings_in_tool(self):
+        props = _TOOL["input_schema"]["properties"]["brand_expression_density"]["properties"]
+        for dim in ("density", "mode"):
+            assert props[dim]["type"] == "string", f"brand_expression_density.{dim} should be string"
+
+    def test_new_category_enums_match_vocabulary(self):
+        la = _TOOL["input_schema"]["properties"]["layout_archetype"]["properties"]
+        assert la["layout"]["enum"] == VOCABULARY["layout_archetype"]["layout"]
+        assert la["circulation"]["enum"] == VOCABULARY["layout_archetype"]["circulation"]
+        ts = _TOOL["input_schema"]["properties"]["typography_signage"]["properties"]
+        assert ts["signage_density"]["enum"] == VOCABULARY["typography_signage"]["signage_density"]
+        bed = _TOOL["input_schema"]["properties"]["brand_expression_density"]["properties"]
+        assert bed["density"]["enum"] == VOCABULARY["brand_expression_density"]["density"]
+        assert bed["mode"]["enum"] == VOCABULARY["brand_expression_density"]["mode"]
