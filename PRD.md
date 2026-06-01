@@ -4,7 +4,7 @@
 **Partner:** Snarkitecture — Alex Mustonen
 **Status:** Draft v4 — post-meeting alignment (sub-slice + scope updates)
 **Date:** May 30, 2026
-**Companion docs:** Hindcast PRD (partner-facing); Hindcast Definition Layer — Schema v2.2
+**Companion docs:** Hindcast PRD (partner-facing); Hindcast Definition Layer — Schema v2.3
 
 > **Naming note:** "Hindcast" stays as the working name. The "Anti-Trend Generator" subtitle is parked pending the naming workshop and is omitted here so it doesn't read as a locked name.
 
@@ -52,6 +52,17 @@ See the partner-facing PRD for full problem framing, value props, and tonal refe
 - Client-facing deliverable.
 
 > **Note on density:** with the time window fixed at 2025–present, corpus breadth is carried by (a) all five boroughs and (b) no flagship qualifier. These are the levers keeping the data set large enough to read saturation against — addressing the partner's concern that a too-narrow slice yields too few projects to detect oversaturation.
+
+### Locked scope parameters
+
+These are resolved decisions — do not reopen without a team decision:
+
+| Parameter | Locked value |
+|---|---|
+| **Geography** | New York City — all five boroughs (not Manhattan only) |
+| **Flagship qualifier** | None. Both slices cover their category broadly; flagships appear but the corpus is not restricted to them. |
+| **Time window** | 2025–present. Settled — not widened. |
+| **Data density strategy** | Breadth through geography (all five boroughs + no flagship qualifier) rather than widening the time window. This is how the build maintains a large enough corpus for saturation detection without moving the window. |
 
 ---
 
@@ -105,13 +116,13 @@ A deliberate hybrid — fits the timeline while giving saturation findings a sta
 
 - `[P0]` Two-layer system: a fixed schema underneath (data layer) and an adaptive editorial layer on top (synthesis).
 
-> The full controlled vocabulary lives in the companion **Schema v2.2** doc; summarized here.
+> The full controlled vocabulary lives in the companion **Schema v2.3** doc; summarized here.
 
 ### Fixed schema (per sub-slice)
 
-Every retrieved image is scored against a structured schema with controlled vocabulary — the data that makes saturation quantifiable and clusterable. A **shared seven-category base** applies across both slices; each slice adds slice-specific dimensions.
+Every retrieved image is scored against a structured schema with controlled vocabulary — the data that makes saturation quantifiable and clusterable. A **shared ten-category base** applies across both slices; each slice adds slice-specific dimensions.
 
-**Shared base (seven categories):** Material · Form/Geometry · Color · Lighting · Texture · Opacity · Atmosphere/Warmth.
+**Shared base (ten categories):** Material · Form/Geometry · Color · Lighting · Texture · Opacity · Atmosphere/Warmth · Layout Archetype · Typography/Signage · Brand Expression Density.
 
 **Sneaker/streetwear-specific dimensions** *(industrial register)* — working draft, to be revised against Alex's reference set when it arrives:
 
@@ -206,11 +217,11 @@ Travertine or limestone floors paired with white-oak millwork, often run as a co
 - `[P0]` **Dezeen** — accessed via Tavily site-scoping rather than a custom scraper.
 - `[P1]` **ArchDaily** — historically had an API; status worth a 30-min verify. Fall back to scoped search if not operational.
 
-**Sneaker/streetwear publication list** *(firm up against Alex's reference set; narrow to 3–4 for NYC)*
-Candidates: Hypebeast, Highsnobiety, Sneaker Freaker, Dezeen, Frame.
+**Sneaker/streetwear publication list** *(locked — 4 sources)*
+Hypebeast · Highsnobiety · Dezeen · Sneaker Freaker.
 
-**Contemporary fashion publication list** *(firm up against Alex's reference set; narrow to 3–4 for NYC)*
-Candidates: Dezeen, Frame, Wallpaper, Sight Unseen, ArchDaily — Wallpaper and Sight Unseen for the design-luxury / design-forward register where this work lives.
+**Contemporary fashion publication list** *(locked — 4 sources)*
+Dezeen · Frame · Wallpaper · Sight Unseen. Wallpaper and Sight Unseen carry the design-luxury / design-forward register where this work lives.
 
 ---
 
@@ -287,8 +298,8 @@ So nothing accidentally gets built:
 
 - **Sneaker/streetwear schema** — working draft above; revise against Alex's reference set when it arrives.
 - **Contemporary fashion schema** — working draft above; revise against Alex's reference set, holding the elevated-end pin.
-- **Publication lists (both slices)** — candidate lists drafted; firm up to 3–4 per slice against Alex's reference sets.
+- ~~**Publication lists (both slices)**~~ — **Resolved.** Slice 1: Hypebeast, Highsnobiety, Dezeen, Sneaker Freaker. Slice 2: Dezeen, Frame, Wallpaper, Sight Unseen.
 - **URL in visible output** — show source URL under each image, or attribution-only (project/designer/year) with URL retained in data? Affects output layout. Team + Alex input wanted.
 - **ArchDaily API status** — 30-minute verification; fallback (scoped Tavily search) already identified.
 
-> Resolved since v3: live search source (**Tavily**), city scope (**all five boroughs**), sub-slices (**sneaker/streetwear + contemporary fashion**), brand activations (**cut**), time window (**2025–present, settled**).
+> Resolved since v3: live search source (**Tavily**), city scope (**all five boroughs**), sub-slices (**sneaker/streetwear + contemporary fashion**), brand activations (**cut**), time window (**2025–present, settled**), publication lists (**locked — see Source list**).
