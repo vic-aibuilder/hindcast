@@ -3,6 +3,7 @@
 **Partner:** Snarkitecture — Alex Mustonen
 **Built from:** full meeting transcript (May 28, 2026)
 **Reconciled:** May 30, 2026 — updated to locked sub-slice + scope decisions
+**v2.3 update:** Jun 1, 2026 — vocabulary additions from Alex Mustonen calibration document: `blonde wood`, `chrome rail`, `matte black rail` (Material/metal), `bleached white / bright white` (Material/wall_finish), `architectural plant` (Form/statement_form), `sparse product display` (Contemporary Fashion/display density)
 **Companion doc:** Hindcast Builder Brief v4
 
 > **What changed from v2.1 → v2.2.** Sub-slice 1 relabeled from "footwear flagship" to **sneaker/streetwear** (flagship qualifier dropped). Second sub-slice locked as **contemporary fashion** (elevated/designer end), replacing the deferred "apparel/womenswear" placeholder. Scope-decision section resolved: time window stays **2025–present**; density carried by all five boroughs + no flagship qualifier rather than by widening the window. Seven-category base unchanged.
@@ -49,13 +50,13 @@ The scope questions Alex raised in the meeting have been decided by the team:
 
 | Dimension | Controlled vocabulary | Notes / Alex's words |
 |---|---|---|
-| **Wood** | white oak, walnut, dark oak, light wood, reclaimed, plywood | *"Dark rich wood paneling… walnut"* |
-| **Metal** | blackened steel, brushed aluminum, stainless steel, brass, copper, perforated metal | *"Stainless steel feels like machinery, like the future"* |
+| **Wood** | white oak, walnut, dark oak, light wood, **blonde wood**, reclaimed, plywood | *"Dark rich wood paneling… walnut"* · blonde wood = DTC/lifestyle light oak default |
+| **Metal** | blackened steel, brushed aluminum, stainless steel, brass, copper, perforated metal, **chrome rail**, **matte black rail** | *"Stainless steel feels like machinery, like the future"* · chrome rail + matte black rail = stock DTC fixture system |
 | **Stone** | travertine, limestone, marble, terrazzo, concrete, slate | *Note if cold-to-touch / hard — Alex used this as a warmth cue* |
 | **Glass** | clear, frosted, translucent, mirror | *See Opacity below* |
 | **Tile** | round tile, square tile, linear tile | *"Round tiles, square tiles, linear tiles"* |
 | **Soft / fabric** | upholstery, soft furnishing, carpet, felt, foam, leather | *"Upholstery… soft furniture" flagged as a saturation signal* |
-| **Wall finish** | raw plaster, painted plaster, fluted plaster, exposed brick, drywall | *Exposed brick = Alex's example of an oversaturated default* |
+| **Wall finish** | raw plaster, painted plaster, fluted plaster, exposed brick, **bleached white / bright white**, drywall | *Exposed brick = Alex's example of an oversaturated default* · bleached white = DTC "clean" default |
 
 Material also carries pattern and color sub-attributes — Alex noted these "play into material."
 
@@ -72,7 +73,7 @@ Material also carries pattern and color sub-attributes — Alex noted these "pla
 | **Arch presence** | none, built-in niche, arched opening, dominant arch | *"You'll see a lot of arched openings… built-in niches. I noticed it a lot." Flagged as saturated.* |
 | **Grid presence** | none, subtle, strong grid | *"A very strong grid look — universal design; tile, floor, ceiling structure"* |
 | **Mass / weight** | solid mass / heavy, light / thin, mixed | *"A giant block of concrete vs a curtain — solid vs light"* |
-| **Statement form** | none, plinth, sculptural object, oversized graphic, architectural void, installation | *The one anchor form that defines the space* |
+| **Statement form** | none, plinth, sculptural object, oversized graphic, architectural void, installation, **architectural plant** | *The one anchor form that defines the space* · architectural plant = DTC finishing-touch default |
 
 ---
 
@@ -163,7 +164,7 @@ Material also carries pattern and color sub-attributes — Alex noted these "pla
 | Dimension | Controlled vocabulary | Notes |
 |---|---|---|
 | **Merchandising** | hero staging, edited wall, single-item plinth, hanging rail | *How garments are displayed* |
-| **Display density** | very edited, moderate, full collection | *How much product is visible at once* |
+| **Display density** | very edited, **sparse product display**, moderate, full collection | *How much product is visible at once* · sparse product display = luxury signal borrowed without luxury |
 | **Entry / threshold** | open frontage, archway, vestibule, controlled funnel, door-only | |
 | **Spatial generosity** | gallery-sparse, moderate, dense retail | *Negative space vs product density* |
 | **Furniture** | none, minimal seating, residential moment, decorative objects | *"Soft furniture" / residential cues* |
