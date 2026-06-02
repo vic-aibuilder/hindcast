@@ -204,7 +204,7 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
 # ── Main agent loop ───────────────────────────────────────────────────────────
 
 
-def run(brief: str, sub_slice: str) -> dict:
+def run(brief: str, sub_slice: str, client: Anthropic | None = None) -> dict:
     """
     Run the retrieval agent for a given brief and sub-slice.
 
@@ -219,6 +219,9 @@ def run(brief: str, sub_slice: str) -> dict:
             "iterations": int,
         }
     """
+    if client is None:
+        client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
     messages = [
         {
             "role": "user",
