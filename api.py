@@ -9,7 +9,7 @@ from __future__ import annotations
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from pipeline.run import run_query
 
@@ -24,7 +24,7 @@ app.add_middleware(
 
 
 class QueryRequest(BaseModel):
-    brief: str
+    brief: str = Field(..., min_length=10, max_length=500)
     sub_slice: str
 
 

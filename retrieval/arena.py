@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 ARENA_BASE_URL = "https://api.are.na/v2"
-ARENA_ACCESS_TOKEN = os.getenv("ARENA_ACCESS_TOKEN")
+
 
 # Are.na search terms per sub-slice
 # These target channels likely to contain relevant curated imagery
@@ -29,22 +29,21 @@ ARENA_QUERIES = {
     ],
 }
 
-_headers = {
-    "Authorization": f"Bearer {ARENA_ACCESS_TOKEN}",
-    "Content-Type": "application/json",
-}
-
-
 def search_channels(query: str, per: int = 10) -> list[dict]:
     """
     Search Are.na channels by query string.
 
     Returns list of channel dicts with id, title, slug.
     """
+    token = os.getenv("ARENA_ACCESS_TOKEN")
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
     response = httpx.get(
         f"{ARENA_BASE_URL}/search/channels",
         params={"q": query, "per": per},
-        headers=_headers,
+        headers=headers,
         timeout=10.0,
     )
     response.raise_for_status()
@@ -57,10 +56,15 @@ def get_channel_images(channel_slug: str, per: int = 20) -> list[dict]:
 
     Returns list of dicts with image_url, source_url, title.
     """
+    token = os.getenv("ARENA_ACCESS_TOKEN")
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
     response = httpx.get(
         f"{ARENA_BASE_URL}/channels/{channel_slug}/contents",
         params={"per": per, "sort": "position"},
-        headers=_headers,
+        headers=headers,
         timeout=10.0,
     )
     response.raise_for_status()

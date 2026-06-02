@@ -102,7 +102,7 @@ def compute_saturation_signals(
         }
     """
     frequencies = compute_frequencies(sub_slice)
-    total_images = len(get_images_by_sub_slice(sub_slice, limit=10000))
+    total_images = len(get_images_by_sub_slice(sub_slice, limit=500))
 
     signals = {}
     for dimension, counts in frequencies.items():

@@ -37,3 +37,9 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Database files — never commit
+*.db
+*.db-shm
+*.db-wal
+hindcast.db*

@@ -21,7 +21,7 @@ from retrieval.arena import search as arena_search
 
 load_dotenv()
 
-client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+
 MODEL = "claude-sonnet-4-6"
 MAX_ITERATIONS = 4
 

@@ -16,7 +16,8 @@ import hashlib
 import json
 import os
 import sqlite3
-from datetime import datetime
+import re
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -107,7 +108,6 @@ def normalize_brief(brief: str, sub_slice: str) -> str:
     Normalize a brief for consistent cache key generation.
     Lowercase, strip punctuation, sort words, prepend sub_slice.
     """
-    import re
 
     cleaned = re.sub(r"[^\w\s]", "", brief.lower())
     words = sorted(cleaned.split())
@@ -131,7 +131,7 @@ def save_images(images: list[dict], sub_slice: str, brief_hash: str) -> list[int
     Returns list of inserted row IDs (excludes skipped duplicates).
     """
     conn = get_connection()
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
     inserted_ids = []
 
     with conn:
@@ -205,7 +205,7 @@ def save_extraction(image_id: int, schema: dict, sub_slice: str) -> None:
     e.g. {"material": "concrete", "form": "rectilinear", ...}
     """
     conn = get_connection()
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
 
     with conn:
         for dimension, value in schema.items():
@@ -282,7 +282,7 @@ def cache_brief(
     """
     brief_hash = hash_brief(brief, sub_slice)
     normalized = normalize_brief(brief, sub_slice)
-    now = datetime.utcnow().isoformat()
+    now = datetime.now(timezone.utc).isoformat()
 
     conn = get_connection()
     with conn:
@@ -331,7 +331,7 @@ def get_cached_brief(brief: str, sub_slice: str) -> list[dict] | None:
     with conn:
         conn.execute(
             "UPDATE brief_cache SET last_accessed = ? WHERE brief_hash = ?",
-            (datetime.utcnow().isoformat(), brief_hash),
+            (datetime.now(timezone.utc).isoformat(), brief_hash),
         )
 
     image_ids = json.loads(row["image_ids"])
