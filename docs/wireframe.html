@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hindcast — Wireframe & Output Mockup</title>
+<style>
+  :root {
+    --ink: #111;
+    --paper: #fafaf7;
+    --line: #111;
+    --muted: #888;
+    --grey-1: #ececec;
+    --grey-2: #d8d8d8;
+    --grey-3: #b8b8b8;
+    --grey-4: #5a5a5a;
+    --accent: #ff4a1c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.5;
+    padding: 60px 48px 120px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Document header */
+  .doc-header {
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 24px;
+    margin-bottom: 56px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .doc-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  .doc-meta {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-align: right;
+  }
+
+  /* Section header */
+  .section {
+    margin-bottom: 80px;
+  }
+
+  .section-label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .section-title {
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--grey-4);
+    margin-bottom: 32px;
+    max-width: 640px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  /* ============ WIREFRAME (low-fi) ============ */
+  .wireframe {
+    border: 1px solid var(--ink);
+    background: #fff;
+    position: relative;
+  }
+
+  .wf-chrome {
+    padding: 12px 16px;
+    border-bottom: 1px dashed var(--grey-3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .wf-dot {
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--grey-3);
+    border-radius: 50%;
+  }
+
+  .wf-url {
+    margin-left: 12px;
+    padding: 4px 12px;
+    border: 1px solid var(--grey-2);
+    border-radius: 2px;
+    color: var(--grey-4);
+    flex: 1;
+    max-width: 320px;
+  }
+
+  .wf-body {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    min-height: 560px;
+  }
+
+  /* Sidebar */
+  .wf-sidebar {
+    border-right: 1px dashed var(--grey-3);
+    padding: 32px 24px;
+  }
+
+  .wf-logo {
+    width: 96px;
+    height: 18px;
+    background: var(--ink);
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .wf-logo::after {
+    content: 'HINDCAST';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--paper);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    font-weight: 700;
+  }
+
+  .wf-field {
+    margin-bottom: 24px;
+  }
+
+  .wf-label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--grey-4);
+    margin-bottom: 6px;
+  }
+
+  .wf-input {
+    height: 32px;
+    border: 1px solid var(--grey-3);
+    background: var(--grey-1);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: var(--grey-3);
+  }
+
+  .wf-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .wf-pill {
+    height: 24px;
+    padding: 0 10px;
+    border: 1px solid var(--grey-3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    color: var(--grey-4);
+    background: #fff;
+  }
+
+  .wf-pill.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .wf-button {
+    margin-top: 32px;
+    height: 40px;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+  }
+
+  /* Main canvas */
+  .wf-main {
+    padding: 32px;
+  }
+
+  .wf-brief {
+    border: 1px dashed var(--grey-3);
+    background: var(--grey-1);
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .wf-brief-label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--grey-4);
+    margin-bottom: 8px;
+  }
+
+  .wf-line {
+    height: 8px;
+    background: var(--grey-2);
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+
+  .wf-line.short { width: 60%; }
+  .wf-line.med { width: 85%; }
+
+  .wf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .wf-tile {
+    aspect-ratio: 1 / 1;
+    background: var(--grey-1);
+    border: 1px dashed var(--grey-3);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .wf-tile::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(45deg, transparent 48%, var(--grey-2) 48%, var(--grey-2) 52%, transparent 52%);
+  }
+
+  .wf-tile-caption {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    right: 6px;
+    height: 6px;
+    background: var(--grey-2);
+    border-radius: 1px;
+    z-index: 1;
+  }
+
+  /* Annotations */
+  .annotation {
+    position: absolute;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+    pointer-events: none;
+  }
+
+  .annotation::before {
+    content: '';
+    position: absolute;
+    background: var(--accent);
+  }
+
+  .ann-1 {
+    top: 100px;
+    left: -180px;
+    width: 160px;
+    text-align: right;
+  }
+
+  .ann-1::before {
+    width: 60px;
+    height: 1px;
+    right: -68px;
+    top: 7px;
+  }
+
+  .ann-2 {
+    top: 240px;
+    left: -180px;
+    width: 160px;
+    text-align: right;
+  }
+
+  .ann-2::before {
+    width: 60px;
+    height: 1px;
+    right: -68px;
+    top: 7px;
+  }
+
+  .ann-3 {
+    top: 80px;
+    right: -200px;
+    width: 180px;
+  }
+
+  .ann-3::before {
+    width: 60px;
+    height: 1px;
+    left: -68px;
+    top: 7px;
+  }
+
+  .ann-4 {
+    top: 320px;
+    right: -200px;
+    width: 180px;
+  }
+
+  .ann-4::before {
+    width: 60px;
+    height: 1px;
+    left: -68px;
+    top: 7px;
+  }
+
+  .wireframe-wrap {
+    position: relative;
+    padding: 0 220px;
+  }
+
+  /* ============ FLOW DIAGRAM ============ */
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .flow-step {
+    border: 1px solid var(--ink);
+    padding: 20px 16px;
+    background: #fff;
+    position: relative;
+    min-height: 140px;
+  }
+
+  .flow-num {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .flow-title {
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .flow-desc {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    color: var(--grey-4);
+    line-height: 1.5;
+  }
+
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    background: var(--paper);
+    width: 12px;
+    text-align: center;
+    z-index: 1;
+    color: var(--ink);
+  }
+
+  /* ============ MOCKUP (hi-fi output) ============ */
+  .mockup {
+    border: 1px solid var(--ink);
+    background: var(--paper);
+  }
+
+  .mock-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--ink);
+  }
+
+  .mock-logo {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    font-weight: 700;
+  }
+
+  .mock-query {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    color: var(--grey-4);
+    letter-spacing: 0.06em;
+  }
+
+  .mock-query span {
+    color: var(--ink);
+  }
+
+  .mock-body {
+    padding: 48px 32px 56px;
+  }
+
+  .mock-eyebrow {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .mock-headline {
+    font-size: 32px;
+    line-height: 1.15;
+    max-width: 720px;
+    margin-bottom: 32px;
+    letter-spacing: -0.01em;
+  }
+
+  .mock-headline em {
+    font-style: italic;
+  }
+
+  .mock-brief {
+    columns: 2;
+    column-gap: 40px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink);
+    margin-bottom: 56px;
+    max-width: 880px;
+  }
+
+  .mock-brief p {
+    margin-bottom: 12px;
+    break-inside: avoid;
+  }
+
+  .mock-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .mock-divider-label {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .mock-divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--ink);
+  }
+
+  .mock-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .mock-tile {
+    aspect-ratio: 4 / 5;
+    position: relative;
+    overflow: hidden;
+    background: var(--grey-1);
+  }
+
+  .mock-tile-img {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Synthetic "saturation" images - representative architectural defaults */
+  .tile-1 .mock-tile-img {
+    background:
+      linear-gradient(180deg, #c9b89a 0%, #c9b89a 55%, #8a7556 55%, #8a7556 100%),
+      #c9b89a;
+  }
+  .tile-1 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20%; right: 20%; top: 55%;
+    background: repeating-linear-gradient(90deg, #6e5a3e 0 12px, #8a7556 12px 24px);
+  }
+
+  .tile-2 .mock-tile-img {
+    background: #e8e2d4;
+  }
+  .tile-2 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    inset: 20%;
+    border: 8px solid #1a1a1a;
+    border-radius: 50%;
+    background: #f5f0e3;
+  }
+
+  .tile-3 .mock-tile-img {
+    background: linear-gradient(180deg, #d4c9b3 0%, #b8a888 100%);
+  }
+  .tile-3 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(90deg, transparent 30%, #8a7a5a 30%, #8a7a5a 32%, transparent 32%, transparent 68%, #8a7a5a 68%, #8a7a5a 70%, transparent 70%),
+      repeating-linear-gradient(0deg, transparent 0 38px, rgba(0,0,0,0.06) 38px 40px);
+  }
+
+  .tile-4 .mock-tile-img {
+    background: #f0ebe0;
+  }
+  .tile-4 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    bottom: 25%; left: 25%; right: 25%; top: 40%;
+    background: #c9b89a;
+    border-radius: 50% 50% 8px 8px / 70% 70% 8px 8px;
+    box-shadow: 0 8px 0 #8a7556;
+  }
+
+  .tile-5 .mock-tile-img {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  }
+  .tile-5 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    inset: 30% 20%;
+    background:
+      radial-gradient(circle at 50% 30%, #e8c97a 0%, #e8c97a 8%, transparent 9%),
+      radial-gradient(circle at 30% 60%, #e8c97a 0%, #e8c97a 6%, transparent 7%),
+      radial-gradient(circle at 70% 60%, #e8c97a 0%, #e8c97a 6%, transparent 7%);
+  }
+
+  .tile-6 .mock-tile-img {
+    background: #ede8db;
+  }
+  .tile-6 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, transparent 60%, #6b8e6b 60%, #6b8e6b 65%, transparent 65%),
+      radial-gradient(ellipse at 30% 55%, #4a6b4a 0%, #4a6b4a 4%, transparent 5%),
+      radial-gradient(ellipse at 60% 50%, #4a6b4a 0%, #4a6b4a 5%, transparent 6%),
+      radial-gradient(ellipse at 75% 58%, #4a6b4a 0%, #4a6b4a 3%, transparent 4%);
+  }
+
+  .tile-7 .mock-tile-img {
+    background: linear-gradient(180deg, #d8c9a8 0%, #b8a585 100%);
+  }
+  .tile-7 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 16px, rgba(110, 90, 62, 0.15) 16px 17px),
+      repeating-linear-gradient(0deg, transparent 0 16px, rgba(110, 90, 62, 0.15) 16px 17px);
+  }
+
+  .tile-8 .mock-tile-img {
+    background: #1a1a1a;
+  }
+  .tile-8 .mock-tile-img::after {
+    content: '';
+    position: absolute;
+    inset: 25% 15%;
+    background:
+      linear-gradient(180deg, #c9a875 0%, #8a6b3e 100%);
+    clip-path: polygon(20% 100%, 80% 100%, 70% 0%, 30% 0%);
+  }
+
+  .mock-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 10px 12px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.65) 100%);
+    color: var(--paper);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  .mock-caption-title {
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+  }
+
+  .mock-caption-meta {
+    font-size: 9px;
+    opacity: 0.75;
+    letter-spacing: 0.04em;
+  }
+
+  /* Notes */
+  .notes {
+    margin-top: 32px;
+    padding: 24px;
+    border-left: 2px solid var(--ink);
+    background: var(--grey-1);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--grey-4);
+  }
+
+  .notes b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .notes ul {
+    list-style: none;
+    margin-top: 8px;
+  }
+
+  .notes li {
+    padding-left: 16px;
+    position: relative;
+    margin-bottom: 4px;
+  }
+
+  .notes li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--ink);
+  }
+
+  @media (max-width: 880px) {
+    body { padding: 32px 20px 80px; }
+    .wireframe-wrap { padding: 0; }
+    .annotation { display: none; }
+    .wf-body { grid-template-columns: 1fr; }
+    .wf-sidebar { border-right: none; border-bottom: 1px dashed var(--grey-3); }
+    .wf-grid, .mock-grid { grid-template-columns: repeat(2, 1fr); }
+    .flow { grid-template-columns: 1fr; }
+    .flow-step:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -22px; transform: translateX(50%); }
+    .mock-brief { columns: 1; }
+    .mock-headline { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <div class="doc-title">Hindcast — Wireframe &amp; Output Mockup</div>
+  <div class="doc-meta">
+    Snarkitecture × AI Native Demo Day<br>
+    v0.1 — May 2026
+  </div>
+</header>
+
+<!-- ============ FLOW ============ -->
+<section class="section">
+  <div class="section-label">01 — User Flow</div>
+  <h2 class="section-title">How the tool moves from brief to output.</h2>
+  <p class="section-desc">Four steps. The designer inputs a brief, runs the search, gets back a visual map of saturation and a short written brief, then iterates.</p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="flow-num">01</div>
+      <div class="flow-title">Input</div>
+      <div class="flow-desc">Project type, city (NYC or LA), and keywords from the brief.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">02</div>
+      <div class="flow-title">Retrieve</div>
+      <div class="flow-desc">Image search across design archives, scoped to 2025–present.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">03</div>
+      <div class="flow-title">Analyze</div>
+      <div class="flow-desc">Claude Vision identifies the dominant patterns and the invisible defaults.</div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-num">04</div>
+      <div class="flow-title">Output</div>
+      <div class="flow-desc">A visual grid of what's saturated, plus a short brief on what to design against.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WIREFRAME ============ -->
+<section class="section">
+  <div class="section-label">02 — Wireframe</div>
+  <h2 class="section-title">Layout &amp; structure, no styling.</h2>
+  <p class="section-desc">Left rail holds the inputs. Main canvas shows the brief at the top and the saturation grid below. Are.na is the layout reference: image-forward, calm, source context preserved.</p>
+
+  <div class="wireframe-wrap">
+    <div class="wireframe">
+      <div class="wf-chrome">
+        <span class="wf-dot"></span>
+        <span class="wf-dot"></span>
+        <span class="wf-dot"></span>
+        <span class="wf-url">hindcast.snarkitecture.com</span>
+      </div>
+
+      <div class="wf-body">
+        <aside class="wf-sidebar">
+          <div class="wf-logo"></div>
+
+          <div class="wf-field">
+            <div class="wf-label">Project Type</div>
+            <div class="wf-input">Hospitality — Fast Casual</div>
+          </div>
+
+          <div class="wf-field">
+            <div class="wf-label">Location</div>
+            <div class="wf-pills">
+              <span class="wf-pill active">NYC</span>
+              <span class="wf-pill">LA</span>
+            </div>
+          </div>
+
+          <div class="wf-field">
+            <div class="wf-label">Keywords</div>
+            <div class="wf-pills">
+              <span class="wf-pill">burger</span>
+              <span class="wf-pill">counter-service</span>
+              <span class="wf-pill">flagship</span>
+            </div>
+          </div>
+
+          <div class="wf-field">
+            <div class="wf-label">Time Window</div>
+            <div class="wf-input">2025 — present</div>
+          </div>
+
+          <div class="wf-button">Run Hindcast</div>
+        </aside>
+
+        <main class="wf-main">
+          <div class="wf-brief">
+            <div class="wf-brief-label">Saturation Brief</div>
+            <div class="wf-line med"></div>
+            <div class="wf-line"></div>
+            <div class="wf-line med"></div>
+            <div class="wf-line short"></div>
+          </div>
+
+          <div class="wf-grid">
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+            <div class="wf-tile"><div class="wf-tile-caption"></div></div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Annotations -->
+      <div class="annotation ann-1">Filters: project type,<br>location, keywords ↘</div>
+      <div class="annotation ann-2">Single primary CTA —<br>"Run Hindcast" ↘</div>
+      <div class="annotation ann-3">↙ Editorial brief —<br>~150 words summarizing<br>the saturation pattern</div>
+      <div class="annotation ann-4">↙ Image grid: 8 results<br>w/ source context<br>(designer, location, date)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MOCKUP ============ -->
+<section class="section">
+  <div class="section-label">03 — Output Mockup</div>
+  <h2 class="section-title">What the result actually looks like.</h2>
+  <p class="section-desc">Same layout as the wireframe, filled in. The short brief sits above the grid. Captions preserve source context. Imagery here is representative — the real tool sources existing photography.</p>
+
+  <div class="mockup">
+    <div class="mock-header">
+      <div class="mock-logo">HINDCAST</div>
+      <div class="mock-query">
+        <span>Hospitality · Fast Casual</span> &nbsp;·&nbsp;
+        <span>NYC</span> &nbsp;·&nbsp;
+        <span>burger, counter-service, flagship</span> &nbsp;·&nbsp;
+        <span>2025–present</span>
+      </div>
+    </div>
+
+    <div class="mock-body">
+      <div class="mock-eyebrow">Saturation Brief — NYC Fast Casual, 2025</div>
+      <h3 class="mock-headline">
+        The dominant gesture is <em>warm minimalism</em>: bleached oak counters, tubular pendant lighting, and a single arched motif repeating across nearly every new opening.
+      </h3>
+
+      <div class="mock-brief">
+        <p>Across 240+ images retrieved from design publications and archives over the past 18 months, three defaults emerge with unusual consistency. The first is material: 71% of new fast casual interiors in NYC use light oak or oak-veneer surfaces on the service counter, often paired with terrazzo or microcement floors in cream or oat.</p>
+        <p>The second is form: the arch. Whether as a doorway, a wall mural, a backbar cutout, or a logo motif, the arch appears in roughly two-thirds of the corpus. It is now the visual shorthand for "elevated casual" and reads as a default rather than a choice.</p>
+        <p>The third is lighting: warm-white tubular or pill-shaped pendants in brushed brass, hung in clusters of three. These have replaced the Edison bulb of the prior decade and serve a similar function — signaling craft without committing to any specific reference.</p>
+        <p>What to design against: anything that reads as oak, arch, or amber. The invisible defaults — terrazzo flooring, sans-serif neon signage, exposed ceiling structure painted matte black — are the harder targets because they no longer register as choices.</p>
+      </div>
+
+      <div class="mock-divider">
+        <span class="mock-divider-label">The Saturated Field — 8 of 240 results</span>
+        <span class="mock-divider-line"></span>
+      </div>
+
+      <div class="mock-grid">
+        <div class="mock-tile tile-1">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Oak counter, terrazzo base</div>
+            <div class="mock-caption-meta">Studio A — Brooklyn, 2025</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-2">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Arched doorway, cream wall</div>
+            <div class="mock-caption-meta">Project unattrib. — NoHo, 2025</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-3">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Tubular pendants, oak banquette</div>
+            <div class="mock-caption-meta">Studio B — LES, 2024</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-4">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Arch backbar, brass fixtures</div>
+            <div class="mock-caption-meta">Studio C — Williamsburg, 2025</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-5">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Cluster pendants, dark ceiling</div>
+            <div class="mock-caption-meta">Studio D — Soho, 2025</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-6">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Houseplants, oat microcement</div>
+            <div class="mock-caption-meta">Studio E — Greenpoint, 2024</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-7">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Grid tile, oak trim</div>
+            <div class="mock-caption-meta">Studio F — Chelsea, 2025</div>
+          </div>
+        </div>
+        <div class="mock-tile tile-8">
+          <div class="mock-tile-img"></div>
+          <div class="mock-caption">
+            <div class="mock-caption-title">Arch logo, dark interior</div>
+            <div class="mock-caption-meta">Studio G — East Village, 2025</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <b>Design notes for the client review:</b>
+    <ul>
+      <li>Imagery in this mockup is illustrative — the real tool retrieves existing photography with full source attribution preserved.</li>
+      <li>"Brief" length is a working target (~150 words). Final voice TBD — leaning short and declarative, closer to an editor's note than a trends report.</li>
+      <li>Single CTA on the left rail keeps the surface area minimal. No save, no export, no sharing in v1.</li>
+      <li>Open questions still in the PRD: corpus strategy (Google CSE vs. design publication scraping), and reverse-image lookup as a P1.</li>
+    </ul>
+  </div>
+</section>
+
+</body>
+</html>
