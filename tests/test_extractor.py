@@ -124,7 +124,15 @@ class TestVocabularyStructure:
             assert cat in VOCABULARY, f"Missing category: {cat}"
 
     def test_material_has_all_dimensions(self):
-        expected = {"wood", "metal", "stone", "glass", "tile", "soft_fabric", "wall_finish"}
+        expected = {
+            "wood",
+            "metal",
+            "stone",
+            "glass",
+            "tile",
+            "soft_fabric",
+            "wall_finish",
+        }
         assert set(VOCABULARY["material"].keys()) == expected
 
     def test_form_geometry_has_all_dimensions(self):
@@ -395,7 +403,9 @@ class TestToolSchema:
     def test_material_dims_are_arrays_in_tool(self):
         mat = _TOOL["input_schema"]["properties"]["material"]["properties"]
         for dim in MATERIAL_LIST_DIMS:
-            assert mat[dim]["type"] == "array", f"material.{dim} should be array type in tool"
+            assert mat[dim]["type"] == "array", (
+                f"material.{dim} should be array type in tool"
+            )
 
     def test_single_value_dims_are_strings_in_tool(self):
         color_props = _TOOL["input_schema"]["properties"]["color"]["properties"]
@@ -408,10 +418,14 @@ class TestToolSchema:
         """Enum values in the tool schema must exactly match VOCABULARY."""
         color_props = _TOOL["input_schema"]["properties"]["color"]["properties"]
         assert color_props["temperature"]["enum"] == VOCABULARY["color"]["temperature"]
-        assert color_props["dominant_hue"]["enum"] == VOCABULARY["color"]["dominant_hue"]
+        assert (
+            color_props["dominant_hue"]["enum"] == VOCABULARY["color"]["dominant_hue"]
+        )
 
     def test_atmosphere_abstract_qualities_is_array_in_tool(self):
-        atm_props = _TOOL["input_schema"]["properties"]["atmosphere_warmth"]["properties"]
+        atm_props = _TOOL["input_schema"]["properties"]["atmosphere_warmth"][
+            "properties"
+        ]
         assert atm_props["abstract_qualities"]["type"] == "array"
         assert (
             atm_props["abstract_qualities"]["items"]["enum"]
@@ -432,24 +446,41 @@ class TestToolSchema:
     def test_layout_archetype_dims_are_strings_in_tool(self):
         props = _TOOL["input_schema"]["properties"]["layout_archetype"]["properties"]
         for dim in ("layout", "circulation", "density"):
-            assert props[dim]["type"] == "string", f"layout_archetype.{dim} should be string"
+            assert props[dim]["type"] == "string", (
+                f"layout_archetype.{dim} should be string"
+            )
 
     def test_typography_signage_dims_are_strings_in_tool(self):
         props = _TOOL["input_schema"]["properties"]["typography_signage"]["properties"]
         for dim in ("signage_density", "logo_treatment", "typography_style"):
-            assert props[dim]["type"] == "string", f"typography_signage.{dim} should be string"
+            assert props[dim]["type"] == "string", (
+                f"typography_signage.{dim} should be string"
+            )
 
     def test_brand_expression_density_dims_are_strings_in_tool(self):
-        props = _TOOL["input_schema"]["properties"]["brand_expression_density"]["properties"]
+        props = _TOOL["input_schema"]["properties"]["brand_expression_density"][
+            "properties"
+        ]
         for dim in ("density", "mode"):
-            assert props[dim]["type"] == "string", f"brand_expression_density.{dim} should be string"
+            assert props[dim]["type"] == "string", (
+                f"brand_expression_density.{dim} should be string"
+            )
 
     def test_new_category_enums_match_vocabulary(self):
         la = _TOOL["input_schema"]["properties"]["layout_archetype"]["properties"]
         assert la["layout"]["enum"] == VOCABULARY["layout_archetype"]["layout"]
-        assert la["circulation"]["enum"] == VOCABULARY["layout_archetype"]["circulation"]
+        assert (
+            la["circulation"]["enum"] == VOCABULARY["layout_archetype"]["circulation"]
+        )
         ts = _TOOL["input_schema"]["properties"]["typography_signage"]["properties"]
-        assert ts["signage_density"]["enum"] == VOCABULARY["typography_signage"]["signage_density"]
-        bed = _TOOL["input_schema"]["properties"]["brand_expression_density"]["properties"]
-        assert bed["density"]["enum"] == VOCABULARY["brand_expression_density"]["density"]
+        assert (
+            ts["signage_density"]["enum"]
+            == VOCABULARY["typography_signage"]["signage_density"]
+        )
+        bed = _TOOL["input_schema"]["properties"]["brand_expression_density"][
+            "properties"
+        ]
+        assert (
+            bed["density"]["enum"] == VOCABULARY["brand_expression_density"]["density"]
+        )
         assert bed["mode"]["enum"] == VOCABULARY["brand_expression_density"]["mode"]

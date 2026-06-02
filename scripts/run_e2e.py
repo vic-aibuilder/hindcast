@@ -89,13 +89,21 @@ def run() -> None:
         print(f"\n[{n}]  {p['title']}")
         print(f"     Images: {p['image_count']}/{len(extractions)}")
         print()
-        wrapped = textwrap.fill(p["description"], width=72, initial_indent="     ",
-                                subsequent_indent="     ")
+        wrapped = textwrap.fill(
+            p["description"],
+            width=72,
+            initial_indent="     ",
+            subsequent_indent="     ",
+        )
         print(wrapped)
         print()
         terms = ", ".join(p["dominant_terms"])
-        term_lines = textwrap.fill(terms, width=68, initial_indent="     Terms: ",
-                                   subsequent_indent="            ")
+        term_lines = textwrap.fill(
+            terms,
+            width=68,
+            initial_indent="     Terms: ",
+            subsequent_indent="            ",
+        )
         print(term_lines)
 
     print("\n" + "─" * 60)

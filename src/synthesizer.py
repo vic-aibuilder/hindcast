@@ -184,7 +184,12 @@ _SYNTHESIS_TOOL: dict[str, Any] = {
                 "description": "Saturation patterns ranked most-to-least saturated.",
                 "items": {
                     "type": "object",
-                    "required": ["title", "description", "dominant_terms", "image_count"],
+                    "required": [
+                        "title",
+                        "description",
+                        "dominant_terms",
+                        "image_count",
+                    ],
                     "additionalProperties": False,
                     "properties": {
                         "title": {
@@ -243,8 +248,7 @@ def _aggregate(extractions: list[dict]) -> dict[str, Any]:
     """
     total = len(extractions)
     counts: dict[str, dict[str, dict[str, int]]] = {
-        cat: {dim: {} for dim in dims}
-        for cat, dims in VOCABULARY.items()
+        cat: {dim: {} for dim in dims} for cat, dims in VOCABULARY.items()
     }
 
     for extraction in extractions:
@@ -312,9 +316,7 @@ def _format_aggregation(agg: dict[str, Any]) -> str:
                     flag = "  ← RARE"
                 else:
                     flag = ""
-                lines.append(
-                    f"    {term:<34} {count:>3}/{total}  ({pct:>4.0%}){flag}"
-                )
+                lines.append(f"    {term:<34} {count:>3}/{total}  ({pct:>4.0%}){flag}")
 
             # collect zero-occurrence terms for absence block
             for term in VOCABULARY[cat][dim]:

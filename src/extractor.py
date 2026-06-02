@@ -261,6 +261,7 @@ _LIST_DIMS: frozenset[tuple[str, str]] = frozenset(
 # Tool definition (built once at module load)
 # ---------------------------------------------------------------------------
 
+
 def _str_prop(vocab: list[str], description: str = "") -> dict[str, Any]:
     prop: dict[str, Any] = {"type": "string", "enum": vocab}
     if description:
@@ -314,13 +315,22 @@ def _build_tool() -> dict[str, Any]:
                     ],
                     "additionalProperties": False,
                     "properties": {
-                        "wood": _arr_prop(v["material"]["wood"], "Wood species / finish visible"),
-                        "metal": _arr_prop(v["material"]["metal"], "Metal types visible"),
-                        "stone": _arr_prop(v["material"]["stone"], "Stone types visible"),
-                        "glass": _arr_prop(v["material"]["glass"], "Glass types visible"),
+                        "wood": _arr_prop(
+                            v["material"]["wood"], "Wood species / finish visible"
+                        ),
+                        "metal": _arr_prop(
+                            v["material"]["metal"], "Metal types visible"
+                        ),
+                        "stone": _arr_prop(
+                            v["material"]["stone"], "Stone types visible"
+                        ),
+                        "glass": _arr_prop(
+                            v["material"]["glass"], "Glass types visible"
+                        ),
                         "tile": _arr_prop(v["material"]["tile"], "Tile types visible"),
                         "soft_fabric": _arr_prop(
-                            v["material"]["soft_fabric"], "Soft / fabric materials visible"
+                            v["material"]["soft_fabric"],
+                            "Soft / fabric materials visible",
                         ),
                         "wall_finish": _arr_prop(
                             v["material"]["wall_finish"], "Wall finishes visible"
@@ -340,18 +350,27 @@ def _build_tool() -> dict[str, Any]:
                     ],
                     "additionalProperties": False,
                     "properties": {
-                        "primary_geometry": _str_prop(v["form_geometry"]["primary_geometry"]),
+                        "primary_geometry": _str_prop(
+                            v["form_geometry"]["primary_geometry"]
+                        ),
                         "basic_shape": _str_prop(v["form_geometry"]["basic_shape"]),
                         "arch_presence": _str_prop(v["form_geometry"]["arch_presence"]),
                         "grid_presence": _str_prop(v["form_geometry"]["grid_presence"]),
                         "mass_weight": _str_prop(v["form_geometry"]["mass_weight"]),
-                        "statement_form": _str_prop(v["form_geometry"]["statement_form"]),
+                        "statement_form": _str_prop(
+                            v["form_geometry"]["statement_form"]
+                        ),
                     },
                 },
                 "color": {
                     "type": "object",
                     "description": "Primary Category 3 — Color.",
-                    "required": ["temperature", "dominant_hue", "palette_type", "accent"],
+                    "required": [
+                        "temperature",
+                        "dominant_hue",
+                        "palette_type",
+                        "accent",
+                    ],
                     "additionalProperties": False,
                     "properties": {
                         "temperature": _str_prop(v["color"]["temperature"]),
@@ -402,7 +421,12 @@ def _build_tool() -> dict[str, Any]:
                 "atmosphere_warmth": {
                     "type": "object",
                     "description": "Secondary Category 7 — Atmosphere / Warmth.",
-                    "required": ["warmth", "formality", "reference", "abstract_qualities"],
+                    "required": [
+                        "warmth",
+                        "formality",
+                        "reference",
+                        "abstract_qualities",
+                    ],
                     "additionalProperties": False,
                     "properties": {
                         "warmth": _str_prop(v["atmosphere_warmth"]["warmth"]),
@@ -437,7 +461,11 @@ def _build_tool() -> dict[str, Any]:
                 "typography_signage": {
                     "type": "object",
                     "description": "Base Category 9 — Typography / Signage.",
-                    "required": ["signage_density", "logo_treatment", "typography_style"],
+                    "required": [
+                        "signage_density",
+                        "logo_treatment",
+                        "typography_style",
+                    ],
                     "additionalProperties": False,
                     "properties": {
                         "signage_density": _str_prop(

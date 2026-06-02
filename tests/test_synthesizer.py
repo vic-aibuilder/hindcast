@@ -181,8 +181,15 @@ class TestAggregate:
         assert aq["engaging"] == 1
 
     def test_missing_category_in_extraction_skipped_gracefully(self):
-        bad = {"material": None, "form_geometry": {}, "color": {}, "lighting": {},
-               "texture": {}, "opacity": {}, "atmosphere_warmth": {}}
+        bad = {
+            "material": None,
+            "form_geometry": {},
+            "color": {},
+            "lighting": {},
+            "texture": {},
+            "opacity": {},
+            "atmosphere_warmth": {},
+        }
         agg = _aggregate([bad])
         assert agg["total"] == 1
         # Should not raise; material just contributes nothing
@@ -191,9 +198,16 @@ class TestAggregate:
     def test_all_categories_present_in_output(self):
         agg = _aggregate(_corpus(1))
         expected = {
-            "material", "form_geometry", "color", "lighting",
-            "texture", "opacity", "atmosphere_warmth",
-            "layout_archetype", "typography_signage", "brand_expression_density",
+            "material",
+            "form_geometry",
+            "color",
+            "lighting",
+            "texture",
+            "opacity",
+            "atmosphere_warmth",
+            "layout_archetype",
+            "typography_signage",
+            "brand_expression_density",
         }
         assert set(agg["categories"].keys()) == expected
 
@@ -222,7 +236,9 @@ class TestFormatAggregation:
 
     def test_rare_flag_applied_at_threshold(self):
         # 1 out of 20 images — 5%, below RARE_PCT
-        corpus = [_make_extraction(color_temperature="cool")] + _corpus(19, color_temperature="warm")
+        corpus = [_make_extraction(color_temperature="cool")] + _corpus(
+            19, color_temperature="warm"
+        )
         agg = _aggregate(corpus)
         report = _format_aggregation(agg)
         # "cool" appears at 5%; should be RARE
@@ -237,8 +253,15 @@ class TestFormatAggregation:
     def test_all_category_headers_present(self):
         agg = _aggregate(_corpus(3))
         report = _format_aggregation(agg)
-        for header in ("MATERIAL", "FORM / GEOMETRY", "COLOR", "LIGHTING",
-                       "TEXTURE", "OPACITY", "ATMOSPHERE / WARMTH"):
+        for header in (
+            "MATERIAL",
+            "FORM / GEOMETRY",
+            "COLOR",
+            "LIGHTING",
+            "TEXTURE",
+            "OPACITY",
+            "ATMOSPHERE / WARMTH",
+        ):
             assert header in report, f"Missing header: {header}"
 
     def test_returns_string(self):
@@ -250,10 +273,9 @@ class TestFormatAggregation:
         # Exactly at _SATURATED_PCT (40%) — should be flagged
         n = 10
         count = round(n * _SATURATED_PCT)  # 4
-        corpus = (
-            [_make_extraction(color_temperature="cool")] * count
-            + [_make_extraction(color_temperature="warm")] * (n - count)
-        )
+        corpus = [_make_extraction(color_temperature="cool")] * count + [
+            _make_extraction(color_temperature="warm")
+        ] * (n - count)
         agg = _aggregate(corpus)
         report = _format_aggregation(agg)
         # cool appears at exactly 40% — flagged
@@ -282,8 +304,10 @@ class TestCountImagesForPattern:
         # dominant_terms has 4 terms; threshold 0.5 → min 2 required
         corpus = [
             _make_extraction(metal=["stainless steel", "blackened steel"]),  # 2 match ✓
-            _make_extraction(metal=["stainless steel"]),                       # 1 match ✗
-            _make_extraction(metal=["stainless steel", "blackened steel", "brass"]),  # 3 ✓
+            _make_extraction(metal=["stainless steel"]),  # 1 match ✗
+            _make_extraction(
+                metal=["stainless steel", "blackened steel", "brass"]
+            ),  # 3 ✓
         ]
         terms = ["stainless steel", "blackened steel", "brass", "copper"]
         count = _count_images_for_pattern(corpus, terms, threshold=0.5)
@@ -344,7 +368,10 @@ class TestSynthesisToolSchema:
     def test_pattern_item_required_fields(self):
         item_schema = _SYNTHESIS_TOOL["input_schema"]["properties"]["patterns"]["items"]
         assert set(item_schema["required"]) == {
-            "title", "description", "dominant_terms", "image_count"
+            "title",
+            "description",
+            "dominant_terms",
+            "image_count",
         }
 
     def test_title_is_string(self):
@@ -383,7 +410,11 @@ class TestSynthesize:
                 "The term co-occurs with overhead track spot lighting and polished concrete floors in 87% of images. "
                 "Blackened steel and brass appear in fewer than 5% of images."
             ),
-            "dominant_terms": ["stainless steel", "overhead track spot", "polished concrete"],
+            "dominant_terms": [
+                "stainless steel",
+                "overhead track spot",
+                "polished concrete",
+            ],
             "image_count": 17,
         },
         {
@@ -421,13 +452,17 @@ class TestSynthesize:
     def test_returns_list_of_dicts(self):
         client = _mock_client(self._MOCK_PATTERNS)
         corpus = _corpus(20, metal=["stainless steel"])
-        result = synthesize(corpus, "Nike SoHo 2025", "sneaker_streetwear", client=client)
+        result = synthesize(
+            corpus, "Nike SoHo 2025", "sneaker_streetwear", client=client
+        )
         assert isinstance(result, list)
         assert all(isinstance(p, dict) for p in result)
 
     def test_pattern_count_in_range(self):
         client = _mock_client(self._MOCK_PATTERNS)
-        result = synthesize(_corpus(20), "test brief", "sneaker_streetwear", client=client)
+        result = synthesize(
+            _corpus(20), "test brief", "sneaker_streetwear", client=client
+        )
         assert 4 <= len(result) <= 6
 
     def test_each_pattern_has_required_keys(self):
@@ -453,7 +488,9 @@ class TestSynthesize:
 
     def test_contemporary_fashion_sub_slice_accepted(self):
         client = _mock_client(self._MOCK_PATTERNS)
-        result = synthesize(_corpus(10), "The Row SoHo", "contemporary_fashion", client=client)
+        result = synthesize(
+            _corpus(10), "The Row SoHo", "contemporary_fashion", client=client
+        )
         assert len(result) >= 4
 
     def test_raises_on_empty_extractions(self):
@@ -503,7 +540,9 @@ class TestSynthesize:
 
     def test_brief_included_in_user_message(self):
         client = _mock_client(self._MOCK_PATTERNS)
-        synthesize(_corpus(5), "THE DISTINCT BRIEF TEXT", "sneaker_streetwear", client=client)
+        synthesize(
+            _corpus(5), "THE DISTINCT BRIEF TEXT", "sneaker_streetwear", client=client
+        )
         call_kwargs = client.messages.create.call_args
         user_content = call_kwargs.kwargs["messages"][0]["content"]
         assert "THE DISTINCT BRIEF TEXT" in user_content
