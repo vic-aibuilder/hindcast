@@ -39,42 +39,21 @@ MODEL = "claude-sonnet-4-6"
 
 def _load_extraction_prompt(sub_slice: str) -> str:
     """
-    Load the extraction prompt for the given sub-slice.
-    Chris writes these — they live in prompts/extraction_prompt.py.
-    Falls back to a placeholder if Chris's prompts aren't ready yet,
-    so Gary can test the mechanism independently.
+    Load the extraction prompt.
+    Chris's prompts/extraction_prompt.py exports SYSTEM_PROMPT.
+    Falls back to placeholder if his file isn't present yet.
     """
     try:
-        if sub_slice == "sneaker_streetwear":
-            from prompts.extraction_prompt import SNEAKER_STREETWEAR_PROMPT
+        from prompts.extraction_prompt import SYSTEM_PROMPT
 
-            return SNEAKER_STREETWEAR_PROMPT
-        elif sub_slice == "contemporary_fashion":
-            from prompts.extraction_prompt import CONTEMPORARY_FASHION_PROMPT
-
-            return CONTEMPORARY_FASHION_PROMPT
+        return SYSTEM_PROMPT
     except ImportError:
         pass
 
-    # Placeholder prompt — lets Gary test the pipeline
-    # before Chris's prompts are ready
-    return """You are a schema extractor for Hindcast, an internal design tool
-for Snarkitecture.
-
-Analyze this retail interior image and extract the following dimensions.
+    # Placeholder — active until Chris's prompts are loaded
+    return """Analyze this retail interior image and extract schema attributes.
 Return ONLY valid JSON — no preamble, no markdown, no explanation.
 
-Extract these shared base dimensions:
-- material: primary material (e.g. "concrete", "white oak", "steel", "stone")
-- form: dominant geometry (e.g. "rectilinear", "arched", "organic", "irregular")
-- color_temperature: "warm", "cool", or "neutral"
-- color_palette: brief descriptor (e.g. "monochrome white", "dark industrial", "warm neutrals")
-- lighting: lighting type (e.g. "overhead track", "diffuse natural", "warm ambient")
-- texture: surface quality (e.g. "smooth", "rough", "polished", "matte")
-- opacity: "opaque", "translucent", or "mixed"
-- atmosphere: overall feel (e.g. "minimal gallery", "industrial warehouse", "warm residential")
-
-Return exactly this JSON structure:
 {
   "material": "",
   "form": "",
