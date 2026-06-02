@@ -18,7 +18,7 @@ from typing import Any, TypedDict
 import anthropic
 from dotenv import load_dotenv
 
-from src.extractor import VOCABULARY, _LIST_DIMS
+from src.schema import VOCABULARY, _LIST_DIMS
 
 load_dotenv()
 

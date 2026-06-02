@@ -12,13 +12,8 @@ from __future__ import annotations
 
 import pytest
 
-from src.extractor import (
-    MODEL,
-    VOCABULARY,
-    _LIST_DIMS,
-    _TOOL,
-    validate,
-)
+from src.extractor import MODEL, _TOOL, validate
+from src.schema import VOCABULARY, _LIST_DIMS
 
 # ---------------------------------------------------------------------------
 # Fixtures
