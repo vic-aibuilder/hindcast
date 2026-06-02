@@ -25,6 +25,7 @@ from pipeline.storage import (
 
 # ── Core scoring ──────────────────────────────────────────────────────────────
 
+
 def compute_frequencies(sub_slice: str) -> dict:
     """
     Compute how often each schema value appears across the corpus
@@ -112,11 +113,13 @@ def compute_saturation_signals(
             # Qualitative frequency label — no exact percentages
             # at this corpus size (per voice spec)
             frequency_label = _qualitative_label(count, total_images)
-            top_values.append({
-                "value": value,
-                "count": count,
-                "frequency": frequency_label,
-            })
+            top_values.append(
+                {
+                    "value": value,
+                    "count": count,
+                    "frequency": frequency_label,
+                }
+            )
         if top_values:
             signals[dimension] = top_values
 
@@ -170,6 +173,7 @@ def format_for_synthesis(sub_slice: str) -> str:
 
 # ── Qualitative labeling ──────────────────────────────────────────────────────
 
+
 def _qualitative_label(count: int, total: int) -> str:
     """
     Convert a raw count into a qualitative frequency label.
@@ -212,11 +216,13 @@ if __name__ == "__main__":
     brief_hash = hash_brief(brief, sub_slice)
 
     test_images = [
-        {"image_url": f"https://example.com/score-test-{i}.jpg",
-         "source_url": "https://dezeen.com",
-         "title": f"Sneaker store {i}",
-         "source": "dezeen.com",
-         "retrieval_method": "test"}
+        {
+            "image_url": f"https://example.com/score-test-{i}.jpg",
+            "source_url": "https://dezeen.com",
+            "title": f"Sneaker store {i}",
+            "source": "dezeen.com",
+            "retrieval_method": "test",
+        }
         for i in range(20)
     ]
 
@@ -224,30 +230,70 @@ if __name__ == "__main__":
 
     # Simulate realistic schema distribution for sneaker/streetwear
     schemas = [
-        {"material": "concrete", "form": "rectilinear",
-         "color_temperature": "cool", "lighting": "overhead track",
-         "texture": "rough", "atmosphere": "industrial warehouse"},
-        {"material": "concrete", "form": "rectilinear",
-         "color_temperature": "cool", "lighting": "overhead track",
-         "texture": "polished", "atmosphere": "minimal gallery"},
-        {"material": "steel", "form": "rectilinear",
-         "color_temperature": "cool", "lighting": "overhead track",
-         "texture": "smooth", "atmosphere": "industrial warehouse"},
-        {"material": "concrete", "form": "rectilinear",
-         "color_temperature": "neutral", "lighting": "diffuse ambient",
-         "texture": "rough", "atmosphere": "minimal gallery"},
-        {"material": "white oak", "form": "rectilinear",
-         "color_temperature": "warm", "lighting": "warm ambient",
-         "texture": "smooth", "atmosphere": "warm residential"},
-        {"material": "concrete", "form": "arched",
-         "color_temperature": "cool", "lighting": "overhead track",
-         "texture": "rough", "atmosphere": "minimal gallery"},
-        {"material": "steel", "form": "rectilinear",
-         "color_temperature": "cool", "lighting": "overhead track",
-         "texture": "smooth", "atmosphere": "industrial warehouse"},
-        {"material": "concrete", "form": "rectilinear",
-         "color_temperature": "cool", "lighting": "overhead track",
-         "texture": "rough", "atmosphere": "industrial warehouse"},
+        {
+            "material": "concrete",
+            "form": "rectilinear",
+            "color_temperature": "cool",
+            "lighting": "overhead track",
+            "texture": "rough",
+            "atmosphere": "industrial warehouse",
+        },
+        {
+            "material": "concrete",
+            "form": "rectilinear",
+            "color_temperature": "cool",
+            "lighting": "overhead track",
+            "texture": "polished",
+            "atmosphere": "minimal gallery",
+        },
+        {
+            "material": "steel",
+            "form": "rectilinear",
+            "color_temperature": "cool",
+            "lighting": "overhead track",
+            "texture": "smooth",
+            "atmosphere": "industrial warehouse",
+        },
+        {
+            "material": "concrete",
+            "form": "rectilinear",
+            "color_temperature": "neutral",
+            "lighting": "diffuse ambient",
+            "texture": "rough",
+            "atmosphere": "minimal gallery",
+        },
+        {
+            "material": "white oak",
+            "form": "rectilinear",
+            "color_temperature": "warm",
+            "lighting": "warm ambient",
+            "texture": "smooth",
+            "atmosphere": "warm residential",
+        },
+        {
+            "material": "concrete",
+            "form": "arched",
+            "color_temperature": "cool",
+            "lighting": "overhead track",
+            "texture": "rough",
+            "atmosphere": "minimal gallery",
+        },
+        {
+            "material": "steel",
+            "form": "rectilinear",
+            "color_temperature": "cool",
+            "lighting": "overhead track",
+            "texture": "smooth",
+            "atmosphere": "industrial warehouse",
+        },
+        {
+            "material": "concrete",
+            "form": "rectilinear",
+            "color_temperature": "cool",
+            "lighting": "overhead track",
+            "texture": "rough",
+            "atmosphere": "industrial warehouse",
+        },
     ]
 
     for i, image_id in enumerate(ids):

@@ -36,10 +36,7 @@ async def query(request: QueryRequest) -> dict:
     ]:
         raise HTTPException(
             status_code=400,
-            detail=(
-                "sub_slice must be 'sneaker_streetwear' "
-                "or 'contemporary_fashion'"
-            ),
+            detail=("sub_slice must be 'sneaker_streetwear' or 'contemporary_fashion'"),
         )
     return run_query(brief=request.brief, sub_slice=request.sub_slice)
 
@@ -50,4 +47,4 @@ async def health() -> dict:
 
 
 if __name__ == "__main__":
-    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)  # nosec B104

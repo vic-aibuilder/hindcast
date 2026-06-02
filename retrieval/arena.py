@@ -77,21 +77,20 @@ def get_channel_images(channel_slug: str, per: int = 20) -> list[dict]:
         display = image.get("display", {})
         original = image.get("original", {})
 
-        image_url = (
-            display.get("url")
-            or original.get("url")
-        )
+        image_url = display.get("url") or original.get("url")
 
         if not image_url:
             continue
 
-        images.append({
-            "image_url": image_url,
-            "source_url": (block.get("source") or {}).get("url", ""),
-            "title": block.get("title", ""),
-            "channel": channel_slug,
-            "arena_id": block.get("id"),
-        })
+        images.append(
+            {
+                "image_url": image_url,
+                "source_url": (block.get("source") or {}).get("url", ""),
+                "title": block.get("title", ""),
+                "channel": channel_slug,
+                "arena_id": block.get("id"),
+            }
+        )
 
     return images
 

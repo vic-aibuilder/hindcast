@@ -52,8 +52,7 @@ def search(
     """
     if sub_slice not in DOMAINS:
         raise ValueError(
-            f"Unknown sub_slice '{sub_slice}'. "
-            f"Must be one of: {list(DOMAINS.keys())}"
+            f"Unknown sub_slice '{sub_slice}'. Must be one of: {list(DOMAINS.keys())}"
         )
 
     domains = DOMAINS[sub_slice]
@@ -68,13 +67,15 @@ def search(
 
     results = []
     for r in response.get("results", []):
-        results.append({
-            "url": r.get("url", ""),
-            "title": r.get("title", ""),
-            "content": r.get("content", ""),
-            "source": _extract_domain(r.get("url", "")),
-            "images": r.get("images", []),
-        })
+        results.append(
+            {
+                "url": r.get("url", ""),
+                "title": r.get("title", ""),
+                "content": r.get("content", ""),
+                "source": _extract_domain(r.get("url", "")),
+                "images": r.get("images", []),
+            }
+        )
 
     return results
 

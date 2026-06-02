@@ -29,6 +29,7 @@ DB_PATH = Path(os.getenv("DB_PATH", "hindcast.db"))
 
 # ── Connection ────────────────────────────────────────────────────────────────
 
+
 def get_connection() -> sqlite3.Connection:
     """Return a database connection with row factory set."""
     conn = sqlite3.connect(DB_PATH)
@@ -38,6 +39,7 @@ def get_connection() -> sqlite3.Connection:
 
 
 # ── Schema bootstrap ──────────────────────────────────────────────────────────
+
 
 def init_db() -> None:
     """
@@ -99,12 +101,14 @@ def init_db() -> None:
 
 # ── Brief hashing ─────────────────────────────────────────────────────────────
 
+
 def normalize_brief(brief: str, sub_slice: str) -> str:
     """
     Normalize a brief for consistent cache key generation.
     Lowercase, strip punctuation, sort words, prepend sub_slice.
     """
     import re
+
     cleaned = re.sub(r"[^\w\s]", "", brief.lower())
     words = sorted(cleaned.split())
     return f"{sub_slice}::{' '.join(words)}"
@@ -117,6 +121,7 @@ def hash_brief(brief: str, sub_slice: str) -> str:
 
 
 # ── Image storage ─────────────────────────────────────────────────────────────
+
 
 def save_images(images: list[dict], sub_slice: str, brief_hash: str) -> list[int]:
     """
@@ -191,6 +196,7 @@ def get_images_by_sub_slice(sub_slice: str, limit: int = 500) -> list[dict]:
 
 # ── Schema extraction storage ─────────────────────────────────────────────────
 
+
 def save_extraction(image_id: int, schema: dict, sub_slice: str) -> None:
     """
     Save Claude's schema extraction for a single image.
@@ -263,6 +269,7 @@ def image_has_extraction(image_id: int) -> bool:
 
 
 # ── Brief cache ───────────────────────────────────────────────────────────────
+
 
 def cache_brief(
     brief: str,
@@ -337,7 +344,7 @@ def get_cached_brief(brief: str, sub_slice: str) -> list[dict] | None:
     conn = get_connection()
     placeholders = ",".join("?" * len(image_ids))
     rows = conn.execute(
-        f"SELECT * FROM images WHERE id IN ({placeholders})",
+        f"SELECT * FROM images WHERE id IN ({placeholders})",  # nosec B608
         image_ids,
     ).fetchall()
     conn.close()
@@ -356,6 +363,7 @@ def is_cache_warm(brief: str, sub_slice: str, min_images: int = 30) -> bool:
 
 # ── Stats (useful for debugging and demo prep) ────────────────────────────────
 
+
 def corpus_stats() -> dict:
     """
     Return a summary of the current corpus state.
@@ -363,9 +371,7 @@ def corpus_stats() -> dict:
     """
     conn = get_connection()
 
-    total_images = conn.execute(
-        "SELECT COUNT(*) FROM images"
-    ).fetchone()[0]
+    total_images = conn.execute("SELECT COUNT(*) FROM images").fetchone()[0]
 
     by_slice = conn.execute(
         "SELECT sub_slice, COUNT(*) as count FROM images GROUP BY sub_slice"
@@ -375,9 +381,7 @@ def corpus_stats() -> dict:
         "SELECT COUNT(*) FROM schema_extractions"
     ).fetchone()[0]
 
-    cached_briefs = conn.execute(
-        "SELECT COUNT(*) FROM brief_cache"
-    ).fetchone()[0]
+    cached_briefs = conn.execute("SELECT COUNT(*) FROM brief_cache").fetchone()[0]
 
     conn.close()
 
@@ -419,13 +423,17 @@ if __name__ == "__main__":
 
     print("Testing schema extraction save...")
     if ids:
-        save_extraction(ids[0], {
-            "material": "concrete",
-            "form": "rectilinear",
-            "color_temperature": "cool",
-            "lighting": "overhead track",
-            "texture": "rough",
-        }, "sneaker_streetwear")
+        save_extraction(
+            ids[0],
+            {
+                "material": "concrete",
+                "form": "rectilinear",
+                "color_temperature": "cool",
+                "lighting": "overhead track",
+                "texture": "rough",
+            },
+            "sneaker_streetwear",
+        )
         print(f"  Extraction saved for image {ids[0]}")
 
         extracted = get_extractions_for_image(ids[0])

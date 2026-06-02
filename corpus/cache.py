@@ -24,6 +24,7 @@ from pipeline.storage import (
 
 # ── Public interface ──────────────────────────────────────────────────────────
 
+
 def check(brief: str, sub_slice: str, min_images: int = 30) -> list[dict] | None:
     """
     Check the cache for a matching brief.
@@ -92,6 +93,7 @@ if __name__ == "__main__":
     ]
 
     from pipeline.storage import hash_brief as _hash_brief
+
     brief_hash = _hash_brief(brief, sub_slice)
     ids = save_images(test_images, sub_slice, brief_hash)
     store(brief, sub_slice, ids)

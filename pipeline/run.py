@@ -35,6 +35,7 @@ MAX_EXTRACTION_BATCH = 40
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+
 def _get_all_extractions(sub_slice: str) -> list[dict]:
     """
     Reconstruct per-image extraction dicts from the database.
@@ -53,6 +54,7 @@ def _get_all_extractions(sub_slice: str) -> list[dict]:
 
 
 # ── Main pipeline ─────────────────────────────────────────────────────────────
+
 
 def run_query(brief: str, sub_slice: str) -> dict:
     """
@@ -85,8 +87,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
 
     if cached_images:
         retrieval_log.append(
-            f"cache hit — {len(cached_images)} images, "
-            "skipping live retrieval."
+            f"cache hit — {len(cached_images)} images, skipping live retrieval."
         )
         images = cached_images
         cache_hit = True
@@ -97,9 +98,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
         agent_result = run_retrieval_agent(brief=brief, sub_slice=sub_slice)
         images = agent_result["images"]
         retrieval_log.extend(agent_result["log"])
-        retrieval_log.append(
-            f"retrieval complete — {len(images)} images returned."
-        )
+        retrieval_log.append(f"retrieval complete — {len(images)} images returned.")
 
         # ── Step 3: Save to database ──────────────────────────────────────────
         retrieval_log.append("saving images to database...")
@@ -114,9 +113,9 @@ def run_query(brief: str, sub_slice: str) -> dict:
         retrieval_log.append(
             f"extracting schema from up to {MAX_EXTRACTION_BATCH} images..."
         )
-        images_with_ids = [
-            img for img in images if img.get("id")
-        ][:MAX_EXTRACTION_BATCH]
+        images_with_ids = [img for img in images if img.get("id")][
+            :MAX_EXTRACTION_BATCH
+        ]
 
         extracted_count = 0
         for img in images_with_ids:
@@ -134,9 +133,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
                     save_extraction(image_id, schema, sub_slice)
                     extracted_count += 1
             except Exception as e:
-                retrieval_log.append(
-                    f"  skipped {image_url[:50]}... ({e})"
-                )
+                retrieval_log.append(f"  skipped {image_url[:50]}... ({e})")
                 continue
 
         retrieval_log.append(
@@ -164,9 +161,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
         sub_slice=sub_slice,
         client=client,
     )
-    retrieval_log.append(
-        f"synthesis complete — {len(patterns)} patterns generated."
-    )
+    retrieval_log.append(f"synthesis complete — {len(patterns)} patterns generated.")
 
     # ── Step 8: Assemble result ───────────────────────────────────────────────
     all_corpus_images = get_images_by_sub_slice(sub_slice, limit=500)
@@ -199,7 +194,7 @@ if __name__ == "__main__":
     for line in result["retrieval_log"]:
         print(f"  {line}")
 
-    print(f"\n── Corpus ──")
+    print("\n── Corpus ──")
     print(f"  Images this query: {len(result['images'])}")
     print(f"  Total corpus size: {result['corpus_size']}")
     print(f"  Cache hit: {result['cache_hit']}")
@@ -207,7 +202,7 @@ if __name__ == "__main__":
     print(f"\n── Patterns ({len(result['patterns'])}) ──")
     for p in result["patterns"]:
         print(f"\n  {p.get('title', '')}")
-        desc = p.get('description', '')
+        desc = p.get("description", "")
         print(f"  {desc[:120]}{'...' if len(desc) > 120 else ''}")
         print(f"  image_count: {p.get('image_count', '—')}")
 

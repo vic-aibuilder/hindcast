@@ -36,6 +36,7 @@ MODEL = "claude-sonnet-4-6"
 
 # ── Prompt loader ─────────────────────────────────────────────────────────────
 
+
 def _load_extraction_prompt(sub_slice: str) -> str:
     """
     Load the extraction prompt for the given sub-slice.
@@ -46,9 +47,11 @@ def _load_extraction_prompt(sub_slice: str) -> str:
     try:
         if sub_slice == "sneaker_streetwear":
             from prompts.extraction_prompt import SNEAKER_STREETWEAR_PROMPT
+
             return SNEAKER_STREETWEAR_PROMPT
         elif sub_slice == "contemporary_fashion":
             from prompts.extraction_prompt import CONTEMPORARY_FASHION_PROMPT
+
             return CONTEMPORARY_FASHION_PROMPT
     except ImportError:
         pass
@@ -86,6 +89,7 @@ Return exactly this JSON structure:
 
 # ── Image fetching ────────────────────────────────────────────────────────────
 
+
 def _fetch_image_as_base64(url: str) -> tuple[str, str] | None:
     """
     Fetch an image from a URL and return (base64_data, media_type).
@@ -96,15 +100,19 @@ def _fetch_image_as_base64(url: str) -> tuple[str, str] | None:
             url,
             timeout=15.0,
             follow_redirects=True,
-            headers={"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"},
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"
+            },
         )
         response.raise_for_status()
 
         content_type = response.headers.get("content-type", "")
 
         # Only process actual images
-        if not any(t in content_type for t in
-                   ["image/jpeg", "image/png", "image/webp", "image/gif"]):
+        if not any(
+            t in content_type
+            for t in ["image/jpeg", "image/png", "image/webp", "image/gif"]
+        ):
             return None
 
         media_type = content_type.split(";")[0].strip()
@@ -116,6 +124,7 @@ def _fetch_image_as_base64(url: str) -> tuple[str, str] | None:
 
 
 # ── Core extraction ───────────────────────────────────────────────────────────
+
 
 def extract_schema(image_url: str, sub_slice: str) -> dict | None:
     """
@@ -159,7 +168,7 @@ def extract_schema(image_url: str, sub_slice: str) -> dict | None:
         if image_content is None:
             print("  Base64 fetch failed as well.")
             return None
-            
+
         try:
             response = client.messages.create(
                 model=MODEL,
@@ -230,6 +239,7 @@ def _parse_json_response(raw: str) -> dict | None:
 
 # ── Batch extraction ──────────────────────────────────────────────────────────
 
+
 def extract_and_store(
     image_id: int,
     image_url: str,
@@ -287,8 +297,10 @@ def batch_extract(
         if not image_id or not image_url:
             continue
 
-        print(f"  Extracting [{processed + 1}/{min(len(images), max_images)}] "
-              f"{image_url[:60]}...")
+        print(
+            f"  Extracting [{processed + 1}/{min(len(images), max_images)}] "
+            f"{image_url[:60]}..."
+        )
 
         schema = extract_and_store(
             image_id=image_id,
@@ -301,7 +313,7 @@ def batch_extract(
             results.append({"image_id": image_id, "schema": schema})
             processed += 1
         else:
-            print(f"    Skipped or failed.")
+            print("    Skipped or failed.")
 
     print(f"  Extracted {len(results)} images successfully.")
     return results

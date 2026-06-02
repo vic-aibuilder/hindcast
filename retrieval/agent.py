@@ -92,12 +92,13 @@ TOOLS = [
 
 # ── System prompt ─────────────────────────────────────────────────────────────
 
+
 def _system_prompt(sub_slice: str) -> str:
     slice_label = (
         "sneaker and streetwear retail"
         if sub_slice == "sneaker_streetwear"
         else "contemporary fashion retail (elevated/designer end — The Row, "
-             "Toteme, Khaite, Acne; warm-minimal / quiet luxury)"
+        "Toteme, Khaite, Acne; warm-minimal / quiet luxury)"
     )
     return f"""You are the retrieval agent for Hindcast, an internal tool for
 Snarkitecture that maps visual saturation in retail design.
@@ -132,6 +133,7 @@ what gaps remain, what you'll do next. This log surfaces in the UI."""
 
 # ── Tool execution ────────────────────────────────────────────────────────────
 
+
 def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
     """
     Execute a tool call and return (log_message, images).
@@ -147,22 +149,26 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
         images = []
         for r in results:
             for img_url in r.get("images", []):
-                images.append({
-                    "image_url": img_url,
-                    "source_url": r["url"],
-                    "title": r["title"],
-                    "source": r["source"],
-                    "retrieval_method": "tavily",
-                })
+                images.append(
+                    {
+                        "image_url": img_url,
+                        "source_url": r["url"],
+                        "title": r["title"],
+                        "source": r["source"],
+                        "retrieval_method": "tavily",
+                    }
+                )
             # Also include the page URL itself as a potential image source
             if not r.get("images"):
-                images.append({
-                    "image_url": r["url"],
-                    "source_url": r["url"],
-                    "title": r["title"],
-                    "source": r["source"],
-                    "retrieval_method": "tavily",
-                })
+                images.append(
+                    {
+                        "image_url": r["url"],
+                        "source_url": r["url"],
+                        "title": r["title"],
+                        "source": r["source"],
+                        "retrieval_method": "tavily",
+                    }
+                )
 
         log = (
             f"tavily_search('{tool_input['query']}') → "
@@ -178,14 +184,16 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
         # Normalize Are.na results to match Tavily format
         normalized = []
         for img in images:
-            normalized.append({
-                "image_url": img["image_url"],
-                "source_url": img.get("source_url", ""),
-                "title": img.get("title", ""),
-                "source": "are.na",
-                "retrieval_method": "arena",
-                "channel": img.get("channel", ""),
-            })
+            normalized.append(
+                {
+                    "image_url": img["image_url"],
+                    "source_url": img.get("source_url", ""),
+                    "title": img.get("title", ""),
+                    "source": "are.na",
+                    "retrieval_method": "arena",
+                    "channel": img.get("channel", ""),
+                }
+            )
         log = f"arena_search({tool_input['sub_slice']}) → {len(normalized)} images"
         return log, normalized
 
@@ -194,6 +202,7 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
 
 
 # ── Main agent loop ───────────────────────────────────────────────────────────
+
 
 def run(brief: str, sub_slice: str) -> dict:
     """
@@ -263,14 +272,18 @@ def run(brief: str, sub_slice: str) -> dict:
             reasoning_log.append(log_msg)
             all_images.extend(images)
 
-            tool_results.append({
-                "type": "tool_result",
-                "tool_use_id": block.id,
-                "content": json.dumps({
-                    "images_retrieved": len(images),
-                    "log": log_msg,
-                }),
-            })
+            tool_results.append(
+                {
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": json.dumps(
+                        {
+                            "images_retrieved": len(images),
+                            "log": log_msg,
+                        }
+                    ),
+                }
+            )
 
         if not made_tool_call:
             break
