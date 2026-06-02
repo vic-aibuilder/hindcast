@@ -22,10 +22,10 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 ## Phase 1 — Foundation (now → June 9)
 
 **Role 1 — Victor**
-- [ ] Set up React project (Vite + TypeScript)
+- [x] Set up React project (Vite + TypeScript)
 - [ ] Wire `.env` and confirm API keys load
 - [ ] Branch protection + collaborator access on GitHub
-- [ ] Establish PR workflow for the team
+- [x] Establish PR workflow for the team
 
 **Role 2 — Gary**
 - [ ] Tavily integration: scoped queries against publication list
@@ -34,10 +34,10 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [ ] Verify ArchDaily API status; fall back to scoped Tavily if dead
 
 **Role 3 — Christian**
-- [ ] Claude client setup (Anthropic SDK, Sonnet 4.6)
-- [ ] Per-image schema extractor: image in, structured schema attributes out (sneaker/streetwear dimensions)
-- [ ] Schema output validated against `docs/schema.md` controlled vocabulary
-- [ ] Write tests for schema extractor
+- [x] Claude client setup (Anthropic SDK, Sonnet 4.6)
+- [x] Per-image schema extractor: image in, structured schema attributes out (sneaker/streetwear dimensions)
+- [x] Schema output validated against `docs/schema.md` controlled vocabulary
+- [x] Write tests for schema extractor
 
 ---
 
@@ -58,11 +58,11 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 **Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over all ~75 seed images, store results
-- [ ] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
-- [ ] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
-- [ ] Sneaker/streetwear reference patterns wired in
-- [ ] Manual end-to-end run: verify full pipeline produces valid output
-- [ ] Write tests for synthesizer output structure
+- [x] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
+- [x] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
+- [x] Sneaker/streetwear reference patterns wired in
+- [ ] Manual end-to-end run: verify full pipeline produces valid output (`scripts/run_e2e.py` ready; pending successful live run with API key + corpus)
+- [x] Write tests for synthesizer output structure
 
 ---
 
