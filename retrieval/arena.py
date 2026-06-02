@@ -29,6 +29,7 @@ ARENA_QUERIES = {
     ],
 }
 
+
 def search_channels(query: str, per: int = 10) -> list[dict]:
     """
     Search Are.na channels by query string.

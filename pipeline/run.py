@@ -95,7 +95,9 @@ def run_query(brief: str, sub_slice: str) -> dict:
     else:
         # ── Step 2: Live retrieval ────────────────────────────────────────────
         retrieval_log.append("cache cold — running live retrieval...")
-        agent_result = run_retrieval_agent(brief=brief, sub_slice=sub_slice, client=client)
+        agent_result = run_retrieval_agent(
+            brief=brief, sub_slice=sub_slice, client=client
+        )
         images = agent_result["images"]
         retrieval_log.extend(agent_result["log"])
         retrieval_log.append(f"retrieval complete — {len(images)} images returned.")
