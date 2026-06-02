@@ -28,10 +28,10 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [x] Establish PR workflow for the team
 
 **Role 2 — Gary**
-- [ ] Tavily integration: scoped queries against publication list
-- [ ] Are.na API integration: channel queries
-- [ ] Basic retrieval function: query in, image URLs + metadata out
-- [ ] Verify ArchDaily API status; fall back to scoped Tavily if dead
+- [x] Tavily integration: scoped queries against publication list
+- [x] Are.na API integration: channel queries
+- [x] Basic retrieval function: query in, image URLs + metadata out
+- [x] Verify ArchDaily API status; fall back to scoped Tavily if dead
 
 **Role 3 — Christian**
 - [x] Claude client setup (Anthropic SDK, Sonnet 4.6)
@@ -51,9 +51,9 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [ ] Are.na-referenced visual style: clean, minimal, image-forward
 
 **Role 2 — Gary**
-- [ ] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
-- [ ] Self-assessment logic: corpus representative? gaps? off-context noise?
-- [ ] Caching layer: keyed by sub-slice + normalized brief
+- [x] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
+- [x] Self-assessment logic: corpus representative? gaps? off-context noise?
+- [x] Caching layer: keyed by sub-slice + normalized brief
 - [ ] Seed corpus slice 1: ~75 sneaker/streetwear images, hand-curated
 
 **Role 3 — Christian**
