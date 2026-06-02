@@ -1,17 +1,72 @@
-# Anthropic SDK — Claude API (Sonnet 4.6)
-anthropic>=0.30.0
-
-# HTTP client
-httpx>=0.27.0
-
-# Tavily search client — verify plan/tier and rate limits at build time
-tavily-python>=0.3.0
-
-# Environment variable loading
-python-dotenv>=1.0.0
-
-# Lint and format
-ruff>=0.4.0
-
-# Tests
-pytest>=8.0.0
+altair==5.5.0
+altgraph @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/altgraph-0.17.2-py2.py3-none-any.whl
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anthropic==0.105.2
+anyio==4.12.1
+attrs==25.4.0
+backports.asyncio.runner==1.2.0
+blinker==1.9.0
+cachetools==6.2.6
+certifi==2026.2.25
+charset-normalizer==3.4.4
+click==8.1.8
+distro==1.9.0
+docstring_parser==0.18.0
+exceptiongroup==1.3.1
+fastapi==0.128.8
+future @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/future-0.18.2-py3-none-any.whl
+gitdb==4.0.12
+GitPython==3.1.46
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.11
+iniconfig==2.1.0
+Jinja2==3.1.6
+jiter==0.15.0
+jsonschema==4.25.1
+jsonschema-specifications==2025.9.1
+lxml==6.0.2
+macholib @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/macholib-1.15.2-py2.py3-none-any.whl
+MarkupSafe==3.0.3
+narwhals==2.17.0
+numpy==2.0.2
+packaging==25.0
+pandas==2.3.3
+pillow==11.3.0
+pluggy==1.6.0
+protobuf==6.33.5
+pyarrow==21.0.0
+pydantic==2.12.5
+pydantic-settings==2.11.0
+pydantic_core==2.41.5
+pydeck==0.9.1
+Pygments==2.19.2
+pytest==8.4.2
+pytest-asyncio==1.2.0
+python-dateutil==2.9.0.post0
+python-docx==1.2.0
+python-dotenv==1.2.1
+pytz==2025.2
+referencing==0.36.2
+regex==2026.1.15
+requests==2.32.5
+rpds-py==0.27.1
+ruff==0.15.15
+six @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot7/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-133.100.1.1/six-1.15.0-py2.py3-none-any.whl
+smmap==5.0.2
+sniffio==1.3.1
+starlette==0.49.3
+streamlit==1.50.0
+tavily-python==0.7.25
+tenacity==9.1.2
+tiktoken==0.13.0
+toml==0.10.2
+tomli==2.4.0
+tornado==6.5.4
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+tzdata==2025.3
+urllib3==2.6.3
+uvicorn==0.39.0
