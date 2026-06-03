@@ -22,22 +22,22 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 ## Phase 1 — Foundation (now → June 9)
 
 **Role 1 — Victor**
-- [ ] Set up React project (Vite + TypeScript)
-- [ ] Wire `.env` and confirm API keys load
-- [ ] Branch protection + collaborator access on GitHub
-- [ ] Establish PR workflow for the team
+- [x] Set up React project (Vite + TypeScript)
+- [x] Wire `.env` and confirm API keys load
+- [x] Branch protection + collaborator access on GitHub
+- [x] Establish PR workflow for the team
 
 **Role 2 — Gary**
-- [ ] Tavily integration: scoped queries against publication list
-- [ ] Are.na API integration: channel queries
-- [ ] Basic retrieval function: query in, image URLs + metadata out
-- [ ] Verify ArchDaily API status; fall back to scoped Tavily if dead
+- [x] Tavily integration: scoped queries against publication list
+- [x] Are.na API integration: channel queries
+- [x] Basic retrieval function: query in, image URLs + metadata out
+- [x] Verify ArchDaily API status; fall back to scoped Tavily if dead
 
 **Role 3 — Christian**
-- [ ] Claude client setup (Anthropic SDK, Sonnet 4.6)
-- [ ] Per-image schema extractor: image in, structured schema attributes out (sneaker/streetwear dimensions)
-- [ ] Schema output validated against `docs/schema.md` controlled vocabulary
-- [ ] Write tests for schema extractor
+- [x] Claude client setup (Anthropic SDK, Sonnet 4.6)
+- [x] Per-image schema extractor: image in, structured schema attributes out (sneaker/streetwear dimensions)
+- [x] Schema output validated against `docs/schema.md` controlled vocabulary
+- [x] Write tests for schema extractor
 
 ---
 
@@ -51,18 +51,18 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [ ] Are.na-referenced visual style: clean, minimal, image-forward
 
 **Role 2 — Gary**
-- [ ] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
-- [ ] Self-assessment logic: corpus representative? gaps? off-context noise?
-- [ ] Caching layer: keyed by sub-slice + normalized brief
+- [x] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
+- [x] Self-assessment logic: corpus representative? gaps? off-context noise?
+- [x] Caching layer: keyed by sub-slice + normalized brief
 - [ ] Seed corpus slice 1: ~75 sneaker/streetwear images, hand-curated
 
 **Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over all ~75 seed images, store results
-- [ ] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
-- [ ] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
-- [ ] Sneaker/streetwear reference patterns wired in
-- [ ] Manual end-to-end run: verify full pipeline produces valid output
-- [ ] Write tests for synthesizer output structure
+- [x] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
+- [x] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
+- [x] Sneaker/streetwear reference patterns wired in
+- [ ] Manual end-to-end run: verify full pipeline produces valid output (`scripts/run_e2e.py` ready; pending successful live run with API key + corpus)
+- [x] Write tests for synthesizer output structure
 
 ---
 

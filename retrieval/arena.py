@@ -4,11 +4,7 @@ Secondary retrieval source — adds human-curated taste signal
 that algorithmic search lacks.
 """
 
-import os
 import httpx
-from dotenv import load_dotenv
-
-load_dotenv()
 
 ARENA_BASE_URL = "https://api.are.na/v2"
 
@@ -36,15 +32,9 @@ def search_channels(query: str, per: int = 10) -> list[dict]:
 
     Returns list of channel dicts with id, title, slug.
     """
-    token = os.getenv("ARENA_ACCESS_TOKEN")
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-    }
     response = httpx.get(
         f"{ARENA_BASE_URL}/search/channels",
         params={"q": query, "per": per},
-        headers=headers,
         timeout=10.0,
     )
     response.raise_for_status()
@@ -57,15 +47,9 @@ def get_channel_images(channel_slug: str, per: int = 20) -> list[dict]:
 
     Returns list of dicts with image_url, source_url, title.
     """
-    token = os.getenv("ARENA_ACCESS_TOKEN")
-    headers = {
-        "Authorization": f"Bearer {token}",
-        "Content-Type": "application/json",
-    }
     response = httpx.get(
         f"{ARENA_BASE_URL}/channels/{channel_slug}/contents",
         params={"per": per, "sort": "position"},
-        headers=headers,
         timeout=10.0,
     )
     response.raise_for_status()
@@ -131,6 +115,9 @@ def search(sub_slice: str, max_images: int = 20) -> list[dict]:
         for channel in channels:
             if len(all_images) >= max_images:
                 break
+
+            if channel.get("status") != "open":
+                continue
 
             slug = channel.get("slug", "")
             if not slug:
