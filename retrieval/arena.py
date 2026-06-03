@@ -4,11 +4,7 @@ Secondary retrieval source — adds human-curated taste signal
 that algorithmic search lacks.
 """
 
-import os
 import httpx
-from dotenv import load_dotenv
-
-load_dotenv()
 
 ARENA_BASE_URL = "https://api.are.na/v2"
 
@@ -119,6 +115,9 @@ def search(sub_slice: str, max_images: int = 20) -> list[dict]:
         for channel in channels:
             if len(all_images) >= max_images:
                 break
+
+            if channel.get("status") != "open":
+                continue
 
             slug = channel.get("slug", "")
             if not slug:

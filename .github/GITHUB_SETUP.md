@@ -18,7 +18,6 @@ added, wire keys in Settings → Secrets and variables → Actions:
 |---|---|
 | `ANTHROPIC_API_KEY` | https://console.anthropic.com |
 | `TAVILY_API_KEY` | Tavily dashboard — verify plan/tier at build time |
-| `ARENA_ACCESS_TOKEN` | https://dev.are.na |
 
 ## CODEOWNERS
 

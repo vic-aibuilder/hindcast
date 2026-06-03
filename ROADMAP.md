@@ -23,7 +23,7 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 **Role 1 — Victor**
 - [x] Set up React project (Vite + TypeScript)
-- [ ] Wire `.env` and confirm API keys load
+- [x] Wire `.env` and confirm API keys load
 - [x] Branch protection + collaborator access on GitHub
 - [x] Establish PR workflow for the team
 
