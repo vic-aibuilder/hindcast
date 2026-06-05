@@ -37,9 +37,14 @@ const MOCK_RESULT: HindcastResult = {
       observation:
         'The most universal move in the set — present regardless of budget or brand tier, which is precisely why it has stopped signalling anything.',
       images: [
-        { url: 'https://picsum.photos/seed/a1/400/300', project: 'Nike House of Innovation', designer: 'Nike In-House', year: 2024 },
-        { url: 'https://picsum.photos/seed/a2/400/300', project: 'Kith Flagship SoHo', designer: 'Snarkitecture', year: 2023 },
-        { url: 'https://picsum.photos/seed/a3/400/300', project: 'New Balance NYC', designer: 'Virgile+Partners', year: 2025 },
+        { url: 'https://picsum.photos/seed/a1/400/300', project: 'Nike House of Innovation', designer: 'Nike In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/a2/400/300', project: 'Aimé Leon Dore Flagship', designer: 'ALD In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/a3/400/300', project: 'New Balance Queens', designer: 'Virgile+Partners', year: 2025 },
+        { url: 'https://picsum.photos/seed/a4/400/300', project: 'Jordan Brand The Bronx', designer: 'Nike In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/a5/400/300', project: 'Fear of God Athletics', designer: 'Jerry Lorenzo Studio', year: 2026 },
+        { url: 'https://picsum.photos/seed/a6/400/300', project: 'A-Cold-Wall Brooklyn', designer: 'Samuel Ross Studio', year: 2025 },
+        { url: 'https://picsum.photos/seed/a7/400/300', project: 'Cactus Plant Flea Market', designer: 'CPFM In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/a8/400/300', project: 'Union Pop-up Staten Island', designer: 'Union In-House', year: 2026 },
       ],
     },
     {
@@ -49,9 +54,14 @@ const MOCK_RESULT: HindcastResult = {
       observation:
         'Appears in roughly two-thirds of the set, almost always paired with exposed track. Rarely the focal move — more often the unexamined default overhead.',
       images: [
-        { url: 'https://picsum.photos/seed/b1/400/300', project: 'Adidas Brand Center 5th Ave', designer: 'Checkland Kindleysides', year: 2024 },
-        { url: 'https://picsum.photos/seed/b2/400/300', project: 'On Running NYC', designer: 'Studio Modijefsky', year: 2025 },
-        { url: 'https://picsum.photos/seed/b3/400/300', project: 'Flight Club Bowery', designer: 'Flight Club In-House', year: 2023 },
+        { url: 'https://picsum.photos/seed/b1/400/300', project: 'Adidas Brand Center 5th Ave', designer: 'Checkland Kindleysides', year: 2026 },
+        { url: 'https://picsum.photos/seed/b2/400/300', project: 'On Running Brooklyn', designer: 'Studio Modijefsky', year: 2025 },
+        { url: 'https://picsum.photos/seed/b3/400/300', project: 'Flight Club Bowery', designer: 'Flight Club In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/b4/400/300', project: 'Saucony Queens', designer: 'Saucony In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/b5/400/300', project: 'New Balance 999 The Bronx', designer: 'NB In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/b6/400/300', project: 'Asics Staten Island', designer: 'Asics In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/b7/400/300', project: 'Brooks Running Brooklyn', designer: 'Brooks In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/b8/400/300', project: 'Hoka Queens', designer: 'Hoka In-House', year: 2026 },
       ],
     },
     {
@@ -61,9 +71,14 @@ const MOCK_RESULT: HindcastResult = {
       observation:
         'Reads as technical precision on first encounter, as template by the third. The same system recurs across unrelated brands.',
       images: [
-        { url: 'https://picsum.photos/seed/c1/400/300', project: 'GOAT Flagship', designer: 'GOAT In-House', year: 2024 },
-        { url: 'https://picsum.photos/seed/c2/400/300', project: 'Concepts Boston', designer: 'Concepts In-House', year: 2023 },
-        { url: 'https://picsum.photos/seed/c3/400/300', project: 'Stadium Goods NYC', designer: 'Stadium Goods In-House', year: 2024 },
+        { url: 'https://picsum.photos/seed/c1/400/300', project: 'GOAT Flagship', designer: 'GOAT In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/c2/400/300', project: 'Concepts Brooklyn', designer: 'Concepts In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/c3/400/300', project: 'Stadium Goods SoHo', designer: 'Stadium Goods In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/c4/400/300', project: 'Round Two The Bronx', designer: 'Round Two In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/c5/400/300', project: 'KLEKT Queens', designer: 'KLEKT In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/c6/400/300', project: 'Sneaker Politics Staten Island', designer: 'SP In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/c7/400/300', project: 'Trophy Room Brooklyn', designer: 'Trophy Room In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/c8/400/300', project: 'Social Status Harlem', designer: 'Social Status In-House', year: 2026 },
       ],
     },
     {
@@ -74,8 +89,13 @@ const MOCK_RESULT: HindcastResult = {
         'The dominant merchandising format in the borough; mid-density mixed display is essentially absent from the set.',
       images: [
         { url: 'https://picsum.photos/seed/d1/400/300', project: 'Extra Butter LES', designer: 'Extra Butter In-House', year: 2025 },
-        { url: 'https://picsum.photos/seed/d2/400/300', project: 'Bodega NYC', designer: 'Bodega In-House', year: 2024 },
-        { url: 'https://picsum.photos/seed/d3/400/300', project: 'Kith Brooklyn', designer: 'Snarkitecture', year: 2023 },
+        { url: 'https://picsum.photos/seed/d2/400/300', project: 'Bodega Brooklyn', designer: 'Bodega In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/d3/400/300', project: 'Dover Street Market Manhattan', designer: 'DSM In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/d4/400/300', project: 'Packer Shoes Queens', designer: 'Packer In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/d5/400/300', project: 'Feature Pop-up The Bronx', designer: 'Feature In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/d6/400/300', project: 'Sneaker District Staten Island', designer: 'SD In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/d7/400/300', project: 'Atmos Brooklyn', designer: 'Atmos In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/d8/400/300', project: 'Bait Queens', designer: 'Bait In-House', year: 2025 },
       ],
     },
     {
@@ -85,9 +105,14 @@ const MOCK_RESULT: HindcastResult = {
       observation:
         'The sport reference has shifted from statement to expectation — present even where the brand has no athletic lineage.',
       images: [
-        { url: 'https://picsum.photos/seed/e1/400/300', project: 'Nike SoHo', designer: 'Nike In-House', year: 2024 },
-        { url: 'https://picsum.photos/seed/e2/400/300', project: 'Foot Locker Power Store', designer: 'Checkland Kindleysides', year: 2023 },
-        { url: 'https://picsum.photos/seed/e3/400/300', project: 'Puma NYC', designer: 'Puma In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/e1/400/300', project: 'Nike SoHo', designer: 'Nike In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/e2/400/300', project: 'Foot Locker Power Store The Bronx', designer: 'Checkland Kindleysides', year: 2025 },
+        { url: 'https://picsum.photos/seed/e3/400/300', project: 'Puma Brooklyn', designer: 'Puma In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/e4/400/300', project: 'Reebok Queens', designer: 'Reebok In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/e5/400/300', project: 'Converse Staten Island', designer: 'Converse In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/e6/400/300', project: 'Vans Brooklyn', designer: 'Vans In-House', year: 2025 },
+        { url: 'https://picsum.photos/seed/e7/400/300', project: 'Timberland The Bronx', designer: 'Timberland In-House', year: 2026 },
+        { url: 'https://picsum.photos/seed/e8/400/300', project: 'Merrell Queens', designer: 'Merrell In-House', year: 2025 },
       ],
     },
   ],
@@ -168,15 +193,17 @@ export default function App() {
                 Brand &amp; Retail — {SLICE_LABELS[state.input.subSlice]}
               </div>
               <div className="results-hdr__title">New York City</div>
-              <div className="results-hdr__meta">
-                <strong>{state.result.patterns.length} patterns</strong> identified
-                · NYC · past 18 months
-              </div>
             </div>
             <button type="button" className="results-hdr__back" onClick={reset}>
               ← New Brief
             </button>
           </header>
+          <hr className="rule" />
+          <div className="results-hdr__meta">
+            <strong>{state.result.patterns.length} patterns</strong> identified
+            · NYC · past 18 months
+          </div>
+          <hr className="rule" />
           <OutputLayout result={state.result} />
         </section>
       )}
