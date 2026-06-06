@@ -7,6 +7,7 @@ Importable by the extractor, synthesizer, retrieval pipeline, and tests.
 v2.3: blonde wood, chrome rail, matte black rail, bleached white / bright white,
        architectural plant — from Alex Mustonen calibration doc
 v2.4: layout_archetype, typography_signage, brand_expression_density — base cats 8–10
+v2.5: Phaidon monograph voice-training terms — Kith, Stampd, Veilance, Valextra
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "dark oak",
             "light wood",
             "blonde wood",
+            "bleached white oak",
             "reclaimed",
             "plywood",
         ],
@@ -26,6 +28,7 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "blackened steel",
             "brushed aluminum",
             "stainless steel",
+            "quilted stainless steel",
             "brass",
             "copper",
             "perforated metal",
@@ -34,12 +37,16 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
         ],
         "stone": [
             "travertine",
+            "raw / honed / unfilled travertine",
             "limestone",
             "marble",
+            "Carrara marble",
             "terrazzo",
             "concrete",
             "slate",
+            "Ceppo di Gré stone",
         ],
+        "other": ["white Corian"],
         "glass": ["clear", "frosted", "translucent", "mirror"],
         "tile": ["round tile", "square tile", "linear tile"],
         "soft_fabric": [
@@ -55,6 +62,7 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "painted plaster",
             "fluted plaster",
             "exposed brick",
+            "whitewashed brick",
             "bleached white / bright white",
             "drywall",
         ],
@@ -90,6 +98,8 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "architectural void",
             "installation",
             "architectural plant",
+            "triangular fin system",
+            "gradient wall",
         ],
     },
     "color": {
@@ -153,6 +163,7 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "industrial",
             "hospitality",
             "archive",
+            "archive room",
             "stadium",
             "nature",
         ],
@@ -172,6 +183,8 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "found-space",
             "labyrinthine",
             "single room",
+            "antechamber / entry sequence",
+            "forced perspective corridor",
         ],
         "circulation": ["open", "directed", "theatrical", "free"],
         "density": ["sparse / gallery", "edited", "dense retail"],
@@ -214,6 +227,7 @@ _LIST_DIMS: frozenset[tuple[str, str]] = frozenset(
         ("material", "tile"),
         ("material", "soft_fabric"),
         ("material", "wall_finish"),
+        ("material", "other"),
         ("atmosphere_warmth", "abstract_qualities"),
     }
 )

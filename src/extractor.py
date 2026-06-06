@@ -90,6 +90,7 @@ def _build_tool() -> dict[str, Any]:
                         "tile",
                         "soft_fabric",
                         "wall_finish",
+                        "other",
                     ],
                     "additionalProperties": False,
                     "properties": {
@@ -112,6 +113,10 @@ def _build_tool() -> dict[str, Any]:
                         ),
                         "wall_finish": _arr_prop(
                             v["material"]["wall_finish"], "Wall finishes visible"
+                        ),
+                        "other": _arr_prop(
+                            v["material"]["other"],
+                            "Other materials visible (e.g. solid surfaces, composites)",
                         ),
                     },
                 },
