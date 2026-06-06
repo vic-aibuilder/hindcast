@@ -40,6 +40,22 @@ MATERIAL_LIST_DIMS = [
     "tile",
     "soft_fabric",
     "wall_finish",
+    "other",
+]
+
+VOICE_TRAINING_VOCAB: list[tuple[tuple[str, str], str]] = [
+    (("material", "stone"), "raw / honed / unfilled travertine"),
+    (("material", "wall_finish"), "whitewashed brick"),
+    (("material", "stone"), "Carrara marble"),
+    (("material", "stone"), "Ceppo di Gré stone"),
+    (("material", "wood"), "bleached white oak"),
+    (("material", "other"), "white Corian"),
+    (("material", "metal"), "quilted stainless steel"),
+    (("layout_archetype", "layout"), "antechamber / entry sequence"),
+    (("layout_archetype", "layout"), "forced perspective corridor"),
+    (("atmosphere_warmth", "reference"), "archive room"),
+    (("form_geometry", "statement_form"), "triangular fin system"),
+    (("form_geometry", "statement_form"), "gradient wall"),
 ]
 
 
@@ -54,6 +70,7 @@ def _clean_result() -> dict:
             "tile": [],
             "soft_fabric": [],
             "wall_finish": ["exposed brick"],
+            "other": [],
         },
         "form_geometry": {
             "primary_geometry": "rectilinear / grid",
@@ -127,8 +144,14 @@ class TestVocabularyStructure:
             "tile",
             "soft_fabric",
             "wall_finish",
+            "other",
         }
         assert set(VOCABULARY["material"].keys()) == expected
+
+    @pytest.mark.parametrize("cat_dim,term", VOICE_TRAINING_VOCAB)
+    def test_voice_training_vocab_terms_present(self, cat_dim, term):
+        cat, dim = cat_dim
+        assert term in VOCABULARY[cat][dim]
 
     def test_form_geometry_has_all_dimensions(self):
         expected = {
