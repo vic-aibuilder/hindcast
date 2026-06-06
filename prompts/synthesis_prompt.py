@@ -78,9 +78,9 @@ travertine, terrazzo, perforated steel.
 
 PATTERN FORMAT — EXACT
 Each pattern must follow this structure:
-  title         ALL CAPS. Names the move directly and specifically. \
-Examples: THE LIGHTBOX CEILING, THE STAINLESS STEEL FIXTURE DEFAULT, \
-THE EXPOSED BRICK CARRY-OVER, THE ARCHED NICHE, THE SOLE-OUT WALL.
+  title         Title Case (lowercase minor words like "the", "and", "with" unless first word). Names the move directly and specifically. \
+Examples: The Lightbox Ceiling, The Stainless Steel Fixture Default, \
+The Exposed Brick Carry-Over, The Arched Niche, The Sole-Out Wall.
   description   Exactly 3 sentences. First: name the spatial or material move and \
 where it clusters. Second: name the specific vocabulary terms driving it and how they \
 co-occur. Third (ALWAYS a data observation): state precisely what is rare, absent, or \

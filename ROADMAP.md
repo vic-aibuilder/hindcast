@@ -44,11 +44,12 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 ## Phase 2 — Slice 1 end-to-end (June 9–15)
 
 **Role 1 — Victor**
-- [ ] Brief submission UI (sub-slice selector + free-text input)
-- [ ] Agent visibility log component (streaming reasoning during load)
-- [ ] Output layout: brief summary + pattern blocks stacked
-- [ ] Per-pattern component: title, description, image grid (project + designer + year)
-- [ ] Are.na-referenced visual style: clean, minimal, image-forward
+- [x] Brief submission UI (sub-slice selector + free-text input)
+- [x] Agent visibility log component (streaming reasoning during load)
+- [x] Output layout: brief summary + pattern blocks stacked
+- [x] Per-pattern component: title, description, image grid (project + designer + year)
+- [x] Are.na-referenced visual style: clean, minimal, image-forward
+  - All five built against mock data; live pipeline swap is Phase 3. Visual style implemented directly from the approved wireframe mockup (`docs/wireframe.html`).
 
 **Role 2 — Gary**
 - [x] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
@@ -61,7 +62,7 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [x] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
 - [x] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
 - [x] Sneaker/streetwear reference patterns wired in
-- [ ] Manual end-to-end run: verify full pipeline produces valid output (`scripts/run_e2e.py` ready; pending successful live run with API key + corpus)
+- [ ] Manual end-to-end run: verify full pipeline produces valid output (`scripts/run_e2e.py` ready; live keys now configured — gated on seed corpus)
 - [x] Write tests for synthesizer output structure
 
 ---
