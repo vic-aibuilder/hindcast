@@ -138,7 +138,7 @@ def search(sub_slice: str, max_images: int = 20) -> list[dict]:
 
 
 if __name__ == "__main__":
-    # Smoke test — run directly to verify Are.na token
+    # Smoke test — run directly to verify Are.na retrieval (public channels, no token)
     print("Testing Are.na retrieval — sneaker/streetwear...")
     images = search("sneaker_streetwear", max_images=10)
     print(f"  Returned {len(images)} images")
