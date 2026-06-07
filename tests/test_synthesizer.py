@@ -561,3 +561,33 @@ class TestSynthesize:
         # all patterns must have image_count >= 0
         for p in result:
             assert p["image_count"] >= 0
+
+
+# ---------------------------------------------------------------------------
+# Synthesis prompt — voice training content
+# ---------------------------------------------------------------------------
+
+
+class TestSynthesisPromptVoiceTraining:
+    @pytest.fixture
+    def prompt(self):
+        from prompts.synthesis_prompt import SYSTEM_PROMPT
+
+        return SYSTEM_PROMPT
+
+    def test_voice_training_section_present(self, prompt):
+        assert "VOICE TRAINING — SNARKITECTURE PHAIDON MONOGRAPH" in prompt
+
+    @pytest.mark.parametrize(
+        "project",
+        [
+            "STAMPD:",
+            "KITH BROOKLYN:",
+            "KITH BLEECKER:",
+            "KITH MIAMI:",
+            "VEILANCE (ARC'TERYX SOHO):",
+            "VALEXTRA:",
+        ],
+    )
+    def test_phaidon_project_descriptions_present(self, prompt, project):
+        assert project in prompt
