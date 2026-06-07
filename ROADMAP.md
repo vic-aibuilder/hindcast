@@ -3,9 +3,28 @@
 > Feature-freeze / build-complete target: **June 18–19**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
 > Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
+> Last updated: **June 3, 2026**
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
+
+---
+
+## Current status
+
+**Phase 1 complete.** Phase 2 in progress — ahead of schedule on frontend (mock
+flow ships; live pipeline swap is Phase 3).
+
+**Critical path:** Gary's seed corpus slice 1 (~75 images) blocks everything
+downstream — Christian's batch extraction, the first live E2E run, Victor's
+frontend-to-pipeline connect, and demo pre-warming.
+
+| Layer | Status |
+|---|---|
+| Backend pipeline | Wired (`api.py` → `pipeline/run.py` → retrieval / extract / synthesize) |
+| Frontend | Full mock flow (brief → agent log → report); not yet calling `POST /query` |
+| Seed corpus | Not started — no curated image set in repo |
+| Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context already in code; needs corpus + verification |
 
 ---
 
@@ -19,7 +38,7 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ---
 
-## Phase 1 — Foundation (now → June 9)
+## Phase 1 — Foundation (complete)
 
 **Role 1 — Victor**
 - [x] Set up React project (Vite + TypeScript)
@@ -41,7 +60,7 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ---
 
-## Phase 2 — Slice 1 end-to-end (June 9–15)
+## Phase 2 — Slice 1 end-to-end (in progress · target June 15)
 
 **Role 1 — Victor**
 - [x] Brief submission UI (sub-slice selector + free-text input)
@@ -49,7 +68,8 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [x] Output layout: brief summary + pattern blocks stacked
 - [x] Per-pattern component: title, description, image grid (project + designer + year)
 - [x] Are.na-referenced visual style: clean, minimal, image-forward
-  - All five built against mock data; live pipeline swap is Phase 3. Visual style implemented directly from the approved wireframe mockup (`docs/wireframe.html`).
+  - All five built against mock data (PR #9). Live pipeline swap is Phase 3.
+    Visual style implemented from the approved wireframe (`docs/wireframe.html`).
 
 **Role 2 — Gary**
 - [x] Retrieval agent loop (max 4 iterations): observe → decide → act → repeat
@@ -62,7 +82,8 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 - [x] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
 - [x] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
 - [x] Sneaker/streetwear reference patterns wired in
-- [ ] Manual end-to-end run: verify full pipeline produces valid output (`scripts/run_e2e.py` ready; live keys now configured — gated on seed corpus)
+- [ ] Manual end-to-end run: verify full pipeline produces valid output
+  - `scripts/run_e2e.py` ready; live keys configured — **blocked on seed corpus**
 - [x] Write tests for synthesizer output structure
 
 ---
@@ -70,21 +91,21 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 ## Phase 3 — Integration + slice 2 (June 15–18)
 
 **Role 1 — Victor**
-- [ ] Connect frontend to live pipeline (brief → results)
-- [ ] Loading state with agent log visible
+- [ ] Connect frontend to live pipeline (`POST /query` at `localhost:8000`)
+- [ ] Wire agent log to live retrieval reasoning log (`retrieval_log` in `/query` response; mock UI exists)
 - [ ] Polish: typography, spacing, image attribution display
 - [ ] Cross-browser / responsive check
-- [ ] Slice 2 UI: swap sub-slice selector label only (no layout changes)
+- [x] Slice 2 UI: sub-slice selector (shipped early in Phase 2; mock results don't vary by slice yet)
 
 **Role 2 — Gary**
 - [ ] Seed corpus slice 2: ~75 contemporary fashion images, hand-curated
-- [ ] Swap publication list for slice 2 (Dezeen, Frame, Wallpaper, Sight Unseen)
-- [ ] Verify caching works across both slices
+- [x] Publication list for slice 2 (Dezeen, Frame, Wallpaper, Sight Unseen) — wired in `retrieval/tavily.py`
+- [ ] Verify caching works across both slices (keying exists; needs live runs with corpus)
 
 **Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over slice 2 seed images
-- [ ] Swap schema to contemporary fashion dimensions
-- [ ] Update synthesis prompt with slice 2 reference patterns
+- [ ] Swap schema to contemporary fashion dimensions (shared v2.5 vocab today; slice-specific dims TBD)
+- [ ] Update synthesis prompt with slice 2 reference patterns (sub-slice context block exists in `src/synthesizer.py`; dedicated calibration reference still needed)
 - [ ] End-to-end test query for slice 2
 
 > **Risk framing:** if timeline pressure hits, sneaker/streetwear (slice 1) is the

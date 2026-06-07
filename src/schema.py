@@ -1,5 +1,5 @@
 """
-Hindcast controlled vocabulary — Schema v2.4.
+Hindcast controlled vocabulary — Schema v2.5.
 
 Single source of truth for the per-image schema dimensions and allowed values.
 Importable by the extractor, synthesizer, retrieval pipeline, and tests.
