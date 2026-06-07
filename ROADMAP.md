@@ -92,7 +92,7 @@ frontend-to-pipeline connect, and demo pre-warming.
 
 **Role 1 — Victor**
 - [ ] Connect frontend to live pipeline (`POST /query` at `localhost:8000`)
-- [ ] Wire agent log to live retrieval reasoning stream (mock UI exists)
+- [ ] Wire agent log to live retrieval reasoning log (`retrieval_log` in `/query` response; mock UI exists)
 - [ ] Polish: typography, spacing, image attribution display
 - [ ] Cross-browser / responsive check
 - [x] Slice 2 UI: sub-slice selector (shipped early in Phase 2; mock results don't vary by slice yet)
@@ -104,7 +104,7 @@ frontend-to-pipeline connect, and demo pre-warming.
 
 **Role 3 — Christian**
 - [ ] Seed corpus extraction: run extractor over slice 2 seed images
-- [ ] Swap schema to contemporary fashion dimensions (shared v2.4 vocab today; slice-specific dims TBD)
+- [ ] Swap schema to contemporary fashion dimensions (shared v2.5 vocab today; slice-specific dims TBD)
 - [ ] Update synthesis prompt with slice 2 reference patterns (sub-slice context block exists in `src/synthesizer.py`; dedicated calibration reference still needed)
 - [ ] End-to-end test query for slice 2
 
