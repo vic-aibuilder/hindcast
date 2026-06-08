@@ -67,6 +67,11 @@ _RARE_PCT = 0.10
 # Minimum fraction of dominant_terms an image must match to count for a pattern
 _PATTERN_MATCH_THRESHOLD = 0.5
 
+# Title Case minor words — per PRD / Alex direction (not ALL CAPS)
+_TITLE_MINOR_WORDS: frozenset[str] = frozenset(
+    {"a", "an", "the", "and", "or", "with", "in", "on", "of", "as", "for", "to"}
+)
+
 # ---------------------------------------------------------------------------
 # Tool definition
 # ---------------------------------------------------------------------------
@@ -100,8 +105,9 @@ _SYNTHESIS_TOOL: dict[str, Any] = {
                         "title": {
                             "type": "string",
                             "description": (
-                                "Pattern name in ALL CAPS — names the move directly. "
-                                "Example: THE LIGHTBOX CEILING"
+                                "Pattern name in Title Case — names the move directly. "
+                                "Lowercase minor words (the, and, with) unless first word. "
+                                "Example: The Lightbox Ceiling"
                             ),
                         },
                         "description": {
@@ -241,6 +247,24 @@ def _format_aggregation(agg: dict[str, Any]) -> str:
 # ---------------------------------------------------------------------------
 # Image-count grounding
 # ---------------------------------------------------------------------------
+
+
+def _normalize_pattern_title(title: str) -> str:
+    """Ensure Title Case output per PRD — corrects ALL CAPS if the model drifts."""
+    title = title.strip()
+    if not title:
+        return title
+    words = title.split()
+    normalized: list[str] = []
+    for i, word in enumerate(words):
+        core = word.lower()
+        if i > 0 and core in _TITLE_MINOR_WORDS:
+            normalized.append(core)
+        elif word.isupper():
+            normalized.append(word.capitalize())
+        else:
+            normalized.append(word)
+    return " ".join(normalized)
 
 
 def _count_images_for_pattern(
@@ -395,7 +419,7 @@ def synthesize(
         computed_count = _count_images_for_pattern(extractions, dominant_terms)
         patterns.append(
             SaturationPattern(
-                title=p.get("title", ""),
+                title=_normalize_pattern_title(p.get("title", "")),
                 description=p.get("description", ""),
                 dominant_terms=dominant_terms,
                 # prefer computed count; fall back to Claude's estimate if computation is 0
