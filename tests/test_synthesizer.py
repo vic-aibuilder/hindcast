@@ -380,11 +380,9 @@ class TestSynthesisToolSchema:
         assert item["properties"]["title"]["type"] == "string"
 
     def test_title_tool_description_requires_title_case(self):
-        desc = (
-            _SYNTHESIS_TOOL["input_schema"]["properties"]["patterns"]["items"][
-                "properties"
-            ]["title"]["description"]
-        )
+        desc = _SYNTHESIS_TOOL["input_schema"]["properties"]["patterns"]["items"][
+            "properties"
+        ]["title"]["description"]
         assert "Title Case" in desc
         assert "ALL CAPS" not in desc
 
@@ -504,7 +502,10 @@ class TestSynthesize:
 
     def test_all_caps_model_output_normalized(self):
         caps_patterns = [
-            {**self._MOCK_PATTERNS[0], "title": "THE OVERHEAD TRACK SPOT AS ONLY LIGHT SOURCE"},
+            {
+                **self._MOCK_PATTERNS[0],
+                "title": "THE OVERHEAD TRACK SPOT AS ONLY LIGHT SOURCE",
+            },
             *self._MOCK_PATTERNS[1:],
         ]
         client = _mock_client(caps_patterns)
