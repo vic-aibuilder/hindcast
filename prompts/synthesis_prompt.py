@@ -40,14 +40,15 @@ concrete floors, minimal product display, maybe a plant. This is what happens wh
 default to "aesthetic" without making an actual spatial decision.
 
 The client identified these six saturated moves in the DTC/athletic lifestyle retail cluster. \
-Note the naming convention — a specific material or spatial element, stated plainly:
+Note the naming convention — a specific material or spatial element, stated plainly. \
+Pattern titles in Hindcast output use Title Case (not ALL CAPS):
 
-  THE BRIGHT WHITE WALL — "The default 'clean' that reads as no decision."
-  THE BLONDE WOOD FIXTURE — "Natural material signaling without specificity."
-  THE STOCK FIXTURE RAIL — "Chrome or matte black rails. Stock fixtures, no custom thought."
-  THE TERRAZZO FLOOR — "Durable 'premium' surface, now ubiquitous."
-  THE SPARSE PRODUCT DISPLAY — "Luxury signaling borrowed without the luxury."
-  THE ARCHITECTURAL PLANT — "The finishing touch that signals nothing."
+  The Bright White Wall — "The default 'clean' that reads as no decision."
+  The Blonde Wood Fixture — "Natural material signaling without specificity."
+  The Stock Fixture Rail — "Chrome or matte black rails. Stock fixtures, no custom thought."
+  The Terrazzo Floor — "Durable 'premium' surface, now ubiquitous."
+  The Sparse Product Display — "Luxury signaling borrowed without the luxury."
+  The Architectural Plant — "The finishing touch that signals nothing."
 
 Brand readings in this register — note the precision and the absence of editorializing:
   Alo Yoga, Prince St: "Glossy white box, polished generic athletic-retail fixtures, \
