@@ -10,6 +10,7 @@ Victor's frontend calls POST /query → api.py → run_query() here.
 from __future__ import annotations
 
 import os
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from anthropic import Anthropic
@@ -60,6 +61,15 @@ def _get_all_extractions(sub_slice: str) -> list[dict]:
             if schema:
                 extractions.append(schema)
     return extractions
+
+
+def _source_breakdown(images: list[dict]) -> dict[str, int]:
+    """Count retrieved images by publication domain for UI/debug."""
+    counts: Counter[str] = Counter()
+    for img in images:
+        src = img.get("source") or "unknown"
+        counts[src] += 1
+    return dict(counts.most_common())
 
 
 # ── Main pipeline ─────────────────────────────────────────────────────────────
@@ -186,8 +196,14 @@ def run_query(brief: str, sub_slice: str) -> dict:
     )
     retrieval_log.append(f"synthesis complete — {len(patterns)} patterns generated.")
 
+    source_breakdown = _source_breakdown(images)
+
     # ── Step 8: Assemble result ───────────────────────────────────────────────
     all_corpus_images = get_images_by_sub_slice(sub_slice, limit=500)
+
+    if source_breakdown:
+        breakdown = ", ".join(f"{k}: {v}" for k, v in source_breakdown.items())
+        retrieval_log.append(f"publication mix this query — {breakdown}")
 
     return {
         "brief": brief,
@@ -197,6 +213,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
         "corpus_size": len(all_corpus_images),
         "patterns": patterns,
         "retrieval_log": retrieval_log,
+        "source_breakdown": source_breakdown,
     }
 
 

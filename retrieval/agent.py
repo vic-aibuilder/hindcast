@@ -13,10 +13,12 @@ from __future__ import annotations
 
 import json
 import os
+from collections import Counter
+
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
-from retrieval.tavily import search as tavily_search
+from retrieval.tavily import search as tavily_search, PUBLICATION_LABELS
 from retrieval.arena import search as arena_search
 
 load_dotenv()
@@ -100,14 +102,18 @@ def _system_prompt(sub_slice: str) -> str:
         else "contemporary fashion retail (elevated/designer end — The Row, "
         "Toteme, Khaite, Acne; warm-minimal / quiet luxury)"
     )
+    pubs = ", ".join(PUBLICATION_LABELS.get(sub_slice, []))
     return f"""You are the retrieval agent for Hindcast, an internal tool for
 Snarkitecture that maps visual saturation in retail design.
 
 Your job is to build a representative corpus of images for a design brief
 focused on {slice_label} in New York City (all five boroughs), 2025–present.
 
+PUBLICATION SCOPE (hard limit — Tavily is scoped to these only):
+{pubs}
+
 You have two tools:
-- tavily_search: searches curated design publications. Your primary workhorse.
+- tavily_search: searches the publication list above. Your primary workhorse.
 - arena_search: searches Are.na for human-curated imagery. Use once as a supplement.
 
 LOOP BEHAVIOR:
@@ -174,6 +180,9 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
             f"tavily_search('{tool_input['query']}') → "
             f"{len(results)} results, {len(images)} images"
         )
+        if results:
+            domains = Counter(r["source"] for r in results)
+            log += f" [sources: {', '.join(f'{d}({n})' for d, n in domains.most_common())}]"
         return log, images
 
     elif tool_name == "arena_search":

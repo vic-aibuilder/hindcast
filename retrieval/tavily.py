@@ -11,13 +11,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Publication domains per sub-slice — do not search the open web
+# Publication domains per sub-slice — locked in PRD.md Source list
+# Do not search the open web
 DOMAINS = {
     "sneaker_streetwear": [
         "hypebeast.com",
         "highsnobiety.com",
         "dezeen.com",
-        "frame-web.com",
         "sneakerfreaker.com",
     ],
     "contemporary_fashion": [
@@ -25,7 +25,22 @@ DOMAINS = {
         "frame-web.com",
         "wallpaper.com",
         "sightunseen.com",
-        "archdaily.com",
+    ],
+}
+
+# Human-readable labels for agent prompt + UI
+PUBLICATION_LABELS: dict[str, list[str]] = {
+    "sneaker_streetwear": [
+        "Hypebeast",
+        "Highsnobiety",
+        "Dezeen",
+        "Sneaker Freaker",
+    ],
+    "contemporary_fashion": [
+        "Dezeen",
+        "Frame",
+        "Wallpaper",
+        "Sight Unseen",
     ],
 }
 
