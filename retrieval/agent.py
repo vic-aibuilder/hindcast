@@ -13,10 +13,14 @@ from __future__ import annotations
 
 import json
 import os
+from collections import Counter, defaultdict
+from itertools import zip_longest
+from urllib.parse import urlsplit, urlunsplit
+
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
-from retrieval.tavily import search as tavily_search
+from retrieval.tavily import search as tavily_search, PUBLICATION_LABELS
 from retrieval.arena import search as arena_search
 
 load_dotenv()
@@ -24,6 +28,62 @@ load_dotenv()
 
 MODEL = "claude-sonnet-4-6"
 MAX_ITERATIONS = 4
+
+# Cap on images kept from any single source page. Listicle/slideshow pages can
+# return ~100 image URLs each, which flood the corpus and the UI with shots from
+# one article. Capping keeps the corpus diverse across pages.
+MAX_IMAGES_PER_SOURCE = 6
+
+
+def _normalize_image_url(url: str) -> str:
+    """Return a dedup key for an image URL by dropping the query string.
+
+    Image CDNs serve one asset at many sizes via query params
+    (e.g. .../foo.jpg?w=1080 vs ?w=960) — same picture, different URL.
+    Stripping the query collapses those variants; the path (which carries
+    the asset identity, e.g. foo-tw.jpg vs foo-000.jpg) is preserved.
+    """
+    try:
+        parts = urlsplit(url)
+        return urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
+    except ValueError:
+        return url
+
+
+def _consolidate_images(all_images: list[dict]) -> list[dict]:
+    """Dedupe, cap per source page, and interleave a raw image list.
+
+    1. Dedupe by normalized URL — CDN endpoints serve one asset at many sizes
+       (e.g. .../foo.jpg?w=1080 vs ?w=960): distinct URLs, identical pictures.
+    2. Cap images per source page (MAX_IMAGES_PER_SOURCE) so a single listicle
+       can't flood the corpus.
+    3. Interleave by source page (round-robin) so consecutive images come from
+       different articles — keeps the UI's first screen and the extraction
+       sample varied instead of showing runs from one page.
+    """
+    seen: set[str] = set()
+    per_source: Counter[str] = Counter()
+    kept: list[dict] = []
+    for img in all_images:
+        url = img.get("image_url", "")
+        if not url:
+            continue
+        key = _normalize_image_url(url)
+        if key in seen:
+            continue
+        source_page = img.get("source_url", "") or key
+        if per_source[source_page] >= MAX_IMAGES_PER_SOURCE:
+            continue
+        seen.add(key)
+        per_source[source_page] += 1
+        kept.append(img)
+
+    groups: dict[str, list[dict]] = defaultdict(list)
+    for img in kept:
+        groups[img.get("source_url") or img.get("image_url", "")].append(img)
+    return [
+        img for row in zip_longest(*groups.values()) for img in row if img is not None
+    ]
 
 
 # ── Tool definitions exposed to the agent ────────────────────────────────────
@@ -100,14 +160,18 @@ def _system_prompt(sub_slice: str) -> str:
         else "contemporary fashion retail (elevated/designer end — The Row, "
         "Toteme, Khaite, Acne; warm-minimal / quiet luxury)"
     )
+    pubs = ", ".join(PUBLICATION_LABELS.get(sub_slice, []))
     return f"""You are the retrieval agent for Hindcast, an internal tool for
 Snarkitecture that maps visual saturation in retail design.
 
 Your job is to build a representative corpus of images for a design brief
 focused on {slice_label} in New York City (all five boroughs), 2025–present.
 
+PUBLICATION SCOPE (hard limit — Tavily is scoped to these only):
+{pubs}
+
 You have two tools:
-- tavily_search: searches curated design publications. Your primary workhorse.
+- tavily_search: searches the publication list above. Your primary workhorse.
 - arena_search: searches Are.na for human-curated imagery. Use once as a supplement.
 
 LOOP BEHAVIOR:
@@ -174,6 +238,9 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
             f"tavily_search('{tool_input['query']}') → "
             f"{len(results)} results, {len(images)} images"
         )
+        if results:
+            domains = Counter(r["source"] for r in results)
+            log += f" [sources: {', '.join(f'{d}({n})' for d, n in domains.most_common())}]"
         return log, images
 
     elif tool_name == "arena_search":
@@ -302,14 +369,7 @@ def run(brief: str, sub_slice: str, client: Anthropic | None = None) -> dict:
             )
             break
 
-    # Deduplicate images by URL
-    seen = set()
-    unique_images = []
-    for img in all_images:
-        url = img.get("image_url", "")
-        if url and url not in seen:
-            seen.add(url)
-            unique_images.append(img)
+    unique_images = _consolidate_images(all_images)
 
     reasoning_log.append(
         f"Retrieval complete: {len(unique_images)} unique images "

@@ -40,14 +40,15 @@ concrete floors, minimal product display, maybe a plant. This is what happens wh
 default to "aesthetic" without making an actual spatial decision.
 
 The client identified these six saturated moves in the DTC/athletic lifestyle retail cluster. \
-Note the naming convention — a specific material or spatial element, stated plainly:
+Note the naming convention — a specific material or spatial element, stated plainly. \
+Pattern titles in Hindcast output use Title Case (not ALL CAPS):
 
-  THE BRIGHT WHITE WALL — "The default 'clean' that reads as no decision."
-  THE BLONDE WOOD FIXTURE — "Natural material signaling without specificity."
-  THE STOCK FIXTURE RAIL — "Chrome or matte black rails. Stock fixtures, no custom thought."
-  THE TERRAZZO FLOOR — "Durable 'premium' surface, now ubiquitous."
-  THE SPARSE PRODUCT DISPLAY — "Luxury signaling borrowed without the luxury."
-  THE ARCHITECTURAL PLANT — "The finishing touch that signals nothing."
+  The Bright White Wall — "The default 'clean' that reads as no decision."
+  The Blonde Wood Fixture — "Natural material signaling without specificity."
+  The Stock Fixture Rail — "Chrome or matte black rails. Stock fixtures, no custom thought."
+  The Terrazzo Floor — "Durable 'premium' surface, now ubiquitous."
+  The Sparse Product Display — "Luxury signaling borrowed without the luxury."
+  The Architectural Plant — "The finishing touch that signals nothing."
 
 Brand readings in this register — note the precision and the absence of editorializing:
   Alo Yoga, Prince St: "Glossy white box, polished generic athletic-retail fixtures, \
@@ -61,6 +62,52 @@ The underlying principle — the Seagram Building logic: contrast with context i
 contrarianism, it's how you make something worth remembering. When every brand in a \
 category shares the same spatial language, the result is visual white noise. Hindcast \
 surfaces this before the designer starts work.
+
+VOICE TRAINING — SNARKITECTURE PHAIDON MONOGRAPH (PRIMARY VOICE SOURCE)
+The following retail project descriptions are from the Snarkitecture Phaidon monograph. \
+Use them as additional calibration examples — materially specific, spatially precise, \
+no editorializing. This is the primary voice source for synthesis output.
+
+STAMPD: The first bricks and mortar store for minimal streetwear brand Stampd is located \
+in a skylit second floor space. The showroom floor is laid with raw, honed, unfilled \
+silver travertine. Whitewashed brick walls contrast with white oak wood display niches, \
+while custom fixtures made from blackened steel and white oak appear slightly off balance \
+but are leveled using thin shims made of travertine.
+
+KITH BROOKLYN: Kith's Brooklyn flagship store invites visitors through a series of \
+experiences, beginning with the storefront display window. Visitors then enter the Archive \
+Room, a tile-clad pavilion which acts as a threshold to the entrance of the main part of \
+the store. The visitor experience culminates in the central sales area, where an extended \
+corridor has been created using floor-to-ceiling, stainless-steel-and-glass shoe displays. \
+Overhead is a custom installation of 650 white, cast replica Air Jordan 2 sneakers using \
+forced perspective to make the space appear larger than it is.
+
+KITH BLEECKER: Snarkitecture's design introduces a new entry sequence that provides an \
+antechamber as a transitional moment from exterior to interior. Overhead, 500 all-white \
+cast replicas of the original 1985 Air Jordan 1 sneakers are arranged in an offset grid \
+to create a vaulted arch that caps the space. The main wall culminates in a double-height \
+wall made from 15,000 custom Kith pencils in a white to black gradient.
+
+KITH MIAMI: The backdrop of the storefront is a structure comprised of fifty triangular \
+fins that form the shoe display. A series of mirror-lined niches filled with mannequins \
+flank each aisle. A custom blue and white terrazzo surface creates a floor-to-ceiling \
+gradient in the entryway. White powder-coated steel and bleached white oak is used for a \
+series of archways in the women's section, creating hidden alcoves; the arches decrease \
+in size, creating a forced perspective and heightened sense of discovery.
+
+VEILANCE (ARC'TERYX SOHO): This semi-permanent concept store is organized into three \
+areas, each designated by a V-shaped freestanding panel. The front of each panel is made \
+from hand-carved expanded polystyrene, creating an excavated surface reminiscent of \
+natural terrain. The opposite surface is faced in dark mirrored-glass. The interplay \
+between the rough texture of the panel surfaces and the clean lines of the glass echoes \
+the origins of the brand.
+
+VALEXTRA: The concept is inspired by the simple structural order of scaffolding — \
+temporary frameworks rather than complex modules — that divide the store into three main \
+bays, each with a white billowing mesh suspended from above. Visitors are enveloped by \
+a singular white surface, blurring the boundaries of walls and ceiling. In addition to \
+the white mesh, padded foam, textured carpet and soft upholstery form the white displays. \
+The Ceppo di Gré stone floor links the entire space.
 
 VOICE RULES — NON-NEGOTIABLE
 - Dry, factual, measured. Not warm, not promotional.
@@ -78,9 +125,9 @@ travertine, terrazzo, perforated steel.
 
 PATTERN FORMAT — EXACT
 Each pattern must follow this structure:
-  title         ALL CAPS. Names the move directly and specifically. \
-Examples: THE LIGHTBOX CEILING, THE STAINLESS STEEL FIXTURE DEFAULT, \
-THE EXPOSED BRICK CARRY-OVER, THE ARCHED NICHE, THE SOLE-OUT WALL.
+  title         Title Case (lowercase minor words like "the", "and", "with" unless first word). Names the move directly and specifically. \
+Examples: The Lightbox Ceiling, The Stainless Steel Fixture Default, \
+The Exposed Brick Carry-Over, The Arched Niche, The Sole-Out Wall.
   description   Exactly 3 sentences. First: name the spatial or material move and \
 where it clusters. Second: name the specific vocabulary terms driving it and how they \
 co-occur. Third (ALWAYS a data observation): state precisely what is rare, absent, or \

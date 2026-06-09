@@ -10,6 +10,9 @@ Victor's frontend calls POST /query → api.py → run_query() here.
 from __future__ import annotations
 
 import os
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
@@ -32,6 +35,13 @@ load_dotenv()
 CACHE_MIN_IMAGES = 30
 MAX_EXTRACTION_BATCH = 40
 
+# Concurrency for the schema-extraction step. Each unit is one Claude vision
+# call; we fan these out because they dominate query latency. Kept modest to
+# stay under API rate limits — override with HINDCAST_EXTRACTION_WORKERS.
+# NOTE: only the vision calls run in parallel; SQLite writes (save_extraction)
+# stay on the main thread because WAL still allows only one writer at a time.
+EXTRACTION_WORKERS = int(os.environ.get("HINDCAST_EXTRACTION_WORKERS", "8"))
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -51,6 +61,15 @@ def _get_all_extractions(sub_slice: str) -> list[dict]:
             if schema:
                 extractions.append(schema)
     return extractions
+
+
+def _source_breakdown(images: list[dict]) -> dict[str, int]:
+    """Count retrieved images by publication domain for UI/debug."""
+    counts: Counter[str] = Counter()
+    for img in images:
+        src = img.get("source") or "unknown"
+        counts[src] += 1
+    return dict(counts.most_common())
 
 
 # ── Main pipeline ─────────────────────────────────────────────────────────────
@@ -112,31 +131,43 @@ def run_query(brief: str, sub_slice: str) -> dict:
                 img["id"] = saved_ids[i]
 
         # ── Step 4: Schema extraction (Chris's hardened extractor) ────────────
-        retrieval_log.append(
-            f"extracting schema from up to {MAX_EXTRACTION_BATCH} images..."
-        )
         images_with_ids = [img for img in images if img.get("id")][
             :MAX_EXTRACTION_BATCH
         ]
 
+        # Candidates = have an id + url and aren't already extracted. The
+        # image_has_extraction() reads are cheap and stay sequential here.
+        candidates = [
+            (img["id"], img.get("image_url", ""))
+            for img in images_with_ids
+            if img.get("id")
+            and img.get("image_url")
+            and not image_has_extraction(img["id"])
+        ]
+        retrieval_log.append(
+            f"extracting schema from {len(candidates)} images "
+            f"({EXTRACTION_WORKERS}-way parallel)..."
+        )
+
+        # Fan out the slow Claude vision calls; collect results as they finish
+        # and write to SQLite on this (main) thread only — WAL is single-writer,
+        # so concurrent save_extraction() calls would hit "database is locked".
         extracted_count = 0
-        for img in images_with_ids:
-            image_id = img.get("id")
-            image_url = img.get("image_url", "")
-
-            if not image_id or not image_url:
-                continue
-            if image_has_extraction(image_id):
-                continue
-
-            try:
-                schema = extract(image_url, client=client)
+        with ThreadPoolExecutor(max_workers=EXTRACTION_WORKERS) as pool:
+            future_to_img = {
+                pool.submit(extract, url, client=client): (image_id, url)
+                for image_id, url in candidates
+            }
+            for future in as_completed(future_to_img):
+                image_id, image_url = future_to_img[future]
+                try:
+                    schema = future.result()
+                except Exception as e:
+                    retrieval_log.append(f"  skipped {image_url[:50]}... ({e})")
+                    continue
                 if schema:
                     save_extraction(image_id, schema, sub_slice)
                     extracted_count += 1
-            except Exception as e:
-                retrieval_log.append(f"  skipped {image_url[:50]}... ({e})")
-                continue
 
         retrieval_log.append(
             f"extraction complete — {extracted_count} new images extracted."
@@ -165,8 +196,14 @@ def run_query(brief: str, sub_slice: str) -> dict:
     )
     retrieval_log.append(f"synthesis complete — {len(patterns)} patterns generated.")
 
+    source_breakdown = _source_breakdown(images)
+
     # ── Step 8: Assemble result ───────────────────────────────────────────────
     all_corpus_images = get_images_by_sub_slice(sub_slice, limit=500)
+
+    if source_breakdown:
+        breakdown = ", ".join(f"{k}: {v}" for k, v in source_breakdown.items())
+        retrieval_log.append(f"publication mix this query — {breakdown}")
 
     return {
         "brief": brief,
@@ -176,6 +213,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
         "corpus_size": len(all_corpus_images),
         "patterns": patterns,
         "retrieval_log": retrieval_log,
+        "source_breakdown": source_breakdown,
     }
 
 

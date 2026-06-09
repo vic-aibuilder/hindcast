@@ -23,6 +23,7 @@ from src.synthesizer import (
     _aggregate,
     _count_images_for_pattern,
     _format_aggregation,
+    _normalize_pattern_title,
     synthesize,
 )
 
@@ -378,6 +379,13 @@ class TestSynthesisToolSchema:
         item = _SYNTHESIS_TOOL["input_schema"]["properties"]["patterns"]["items"]
         assert item["properties"]["title"]["type"] == "string"
 
+    def test_title_tool_description_requires_title_case(self):
+        desc = _SYNTHESIS_TOOL["input_schema"]["properties"]["patterns"]["items"][
+            "properties"
+        ]["title"]["description"]
+        assert "Title Case" in desc
+        assert "ALL CAPS" not in desc
+
     def test_dominant_terms_is_array_of_strings(self):
         item = _SYNTHESIS_TOOL["input_schema"]["properties"]["patterns"]["items"]
         dt = item["properties"]["dominant_terms"]
@@ -397,6 +405,24 @@ class TestSynthesisToolSchema:
 
 
 # ---------------------------------------------------------------------------
+# Title normalization — Alex / PRD: Title Case, not ALL CAPS
+# ---------------------------------------------------------------------------
+
+
+class TestNormalizePatternTitle:
+    @pytest.mark.parametrize(
+        "raw,expected",
+        [
+            ("THE COOL GREY CONCRETE DEFAULT", "The Cool Grey Concrete Default"),
+            ("The Lightbox Ceiling", "The Lightbox Ceiling"),
+            ("THE PLINTH AS ONLY STATEMENT FORM", "The Plinth as Only Statement Form"),
+        ],
+    )
+    def test_all_caps_normalized_to_title_case(self, raw, expected):
+        assert _normalize_pattern_title(raw) == expected
+
+
+# ---------------------------------------------------------------------------
 # synthesize() — mocked client
 # ---------------------------------------------------------------------------
 
@@ -404,7 +430,7 @@ class TestSynthesisToolSchema:
 class TestSynthesize:
     _MOCK_PATTERNS = [
         {
-            "title": "THE STAINLESS STEEL FIXTURE DEFAULT",
+            "title": "The Stainless Steel Fixture Default",
             "description": (
                 "Stainless steel dominates retail fixture systems across the corpus. "
                 "The term co-occurs with overhead track spot lighting and polished concrete floors in 87% of images. "
@@ -418,7 +444,7 @@ class TestSynthesize:
             "image_count": 17,
         },
         {
-            "title": "THE LIGHTBOX CEILING",
+            "title": "The Lightbox Ceiling",
             "description": (
                 "Lightbox ceiling panels function as the primary lighting strategy in this corpus. "
                 "The term clusters with flat / even drama and concealed visibility, producing a uniform wash with no directional modeling. "
@@ -428,7 +454,7 @@ class TestSynthesize:
             "image_count": 14,
         },
         {
-            "title": "THE RECTILINEAR GRID AS DEFAULT GEOMETRY",
+            "title": "The Rectilinear Grid as Default Geometry",
             "description": (
                 "Rectilinear / grid is the primary geometry in the near-total corpus. "
                 "Strong grid presence and rectangular basic shape reinforce the logic at every spatial scale. "
@@ -438,7 +464,7 @@ class TestSynthesize:
             "image_count": 10,
         },
         {
-            "title": "THE COOL AUSTERE REGISTER",
+            "title": "The Cool Austere Register",
             "description": (
                 "Cool / austere / clinical warmth reading appears in the majority of images. "
                 "The cluster includes cool color temperature, grey or white dominant hue, and laboratory spatial reference. "
@@ -473,6 +499,18 @@ class TestSynthesize:
             assert "description" in p
             assert "dominant_terms" in p
             assert "image_count" in p
+
+    def test_all_caps_model_output_normalized(self):
+        caps_patterns = [
+            {
+                **self._MOCK_PATTERNS[0],
+                "title": "THE OVERHEAD TRACK SPOT AS ONLY LIGHT SOURCE",
+            },
+            *self._MOCK_PATTERNS[1:],
+        ]
+        client = _mock_client(caps_patterns)
+        result = synthesize(_corpus(20), "test", "sneaker_streetwear", client=client)
+        assert result[0]["title"] == "The Overhead Track Spot as Only Light Source"
 
     def test_image_count_is_computed_not_claude_estimate(self):
         # corpus: all 20 images have stainless steel
@@ -561,3 +599,33 @@ class TestSynthesize:
         # all patterns must have image_count >= 0
         for p in result:
             assert p["image_count"] >= 0
+
+
+# ---------------------------------------------------------------------------
+# Synthesis prompt — voice training content
+# ---------------------------------------------------------------------------
+
+
+class TestSynthesisPromptVoiceTraining:
+    @pytest.fixture
+    def prompt(self):
+        from prompts.synthesis_prompt import SYSTEM_PROMPT
+
+        return SYSTEM_PROMPT
+
+    def test_voice_training_section_present(self, prompt):
+        assert "VOICE TRAINING — SNARKITECTURE PHAIDON MONOGRAPH" in prompt
+
+    @pytest.mark.parametrize(
+        "project",
+        [
+            "STAMPD:",
+            "KITH BROOKLYN:",
+            "KITH BLEECKER:",
+            "KITH MIAMI:",
+            "VEILANCE (ARC'TERYX SOHO):",
+            "VALEXTRA:",
+        ],
+    )
+    def test_phaidon_project_descriptions_present(self, prompt, project):
+        assert project in prompt

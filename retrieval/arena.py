@@ -4,11 +4,7 @@ Secondary retrieval source — adds human-curated taste signal
 that algorithmic search lacks.
 """
 
-import os
 import httpx
-from dotenv import load_dotenv
-
-load_dotenv()
 
 ARENA_BASE_URL = "https://api.are.na/v2"
 
@@ -120,6 +116,9 @@ def search(sub_slice: str, max_images: int = 20) -> list[dict]:
             if len(all_images) >= max_images:
                 break
 
+            if channel.get("status") != "open":
+                continue
+
             slug = channel.get("slug", "")
             if not slug:
                 continue
@@ -139,7 +138,7 @@ def search(sub_slice: str, max_images: int = 20) -> list[dict]:
 
 
 if __name__ == "__main__":
-    # Smoke test — run directly to verify Are.na token
+    # Smoke test — run directly to verify Are.na retrieval (public channels, no token)
     print("Testing Are.na retrieval — sneaker/streetwear...")
     images = search("sneaker_streetwear", max_images=10)
     print(f"  Returned {len(images)} images")
