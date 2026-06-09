@@ -24,8 +24,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Database lives at the project root
-DB_PATH = Path(os.getenv("DB_PATH", "hindcast.db"))
+
+# Database lives at the project root by default. Resolve the path at call time
+# (not import time) so DB_PATH can be overridden at runtime — e.g. tests that
+# point at a temp DB via monkeypatch.setenv("DB_PATH", ...).
+def _db_path() -> Path:
+    return Path(os.getenv("DB_PATH", "hindcast.db"))
 
 
 # ── Connection ────────────────────────────────────────────────────────────────
@@ -33,7 +37,7 @@ DB_PATH = Path(os.getenv("DB_PATH", "hindcast.db"))
 
 def get_connection() -> sqlite3.Connection:
     """Return a database connection with row factory set."""
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(_db_path())
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")  # better concurrent read performance
     return conn
@@ -390,7 +394,7 @@ def corpus_stats() -> dict:
         "by_slice": {row["sub_slice"]: row["count"] for row in by_slice},
         "total_extractions": total_extractions,
         "cached_briefs": cached_briefs,
-        "db_path": str(DB_PATH),
+        "db_path": str(_db_path()),
     }
 
 
