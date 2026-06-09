@@ -1,3 +1,14 @@
+from __future__ import annotations
+
+from pipeline.storage import (
+    init_db,
+    save_images,
+    save_extraction,
+    hash_brief,
+    image_has_extraction,
+)
+from src.extractor import extract
+
 SEED_IMAGES_FASHION: list[dict] = [
     {
         "image_url": "https://static.dezeen.com/uploads/2026/05/issey-miyake-store-nomad_so-il_dezeen_hero1.jpg",
@@ -891,3 +902,81 @@ SEED_IMAGES_SNEAKER: list[dict] = [
         "source": "wwd.com",
     },
 ]
+
+
+SEED_BRIEF = "__seed_corpus__"
+
+
+def load_slice(images: list[dict], sub_slice: str) -> None:
+    if not images:
+        print(f"  No seed images defined for {sub_slice} — skipping.")
+        return
+
+    print(f"\nLoading seed corpus: {sub_slice}")
+    print(f"  {len(images)} images to process...")
+
+    brief_hash = hash_brief(SEED_BRIEF, sub_slice)
+    saved_ids = save_images(images, sub_slice, brief_hash)
+    print(f"  Saved {len(saved_ids)} new images to database.")
+
+    # Look up IDs for images already in the database
+    from pipeline.storage import get_connection
+
+    conn = get_connection()
+    for img in images:
+        if img.get("id"):
+            continue
+        row = conn.execute(
+            "SELECT id FROM images WHERE image_url = ?",
+            (img.get("image_url", ""),),
+        ).fetchone()
+        if row:
+            img["id"] = row["id"]
+    conn.close()
+
+    extracted = 0
+    skipped = 0
+    failed = 0
+
+    for img in images:
+        image_id = img.get("id")
+        image_url = img.get("image_url", "")
+
+        if not image_id or not image_url:
+            continue
+
+        if image_has_extraction(image_id):
+            skipped += 1
+            continue
+
+        try:
+            schema = extract(image_url)
+            if schema:
+                save_extraction(image_id, schema, sub_slice)
+                extracted += 1
+                print(f"  [{extracted}] {img.get('title', '')[:50]}")
+        except Exception as e:
+            failed += 1
+            print(f"  failed: {image_url[:60]} ({e})")
+            continue
+
+    print(f"  Done — {extracted} extracted, {skipped} skipped, {failed} failed.")
+
+
+def load_all() -> None:
+    init_db()
+    print("Loading Hindcast seed corpus...")
+    load_slice(SEED_IMAGES_SNEAKER, "sneaker_streetwear")
+    load_slice(SEED_IMAGES_FASHION, "contemporary_fashion")
+
+    from pipeline.storage import corpus_stats
+
+    stats = corpus_stats()
+    print(f"\nSeed corpus complete.")
+    print(f"  Total images: {stats['total_images']}")
+    print(f"  By slice: {stats['by_slice']}")
+    print(f"  Extractions: {stats['total_extractions']}")
+
+
+if __name__ == "__main__":
+    load_all()
