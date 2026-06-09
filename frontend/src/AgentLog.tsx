@@ -2,11 +2,11 @@ import { useEffect, useRef } from 'react'
 
 interface AgentLogProps {
   messages: string[]
-  active: boolean
+  active?: boolean
   label?: string
 }
 
-export default function AgentLog({ messages, active, label }: AgentLogProps) {
+export default function AgentLog({ messages, active = false, label }: AgentLogProps) {
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
