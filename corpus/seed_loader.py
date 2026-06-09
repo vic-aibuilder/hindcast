@@ -8,6 +8,7 @@ from pipeline.storage import (
     image_has_extraction,
 )
 from src.extractor import extract
+from retrieval.consolidate import _consolidate_images
 
 SEED_IMAGES_FASHION: list[dict] = [
     {
@@ -122,12 +123,6 @@ SEED_IMAGES_FASHION: list[dict] = [
         "image_url": "https://cdn.prod.website-files.com/5d70caf362d15d860bedae09/69c77dc2ad16bd7f634b9250_68bee418e408a488636840f9_thisispaper-acne-studios-greene-street-arquitectura-g-new-york-guide-14.webp",
         "source_url": "https://www.thisispaper.com/mag/acne-studios-greene-street-arquitectura-g",
         "title": "Acne Studios Greene Street New York — interior 12",
-        "source": "thisispaper.com",
-    },
-    {
-        "image_url": "https://cdn.prod.website-files.com/5d70caf362d15d860bedae09/69c77dc2ad16bd7f634b924e_68bee41604d9edcbe897256e_thisispaper-acne-studios-greene-street-arquitectura-g-new-york-guide-15.webp",
-        "source_url": "https://www.thisispaper.com/mag/acne-studios-greene-street-arquitectura-g",
-        "title": "Acne Studios Greene Street New York — interior 13",
         "source": "thisispaper.com",
     },
     {
@@ -520,180 +515,6 @@ SEED_IMAGES_FASHION: list[dict] = [
         "title": "Supreme Brooklyn by Neil Logan Architect — interior 4",
         "source": "dezeen.com",
     },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_10.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 1",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_008.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 2",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_5.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 3",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_005.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 4",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_8.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 5",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_3.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 6",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/Toteme_mercer_IMG_6801_a-scaled.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme/",
-        "title": "Toteme Mercer Street NYC by HS2 Architecture — interior 7",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/02_NYC_Store_075-2048x1176.jpg",
-        "source_url": "https://hs2architecture.com/projects/varley/",
-        "title": "Varley NYC by HS2 Architecture — interior 1",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/04A_NYC_Store_190-1536x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/varley/",
-        "title": "Varley NYC by HS2 Architecture — interior 2",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/04B_NYC_Store_187-1537x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/varley/",
-        "title": "Varley NYC by HS2 Architecture — interior 3",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/03__NYC_Store_179-2048x1271.jpg",
-        "source_url": "https://hs2architecture.com/projects/varley/",
-        "title": "Varley NYC by HS2 Architecture — interior 4",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/toteme-madison-2-1638x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme-madison-avenue/",
-        "title": "Toteme Madison Avenue NYC by HS2 Architecture — interior 1",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/20240910_FH_Toteme_Interior_0030-MAIN_V1E_4X5-copy-2.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme-madison-avenue/",
-        "title": "Toteme Madison Avenue NYC by HS2 Architecture — interior 2",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/toteme-madison-3-1638x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme-madison-avenue/",
-        "title": "Toteme Madison Avenue NYC by HS2 Architecture — interior 3",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/20240910_FH_Toteme_Interior_0559_V3_4X5-copy-2-1638x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme-madison-avenue/",
-        "title": "Toteme Madison Avenue NYC by HS2 Architecture — interior 4",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/toteme-madison-5-2048x1638.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme-madison-avenue/",
-        "title": "Toteme Madison Avenue NYC by HS2 Architecture — interior 5",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/toteme-madison-6-1638x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/toteme-madison-avenue/",
-        "title": "Toteme Madison Avenue NYC by HS2 Architecture — interior 6",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/RL-04-1360x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 1",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/RL-05-1360x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 2",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/05-33.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 3",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/RL-07-1360x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 4",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/RL-011a.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 5",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/08-16.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 6",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/09-13.jpg",
-        "source_url": "https://hs2architecture.com/projects/ralph-lauren/",
-        "title": "Ralph Lauren NYC by HS2 Architecture — interior 7",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/ACNE-1.jpg",
-        "source_url": "https://hs2architecture.com/projects/acne-studios-horatio-street/",
-        "title": "Acne Studios Horatio Street NYC by HS2 Architecture — interior 1",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/ACNE-03.jpg",
-        "source_url": "https://hs2architecture.com/projects/acne-studios-horatio-street/",
-        "title": "Acne Studios Horatio Street NYC by HS2 Architecture — interior 2",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/ACNE-02-1537x2048.jpg",
-        "source_url": "https://hs2architecture.com/projects/acne-studios-horatio-street/",
-        "title": "Acne Studios Horatio Street NYC by HS2 Architecture — interior 3",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/ACNE-04.jpg",
-        "source_url": "https://hs2architecture.com/projects/acne-studios-horatio-street/",
-        "title": "Acne Studios Horatio Street NYC by HS2 Architecture — interior 4",
-        "source": "hs2architecture.com",
-    },
-    {
-        "image_url": "https://hs2architecture.com/wp-content/uploads/ACNE-06.jpg",
-        "source_url": "https://hs2architecture.com/projects/acne-studios-horatio-street/",
-        "title": "Acne Studios Horatio Street NYC by HS2 Architecture — interior 5",
-        "source": "hs2architecture.com",
-    },
 ]
 
 SEED_IMAGES_SNEAKER: list[dict] = [
@@ -906,11 +727,20 @@ SEED_IMAGES_SNEAKER: list[dict] = [
 
 SEED_BRIEF = "__seed_corpus__"
 
+# Per-source cap for the curated seed corpus. Looser than live retrieval's
+# MAX_IMAGES_PER_SOURCE (6): these images are hand-picked, so there is no
+# listicle-flood risk and a well-documented store can keep more shots.
+SEED_MAX_IMAGES_PER_SOURCE = 8
+
 
 def load_slice(images: list[dict], sub_slice: str) -> None:
     if not images:
         print(f"  No seed images defined for {sub_slice} — skipping.")
         return
+
+    # Same dedupe + per-source cap + interleave as live retrieval, but with the
+    # looser seed cap (see SEED_MAX_IMAGES_PER_SOURCE).
+    images = _consolidate_images(images, max_per_source=SEED_MAX_IMAGES_PER_SOURCE)
 
     print(f"\nLoading seed corpus: {sub_slice}")
     print(f"  {len(images)} images to process...")
@@ -972,7 +802,7 @@ def load_all() -> None:
     from pipeline.storage import corpus_stats
 
     stats = corpus_stats()
-    print(f"\nSeed corpus complete.")
+    print("\nSeed corpus complete.")
     print(f"  Total images: {stats['total_images']}")
     print(f"  By slice: {stats['by_slice']}")
     print(f"  Extractions: {stats['total_extractions']}")

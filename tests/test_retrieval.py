@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from retrieval.agent import (
+from retrieval.consolidate import (
     MAX_IMAGES_PER_SOURCE,
     _consolidate_images,
     _normalize_image_url,
