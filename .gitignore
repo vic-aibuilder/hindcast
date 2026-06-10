@@ -43,3 +43,6 @@ Thumbs.db
 *.db-shm
 *.db-wal
 hindcast.db*
+
+# Accidental nested clone (breaks pytest module discovery)
+/hindcast/
