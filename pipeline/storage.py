@@ -205,32 +205,39 @@ def save_extraction(image_id: int, schema: dict, sub_slice: str) -> None:
     """
     Save Claude's schema extraction for a single image.
 
-    schema is a flat dict of {dimension: value} pairs,
-    e.g. {"material": "concrete", "form": "rectilinear", ...}
+    schema is a *nested* dict of {category: {dimension: value}}, e.g.
+    {"material": {"wood": ["white oak"], "metal": ["steel"], ...},
+     "color": {"temperature": "cool", ...}, ...}.
+
+    Each top-level category is stored as one row, with its nested
+    {dimension: value} block JSON-encoded in the value column. JSON (not
+    str()) is used so the nesting — and list values — round-trip intact;
+    get_extractions_for_image() decodes them back to the nested shape the
+    synthesizer expects. (The `dimension` column holds the category key.)
     """
     conn = get_connection()
     now = datetime.now(timezone.utc).isoformat()
 
     with conn:
-        for dimension, value in schema.items():
-            # value may be a list (multiple tags) or a string
-            if isinstance(value, list):
-                value = json.dumps(value)
+        for category, dimensions in schema.items():
             conn.execute(
                 """
                 INSERT INTO schema_extractions
                     (image_id, dimension, value, sub_slice, created_at)
                 VALUES (?, ?, ?, ?, ?)
                 """,
-                (image_id, dimension, str(value), sub_slice, now),
+                (image_id, category, json.dumps(dimensions), sub_slice, now),
             )
     conn.close()
 
 
 def get_extractions_for_image(image_id: int) -> dict:
     """
-    Retrieve all schema dimensions for a single image.
-    Returns a flat dict of {dimension: value}.
+    Retrieve the schema extraction for a single image.
+
+    Returns the nested {category: {dimension: value}} dict, reconstructed by
+    JSON-decoding each stored category block — the inverse of save_extraction.
+    This is the shape src/synthesizer.synthesize() expects.
     """
     conn = get_connection()
     rows = conn.execute(
@@ -238,7 +245,7 @@ def get_extractions_for_image(image_id: int) -> dict:
         (image_id,),
     ).fetchall()
     conn.close()
-    return {row["dimension"]: row["value"] for row in rows}
+    return {row["dimension"]: json.loads(row["value"]) for row in rows}
 
 
 def get_all_extractions_for_sub_slice(sub_slice: str) -> list[dict]:
@@ -270,6 +277,38 @@ def image_has_extraction(image_id: int) -> bool:
     ).fetchone()
     conn.close()
     return row is not None
+
+
+def purge_legacy_extractions() -> int:
+    """
+    Delete extraction rows that predate the JSON round-trip.
+
+    Before the nested-schema fix, save_extraction stored each category via
+    str(), producing stringified Python dicts (single-quoted) that
+    get_extractions_for_image() can no longer JSON-decode. Such rows are
+    unrecoverable and must be re-extracted — and because image_has_extraction()
+    still sees them, a plain re-run would *skip* those images, so they must be
+    deleted first.
+
+    Detection is format-based: any value that does not parse as JSON is legacy.
+    Idempotent — after a clean run every remaining row is valid JSON, so a
+    second call deletes nothing. Returns the number of rows removed.
+    """
+    conn = get_connection()
+    legacy_ids: list[int] = []
+    for row in conn.execute("SELECT id, value FROM schema_extractions").fetchall():
+        try:
+            json.loads(row["value"])
+        except (json.JSONDecodeError, TypeError):
+            legacy_ids.append(row["id"])
+    if legacy_ids:
+        with conn:
+            conn.executemany(
+                "DELETE FROM schema_extractions WHERE id = ?",
+                [(i,) for i in legacy_ids],
+            )
+    conn.close()
+    return len(legacy_ids)
 
 
 # ── Brief cache ───────────────────────────────────────────────────────────────

@@ -166,7 +166,12 @@ def _aggregate(extractions: list[dict]) -> dict[str, Any]:
         for cat, dims in VOCABULARY.items():
             cat_data = extraction.get(cat)
             if not isinstance(cat_data, dict):
-                continue
+                raise ValueError(
+                    f"Extraction category {cat!r} is {type(cat_data).__name__}, "
+                    f"expected a {{dimension: value}} dict. The schema did not "
+                    f"round-trip through storage — check "
+                    f"pipeline.storage.save_extraction / get_extractions_for_image."
+                )
             for dim in dims:
                 value = cat_data.get(dim)
                 if (cat, dim) in _LIST_DIMS:
