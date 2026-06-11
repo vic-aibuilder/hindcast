@@ -112,6 +112,20 @@ def _make_extraction(
             "reference": reference,
             "abstract_qualities": abstract_qualities or [],
         },
+        "layout_archetype": {
+            "layout": "open plan / gallery",
+            "circulation": "open",
+            "density": "sparse / gallery",
+        },
+        "typography_signage": {
+            "signage_density": "none",
+            "logo_treatment": "logo-as-architecture",
+            "typography_style": "serif",
+        },
+        "brand_expression_density": {
+            "density": "very high",
+            "mode": "material-embedded",
+        },
     }
 
 
@@ -181,20 +195,25 @@ class TestAggregate:
         assert aq["inviting"] == 2
         assert aq["engaging"] == 1
 
-    def test_missing_category_in_extraction_skipped_gracefully(self):
+    def test_malformed_category_raises(self):
+        # A category that isn't a {dimension: value} dict means the schema did
+        # not round-trip through storage. _aggregate must fail loud, not skip
+        # silently — that silent skip is how the nested-schema storage break
+        # (categories persisted as stringified dicts) went unnoticed.
         bad = {
-            "material": None,
+            "material": "{'wood': ['white oak']}",  # stringified dict — the corruption signature
             "form_geometry": {},
             "color": {},
             "lighting": {},
             "texture": {},
             "opacity": {},
             "atmosphere_warmth": {},
+            "layout_archetype": {},
+            "typography_signage": {},
+            "brand_expression_density": {},
         }
-        agg = _aggregate([bad])
-        assert agg["total"] == 1
-        # Should not raise; material just contributes nothing
-        assert agg["categories"]["material"]["wood"] == {}
+        with pytest.raises(ValueError):
+            _aggregate([bad])
 
     def test_all_categories_present_in_output(self):
         agg = _aggregate(_corpus(1))
