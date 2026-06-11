@@ -3,7 +3,7 @@
 > Feature-freeze / build-complete target: **June 18–19**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
 > Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
-> Last updated: **June 9, 2026**
+> Last updated: **June 10, 2026**
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
@@ -13,43 +13,44 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 ## Current status
 
 **Phase 1 complete.** Phase 2 partially landed — seed corpus is in (PR #21) and the
-frontend is wired to the live pipeline — but a **June 9 end-to-end run surfaced a
-critical break in the analytical core** (see Known issues below): the live path
-*runs* to completion, but the schema extractions never reach synthesis, so patterns
-are currently generated from prompt priming rather than image data.
+frontend is wired to the live pipeline. A **June 9 end-to-end run surfaced a critical
+break in the analytical core** (schema extractions never reached synthesis); the
+storage round-trip and the silent-aggregator gaps behind it are **fixed in PR #26**
+(P0 + P0-assist below). The fix is verified in code and tests, but **not yet confirmed
+end-to-end** — synthesis can only ground on real data once the seed corpus is
+re-extracted through the fixed storage.
 
-**Critical path:** fix the schema-persistence break (P0, Gary) so synthesis is
-grounded in the extracted schema; then run the extractor over the curated **seed
-corpus** (demo pre-warming + controlled demo set) and Phase 4 demo hardening.
+**Critical path:** **re-extract the seed corpus** (Christian, Phase 2 #3 — now
+unblocked by #26) so synthesis grounds on real image data; then a **fresh live E2E run**
+to confirm grounded patterns; then Phase 4 demo hardening.
 
 | Layer | Status |
 |---|---|
-| Backend pipeline | Wired and runs E2E, but **schema → synthesis is broken**: storage persists the nested schema as a stringified dict, so the aggregator reads empty data and patterns are ungrounded (Known issues P0) |
+| Backend pipeline | Wired and runs E2E. The **schema → synthesis round-trip is fixed** (PR #26): storage JSON-encodes/decodes the nested schema and `_aggregate` raises on shape mismatch. Grounded output pending re-extraction + a fresh E2E run. |
 | Frontend | Calling `POST /query` live (`frontend/src/api.ts`); renders `retrieval_log` + patterns. Pattern images are a positional slice of raw retrieval, not matched to each pattern (P1) |
-| Seed corpus | Landed (PR #21): 118 curated images across both slices (~109 effective after the per-source cap); extraction run over the corpus not yet performed — gated behind the P0 fix |
-| Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; needs extraction + verification after P0 |
+| Seed corpus | Landed (PR #21): 118 curated images across both slices (~109 effective after the per-source cap). Extraction not yet run — **unblocked by #26**; legacy corrupt rows purged via `purge_legacy_extractions()`, so a re-extraction repopulates cleanly. |
+| Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; needs extraction + verification after re-extraction (#26 unblocks) |
 
 ---
 
 ## Known issues / blockers (discovered June 9 — live E2E run)
 
-Ranked. The first two sever the analytical core: output *looks* data-driven but is not.
+Ranked. The first two severed the analytical core (output *looked* data-driven but
+was not) — both are now resolved in #26; the two P1s remain open.
 
-- **P0 — Schema never reaches synthesis (storage round-trip).** Owner: **Gary**
-  (`pipeline/storage.py`). The extractor emits a *nested* Schema v2.4 dict
-  (`{category: {dimension: value}}`), but `save_extraction` was written for a *flat*
-  schema (its docstring still says so) and stores each category as `str(value)` →
-  a stringified Python dict (`storage.py:225`). On read-back, `_aggregate` sees a
-  string instead of a dict and drops it. **Proof:** 37 stored sneaker extractions →
-  **0** non-zero term counts; the frequency report handed to the synthesizer reads
-  "37 images analyzed" with every term ZERO-OCCURRENCE. Patterns are confabulated
-  from the brief + sub-slice priming, not the data. Fix: `json.dumps`/`json.loads`
-  the nested value on write/read. The 37 existing rows are already corrupt →
-  re-extract or migrate.
-- **P0-assist — Aggregator fails silently.** Owner: **Christian**
-  (`src/synthesizer.py:168`). `_aggregate` does `continue` on a shape mismatch
-  instead of raising — which is *why* the P0 bug went unnoticed. A defensive `raise`
-  would surface this class of break on the first run.
+- **P0 — Schema never reaches synthesis (storage round-trip).** ✅ **Resolved in #26.**
+  Owner: Gary (`pipeline/storage.py`). The extractor emits a *nested*
+  `{category: {dimension: value}}` schema, but `save_extraction` was written for a
+  *flat* schema and stored each category as `str(value)` → a stringified dict that
+  `_aggregate` saw as a string and dropped. **Was:** 37 stored sneaker extractions →
+  **0** non-zero term counts; patterns confabulated from priming, not data.
+  **Fix (#26):** `json.dumps`/`json.loads` the nested category block on write/read so
+  it round-trips (verified: 33 non-zero counts on a round-trip test). Legacy corrupt
+  rows are cleared by `purge_legacy_extractions()` — re-extraction required to repopulate.
+- **P0-assist — Aggregator fails silently.** ✅ **Resolved in #26.** Owner: Christian
+  (`src/synthesizer.py`). `_aggregate` did `continue` on a shape mismatch instead of
+  raising — which is *why* P0 went unnoticed. **Fix (#26):** it now raises `ValueError`
+  on a non-dict category, surfacing this class of break on the first run.
 - **P1 — Pattern images are unrelated to the pattern.** Owner: **Victor**
   (`frontend/src/api.ts`). `adaptQueryResponse` slices the global retrieved-image
   list by position (`offset = i * 8`) and bolts 8 images onto each pattern — no link
