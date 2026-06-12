@@ -18,6 +18,9 @@ of a trend forecast.
 4. Claude synthesizes 4–6 named saturation patterns from the aggregated data.
 5. Output: image grid with editorial framing.
 
+Images, schema extractions, and the brief cache persist in a local SQLite database
+(`hindcast.db`); see [ARCHITECTURE.md](ARCHITECTURE.md#storage) for the data layer.
+
 ## Docs
 
 - [PRD.md](PRD.md) — full product and engineering spec
