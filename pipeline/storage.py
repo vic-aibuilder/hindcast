@@ -268,6 +268,53 @@ def get_all_extractions_for_sub_slice(sub_slice: str) -> list[dict]:
     return [dict(row) for row in rows]
 
 
+def count_extracted_images_for_sub_slice(sub_slice: str) -> int:
+    """Count distinct images with schema extractions for a sub-slice."""
+    conn = get_connection()
+    count = conn.execute(
+        """
+        SELECT COUNT(DISTINCT e.image_id)
+        FROM schema_extractions e
+        JOIN images i ON i.id = e.image_id
+        WHERE i.sub_slice = ?
+        """,
+        (sub_slice,),
+    ).fetchone()[0]
+    conn.close()
+    return count
+
+
+def get_extracted_schemas_for_sub_slice(sub_slice: str) -> list[dict]:
+    """
+    Return nested schema dicts for every extracted image in a sub-slice.
+
+    Queries schema_extractions directly so seed-corpus images are included
+    even when the images table holds many more rows from live retrieval.
+    """
+    conn = get_connection()
+    image_ids = [
+        row["image_id"]
+        for row in conn.execute(
+            """
+            SELECT DISTINCT e.image_id
+            FROM schema_extractions e
+            JOIN images i ON i.id = e.image_id
+            WHERE i.sub_slice = ?
+            ORDER BY e.image_id
+            """,
+            (sub_slice,),
+        ).fetchall()
+    ]
+    conn.close()
+
+    schemas: list[dict] = []
+    for image_id in image_ids:
+        schema = get_extractions_for_image(image_id)
+        if schema:
+            schemas.append(schema)
+    return schemas
+
+
 def image_has_extraction(image_id: int) -> bool:
     """Check whether an image has already been extracted."""
     conn = get_connection()

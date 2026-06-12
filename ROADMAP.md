@@ -3,7 +3,7 @@
 > Feature-freeze / build-complete target: **June 18–19**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
 > Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
-> Last updated: **June 10, 2026**
+> Last updated: **June 12, 2026**
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
@@ -12,24 +12,21 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ## Current status
 
-**Phase 1 complete.** Phase 2 partially landed — seed corpus is in (PR #21) and the
-frontend is wired to the live pipeline. A **June 9 end-to-end run surfaced a critical
-break in the analytical core** (schema extractions never reached synthesis); the
-storage round-trip and the silent-aggregator gaps behind it are **fixed in PR #26**
-(P0 + P0-assist below). The fix is verified in code and tests, but **not yet confirmed
-end-to-end** — synthesis can only ground on real data once the seed corpus is
-re-extracted through the fixed storage.
+**Phase 1 complete. Phase 2 Role 3 complete.** Seed corpus is extracted (108/109
+images, 1,080 schema rows) and synthesis is **confirmed data-grounded** on both
+slices (June 12 E2E). P0/P0-assist resolved in PR #26. Extraction collection now
+queries `schema_extractions` directly so seed images surface even when live-retrieval
+rows dominate the `images` table.
 
-**Critical path:** **re-extract the seed corpus** (Christian, Phase 2 #3 — now
-unblocked by #26) so synthesis grounds on real image data; then a **fresh live E2E run**
-to confirm grounded patterns; then Phase 4 demo hardening.
+**Critical path:** Phase 4 demo hardening — pre-warm cache queries, fix P1s (pattern
+image matching, retrieval junk filter), frontend polish.
 
 | Layer | Status |
 |---|---|
-| Backend pipeline | Wired and runs E2E. The **schema → synthesis round-trip is fixed** (PR #26): storage JSON-encodes/decodes the nested schema and `_aggregate` raises on shape mismatch. Grounded output pending re-extraction + a fresh E2E run. |
+| Backend pipeline | Wired and runs E2E. Schema → synthesis round-trip fixed (PR #26). Seed-corpus synthesis verified: 64 sneaker + 44 fashion extractions → 6 grounded patterns each (June 12). |
 | Frontend | Calling `POST /query` live (`frontend/src/api.ts`); renders `retrieval_log` + patterns. Pattern images are a positional slice of raw retrieval, not matched to each pattern (P1) |
-| Seed corpus | Landed (PR #21): 118 curated images across both slices (~109 effective after the per-source cap). Extraction not yet run — **unblocked by #26**; legacy corrupt rows purged via `purge_legacy_extractions()`, so a re-extraction repopulates cleanly. |
-| Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; needs extraction + verification after re-extraction (#26 unblocks) |
+| Seed corpus | **Extracted (June 12):** 108/109 images, 1,080 schema rows, valid JSON round-trip confirmed. 64 sneaker / 44 fashion. |
+| Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; seed extraction + synthesis E2E verified June 12. |
 
 ---
 
@@ -97,7 +94,7 @@ was not) — both are now resolved in #26; the two P1s remain open.
 
 ---
 
-## Phase 2 — Slice 1 end-to-end (in progress · target June 15)
+## Phase 2 — Slice 1 end-to-end (complete · Role 3)
 
 **Role 1 — Victor**
 - [x] Brief submission UI (sub-slice selector + free-text input)
@@ -115,13 +112,11 @@ was not) — both are now resolved in #26; the two P1s remain open.
 - [x] Seed corpus slice 1: 60 sneaker/streetwear images, hand-curated (PR #21)
 
 **Role 3 — Christian**
-- [ ] Seed corpus extraction: run extractor over all ~109 seed images (effective, after cap), store results
+- [x] Seed corpus extraction: 108/109 images extracted (64 sneaker, 44 fashion), 1,080 schema rows stored with valid JSON (June 12)
 - [x] Editorial synthesizer: aggregated schema + brief → 4–6 named saturation patterns
 - [x] Synthesis prompt primed on Snarkitecture voice (dry, factual, material-specific)
 - [x] Sneaker/streetwear reference patterns wired in
-- [ ] Manual end-to-end run: verify full pipeline produces valid output
-  - `scripts/run_e2e.py` ready; live keys configured — **blocked on seed corpus**
-  - See Known issues P0 (schema → synthesis) before relying on this run's output
+- [x] Manual end-to-end run: seed-corpus synthesis verified on both slices — 6 grounded patterns each, non-zero aggregator term counts (June 12)
 - [x] Write tests for synthesizer output structure
 
 ---
@@ -142,13 +137,13 @@ was not) — both are now resolved in #26; the two P1s remain open.
 - [x] Publication list for slice 2 (Dezeen, Frame, Wallpaper, Sight Unseen) — wired in `retrieval/tavily.py`
 - [ ] Verify caching works across both slices (keying exists; needs live runs with corpus)
 - [ ] Follow-ups from PR #21: re-source 29 dropped hs2architecture.com images (#22);
-  Madhappy/RTA slice placement decision (#23)
+  Madhappy slice placement ✅ resolved in #28
 
 **Role 3 — Christian**
-- [ ] Seed corpus extraction: run extractor over slice 2 seed images
+- [x] Seed corpus extraction: run extractor over slice 2 seed images (44/44, June 12)
 - [ ] Swap schema to contemporary fashion dimensions (shared v2.5 vocab today; slice-specific dims TBD)
 - [ ] Update synthesis prompt with slice 2 reference patterns (sub-slice context block exists in `src/synthesizer.py`; dedicated calibration reference still needed)
-- [ ] End-to-end test query for slice 2
+- [x] End-to-end test query for slice 2 — seed-corpus synthesis verified, 6 patterns (June 12)
 
 > **Risk framing:** if timeline pressure hits, sneaker/streetwear (slice 1) is the
 > committed deliverable. Slice 2 can be shown as an extension of the same approach.

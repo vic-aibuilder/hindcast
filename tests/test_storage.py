@@ -9,6 +9,7 @@ import pytest
 from pipeline.storage import (
     get_connection,
     get_extractions_for_image,
+    get_extracted_schemas_for_sub_slice,
     hash_brief,
     init_db,
     purge_legacy_extractions,
@@ -88,3 +89,24 @@ def test_purge_is_idempotent():
     save_extraction(image_id, {"color": {"temperature": "cool"}}, "sneaker_streetwear")
     assert purge_legacy_extractions() == 0
     assert purge_legacy_extractions() == 0
+
+
+def test_get_extracted_schemas_skips_unextracted_images():
+    """Seed extractions are found even when many unextracted images exist."""
+    extracted_id = _one_image()
+    save_extraction(
+        extracted_id,
+        {"material": {"metal": ["steel"]}, "color": {"temperature": "cool"}},
+        "sneaker_streetwear",
+    )
+
+    # Simulate live-retrieval junk: many images, no extractions.
+    junk = [
+        {"image_url": f"https://example.com/junk-{i}.jpg", "source": "hypebeast.com"}
+        for i in range(600)
+    ]
+    save_images(junk, "sneaker_streetwear", hash_brief("live", "sneaker_streetwear"))
+
+    schemas = get_extracted_schemas_for_sub_slice("sneaker_streetwear")
+    assert len(schemas) == 1
+    assert schemas[0]["material"]["metal"] == ["steel"]
