@@ -24,6 +24,11 @@ interface CorpusImage {
   source_url?: string
   title?: string
   source?: string
+  // Structured attribution — populated once retrieval captures it
+  // (#27 item 3, Gary's half). Absent until then; we derive what we can.
+  designer?: string
+  year?: number
+  project?: string
 }
 
 interface ApiPattern {
@@ -33,12 +38,20 @@ interface ApiPattern {
   image_count?: number
 }
 
+// Pull a 4-digit year out of the title only when one is actually present.
+// Returns undefined rather than fabricating a year — real years arrive via
+// img.year once retrieval captures structured attribution (#27 item 3).
+function deriveYear(title?: string): number | undefined {
+  const match = title?.match(/\b(20\d{2})\b/)
+  return match ? Number(match[1]) : undefined
+}
+
 function toPatternImages(images: CorpusImage[], offset: number, count: number): PatternImage[] {
   return images.slice(offset, offset + count).map(img => ({
     url: img.image_url,
-    project: img.title?.slice(0, 80) || 'Untitled project',
-    designer: img.source?.replace(/^www\./, '') || 'Unknown source',
-    year: 2025,
+    project: img.project ?? (img.title?.slice(0, 80) || 'Untitled project'),
+    designer: img.designer ?? (img.source?.replace(/^www\./, '') || 'Unknown source'),
+    year: img.year ?? deriveYear(img.title),
   }))
 }
 
