@@ -24,9 +24,9 @@ dominate `images` — resolving **#27 Item 2** (full-extracted-corpus denominato
 **Critical path to demo — not just hardening; open items remain:**
 
 - **#27 Item 1 (docs, Victor):** README/ARCHITECTURE synced to the SQLite layer + real
-  seed counts (separate docs PR); this roadmap updated here.
+  seed counts (PR #32); this roadmap updated here.
 - **#27 Item 3 (attribution):** `year` was fabricated. **Display half done** — derives
-  from title, omits when unknown (separate frontend PR). **Data half open** — real
+  from title, omits when unknown (PR #31). **Data half open** — real
   `designer/year/project` columns at retrieval (Gary).
 - **P1s:** pattern-image term matching (Victor); retrieval junk filter (Gary).
 - Then: cache pre-warm + demo hardening.
