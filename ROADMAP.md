@@ -19,15 +19,16 @@ patterns from real extractions). P0/P0-assist resolved in PR #26. **This PR (#30
 makes saturation/synthesis read the *extracted* set directly (`schema_extractions`),
 dropping the old 500-row cap so seed images surface even when live-retrieval rows
 dominate `images` — resolving **#27 Item 2** (full-extracted-corpus denominator;
-**pending Gary sign-off**).
+**Gary-ratified**).
 
 **Critical path to demo — not just hardening; open items remain:**
 
 - **#27 Item 1 (docs, Victor):** README/ARCHITECTURE synced to the SQLite layer + real
   seed counts (PR #32); this roadmap updated here.
-- **#27 Item 3 (attribution):** `year` was fabricated. **Display half done** — derives
-  from title, omits when unknown (PR #31). **Data half open** — real
-  `designer/year/project` columns at retrieval (Gary).
+- **Attribution (#33, split from #27):** `year` was fabricated. **Display half done** —
+  derives from title, omits when unknown (PR #31). **Data half — pending team call:**
+  accept derived attribution for the demo, or capture real `designer/year/project`
+  columns at retrieval (Gary).
 - **P1s:** pattern-image term matching (Victor); retrieval junk filter (Gary).
 - Then: cache pre-warm + demo hardening.
 
