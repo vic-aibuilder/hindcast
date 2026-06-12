@@ -12,20 +12,30 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ## Current status
 
-**Phase 1 complete. Phase 2 Role 3 complete.** Seed corpus is extracted (108/109
-images, 1,080 schema rows) and synthesis is **confirmed data-grounded** on both
-slices (June 12 E2E). P0/P0-assist resolved in PR #26. Extraction collection now
-queries `schema_extractions` directly so seed images surface even when live-retrieval
-rows dominate the `images` table.
+**Phase 1 complete. Phase 2 Role 3 tasks complete** (seed extraction, synthesizer,
+E2E). Seed corpus extracted (108 images, 1,080 schema rows); synthesis **confirmed
+data-grounded on both slices** (June 12 E2E — sneaker and fashion each return grounded
+patterns from real extractions). P0/P0-assist resolved in PR #26. **This PR (#30)**
+makes saturation/synthesis read the *extracted* set directly (`schema_extractions`),
+dropping the old 500-row cap so seed images surface even when live-retrieval rows
+dominate `images` — resolving **#27 Item 2** (full-extracted-corpus denominator;
+**pending Gary sign-off**).
 
-**Critical path:** Phase 4 demo hardening — pre-warm cache queries, fix P1s (pattern
-image matching, retrieval junk filter), frontend polish.
+**Critical path to demo — not just hardening; open items remain:**
+
+- **#27 Item 1 (docs, Victor):** README/ARCHITECTURE synced to the SQLite layer + real
+  seed counts (separate docs PR); this roadmap updated here.
+- **#27 Item 3 (attribution):** `year` was fabricated. **Display half done** — derives
+  from title, omits when unknown (separate frontend PR). **Data half open** — real
+  `designer/year/project` columns at retrieval (Gary).
+- **P1s:** pattern-image term matching (Victor); retrieval junk filter (Gary).
+- Then: cache pre-warm + demo hardening.
 
 | Layer | Status |
 |---|---|
-| Backend pipeline | Wired and runs E2E. Schema → synthesis round-trip fixed (PR #26). Seed-corpus synthesis verified: 64 sneaker + 44 fashion extractions → 6 grounded patterns each (June 12). |
-| Frontend | Calling `POST /query` live (`frontend/src/api.ts`); renders `retrieval_log` + patterns. Pattern images are a positional slice of raw retrieval, not matched to each pattern (P1) |
-| Seed corpus | **Extracted (June 12):** 108/109 images, 1,080 schema rows, valid JSON round-trip confirmed. 64 sneaker / 44 fashion. |
+| Backend pipeline | Wired, runs E2E. Round-trip fixed (#26). Saturation/synthesis denominate over the extracted set, not a 500-row window (#30, + denominator/isolation tests). ~108 extracted images → 6 grounded patterns/slice (June 12; sneaker re-verified on this branch). |
+| Frontend | Live `POST /query`; renders `retrieval_log` + patterns. `corpus_size` now reflects analyzed (extracted) images; per-image `year` no longer fabricated (#27 item 3 display). **Open P1:** pattern images are a positional slice of retrieval, not matched to each pattern's terms. |
+| Seed corpus | **Extracted (June 12):** 108 images, 1,080 schema rows, valid JSON round-trip confirmed. (~64–65 sneaker / ~43–44 fashion — split varies with the 1 failed image + per-source cap.) |
 | Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; seed extraction + synthesis E2E verified June 12. |
 
 ---
