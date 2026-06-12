@@ -2,7 +2,7 @@ export interface PatternImage {
   url: string
   project: string
   designer: string
-  year: number
+  year?: number
 }
 
 export interface SaturationPattern {
