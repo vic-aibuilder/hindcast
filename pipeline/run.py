@@ -21,9 +21,9 @@ from pipeline.storage import (
     init_db,
     save_images,
     save_extraction,
-    get_images_by_sub_slice,
+    get_extracted_schemas_for_sub_slice,
+    count_extracted_images_for_sub_slice,
     image_has_extraction,
-    get_extractions_for_image,
     hash_brief,
 )
 from corpus.cache import check as cache_check, store as cache_store
@@ -49,18 +49,9 @@ EXTRACTION_WORKERS = int(os.environ.get("HINDCAST_EXTRACTION_WORKERS", "8"))
 def _get_all_extractions(sub_slice: str) -> list[dict]:
     """
     Reconstruct per-image extraction dicts from the database.
-    Returns a list of flat schema dicts — one per image —
-    for passing to src/synthesizer.synthesize().
+    Returns nested schema dicts for passing to src/synthesizer.synthesize().
     """
-    images = get_images_by_sub_slice(sub_slice, limit=500)
-    extractions = []
-    for img in images:
-        image_id = img.get("id")
-        if image_id and image_has_extraction(image_id):
-            schema = get_extractions_for_image(image_id)
-            if schema:
-                extractions.append(schema)
-    return extractions
+    return get_extracted_schemas_for_sub_slice(sub_slice)
 
 
 def _source_breakdown(images: list[dict]) -> dict[str, int]:
@@ -199,7 +190,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
     source_breakdown = _source_breakdown(images)
 
     # ── Step 8: Assemble result ───────────────────────────────────────────────
-    all_corpus_images = get_images_by_sub_slice(sub_slice, limit=500)
+    extracted_corpus_size = count_extracted_images_for_sub_slice(sub_slice)
 
     if source_breakdown:
         breakdown = ", ".join(f"{k}: {v}" for k, v in source_breakdown.items())
@@ -210,7 +201,7 @@ def run_query(brief: str, sub_slice: str) -> dict:
         "sub_slice": sub_slice,
         "cache_hit": cache_hit,
         "images": images[:50],
-        "corpus_size": len(all_corpus_images),
+        "corpus_size": extracted_corpus_size,
         "patterns": patterns,
         "retrieval_log": retrieval_log,
         "source_breakdown": source_breakdown,
