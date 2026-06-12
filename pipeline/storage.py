@@ -184,20 +184,6 @@ def get_images_for_brief(brief_hash: str) -> list[dict]:
     return [dict(row) for row in rows]
 
 
-def get_images_by_sub_slice(sub_slice: str, limit: int = 500) -> list[dict]:
-    """
-    Retrieve images for a sub-slice regardless of brief.
-    Used for saturation scoring across the full corpus.
-    """
-    conn = get_connection()
-    rows = conn.execute(
-        "SELECT * FROM images WHERE sub_slice = ? LIMIT ?",
-        (sub_slice, limit),
-    ).fetchall()
-    conn.close()
-    return [dict(row) for row in rows]
-
-
 # ── Schema extraction storage ─────────────────────────────────────────────────
 
 
