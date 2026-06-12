@@ -24,7 +24,7 @@ export default function PatternCard({ pattern, index, total }: PatternCardProps)
           <figure key={i} className="pattern__fig">
             <img className="pattern__img" src={img.url} alt={img.project} loading="lazy" />
             <figcaption className="pattern__cap">
-              {img.project} · {img.designer} · {img.year}
+              {img.project} · {img.designer}{img.year ? ` · ${img.year}` : ''}
             </figcaption>
           </figure>
         ))}
