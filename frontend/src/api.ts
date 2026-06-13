@@ -36,6 +36,10 @@ interface ApiPattern {
   description: string
   dominant_terms?: string[]
   image_count?: number
+  // Images that actually evidence this pattern — term-matched server-side
+  // (#41). Same shape as the top-level `images` list. Absent until the
+  // backend half lands; we fall back to an empty grid until then.
+  evidence_images?: CorpusImage[]
 }
 
 // Pull a 4-digit year out of the title only when one is actually present.
@@ -46,8 +50,8 @@ function deriveYear(title?: string): number | undefined {
   return match ? Number(match[1]) : undefined
 }
 
-function toPatternImages(images: CorpusImage[], offset: number, count: number): PatternImage[] {
-  return images.slice(offset, offset + count).map(img => ({
+function toPatternImages(images: CorpusImage[]): PatternImage[] {
+  return images.map(img => ({
     url: img.image_url,
     project: img.project ?? (img.title?.slice(0, 80) || 'Untitled project'),
     designer: img.designer ?? (img.source?.replace(/^www\./, '') || 'Unknown source'),
@@ -56,16 +60,13 @@ function toPatternImages(images: CorpusImage[], offset: number, count: number): 
 }
 
 export function adaptQueryResponse(data: QueryResponse): HindcastResult {
-  const corpus = data.images ?? []
-  const patterns: SaturationPattern[] = (data.patterns ?? []).map((p, i) => {
-    const perPattern = Math.min(8, Math.max(4, p.image_count ?? 8))
-    const offset = i * 8
-    return {
-      title: p.title,
-      description: p.description,
-      images: toPatternImages(corpus, offset, perPattern),
-    }
-  })
+  const patterns: SaturationPattern[] = (data.patterns ?? []).map((p) => ({
+    title: p.title,
+    description: p.description,
+    // Term-matched images for this specific pattern (#41), not a positional
+    // slice of the global corpus. Empty until the backend half lands.
+    images: toPatternImages(p.evidence_images ?? []),
+  }))
 
   const cacheNote = data.cache_hit ? 'cache hit' : 'live retrieval'
   const sources = Object.entries(data.source_breakdown ?? {})
