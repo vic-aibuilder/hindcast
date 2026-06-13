@@ -18,6 +18,35 @@ from collections import Counter, defaultdict
 from itertools import zip_longest
 from urllib.parse import urlsplit, urlunsplit
 
+# URL path segments that reliably indicate product/editorial content
+# rather than retail interior photography
+_PRODUCT_URL_PATTERNS = (
+    "/releases/",
+    "/products/",
+    "/release-date/",
+    "/buy/",
+    "/shop/",
+    "/review/",
+    "/best-",
+    "/top-",
+    "/roundup/",
+    "/gift-guide/",
+    "/collab/",
+    "/collection/",
+    "/lookbook/",
+)
+
+
+def _looks_like_interior(img: dict) -> bool:
+    """
+    Fast heuristic — returns False if the image URL or source URL
+    strongly suggests product photography rather than a retail interior.
+    No vision call — purely string-based.
+    """
+    url = (img.get("source_url") or img.get("image_url") or "").lower()
+    return not any(pattern in url for pattern in _PRODUCT_URL_PATTERNS)
+
+
 # Cap on images kept from any single source page. Listicle/slideshow pages can
 # return ~100 image URLs each, which flood the corpus and the UI with shots from
 # one article. Capping keeps the corpus diverse across pages. This is the
@@ -45,18 +74,19 @@ def _consolidate_images(
 ) -> list[dict]:
     """Dedupe, cap per source page, and interleave a raw image list.
 
-    1. Dedupe by normalized URL — CDN endpoints serve one asset at many sizes
-       (e.g. .../foo.jpg?w=1080 vs ?w=960): distinct URLs, identical pictures.
-    2. Cap images per source page (``max_per_source``) so a single listicle
-       can't flood the corpus.
-    3. Interleave by source page (round-robin) so consecutive images come from
-       different articles — keeps the UI's first screen and the extraction
-       sample varied instead of showing runs from one page.
+    0. Pre-filter obvious product/editorial URLs before dedup.
+    1. Dedupe by normalized URL.
+    2. Cap images per source page.
+    3. Interleave by source page (round-robin).
     """
+    # Step 0 — drop obvious non-interior URLs
+    candidates = [img for img in all_images if _looks_like_interior(img)]
+
     seen: set[str] = set()
     per_source: Counter[str] = Counter()
     kept: list[dict] = []
-    for img in all_images:
+
+    for img in candidates:
         url = img.get("image_url", "")
         if not url:
             continue
@@ -73,6 +103,7 @@ def _consolidate_images(
     groups: dict[str, list[dict]] = defaultdict(list)
     for img in kept:
         groups[img.get("source_url") or img.get("image_url", "")].append(img)
+
     return [
         img for row in zip_longest(*groups.values()) for img in row if img is not None
     ]
