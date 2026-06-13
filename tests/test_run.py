@@ -56,7 +56,9 @@ def test_run_query_populates_evidence_images_and_matches_image_count(monkeypatch
         for i, image_id in enumerate(image_ids)
     ]
 
-    monkeypatch.setattr("pipeline.run.cache_check", lambda *args, **kwargs: cached_images)
+    monkeypatch.setattr(
+        "pipeline.run.cache_check", lambda *args, **kwargs: cached_images
+    )
     monkeypatch.setattr("pipeline.run.Anthropic", lambda api_key=None: object())
     monkeypatch.setattr(
         "pipeline.run.synthesize",
@@ -77,7 +79,9 @@ def test_run_query_populates_evidence_images_and_matches_image_count(monkeypatch
     assert pattern["image_count"] == 1
     assert len(pattern["evidence_images"]) == 1
     assert "image_ids" not in pattern
-    assert pattern["evidence_images"][0]["image_url"].endswith(f"img-{len(image_ids)-1}.jpg")
+    assert pattern["evidence_images"][0]["image_url"].endswith(
+        f"img-{len(image_ids) - 1}.jpg"
+    )
 
 
 def test_evidence_image_can_be_outside_top_level_images_cap(monkeypatch):
@@ -108,7 +112,9 @@ def test_evidence_image_can_be_outside_top_level_images_cap(monkeypatch):
         for i, image_id in enumerate(image_ids)
     ]
 
-    monkeypatch.setattr("pipeline.run.cache_check", lambda *args, **kwargs: cached_images)
+    monkeypatch.setattr(
+        "pipeline.run.cache_check", lambda *args, **kwargs: cached_images
+    )
     monkeypatch.setattr("pipeline.run.Anthropic", lambda api_key=None: object())
     monkeypatch.setattr(
         "pipeline.run.synthesize",
@@ -130,4 +136,4 @@ def test_evidence_image_can_be_outside_top_level_images_cap(monkeypatch):
     assert len(result["images"]) == 50
     assert target_id not in top_level_ids
     assert len(evidence) == 1
-    assert evidence[0]["image_url"].endswith(f"img-{len(image_ids)-1}.jpg")
+    assert evidence[0]["image_url"].endswith(f"img-{len(image_ids) - 1}.jpg")
