@@ -41,6 +41,18 @@ def test_yes_case_insensitive():
     assert result is True
 
 
+def test_yes_with_period():
+    client = _mock_client("YES.")
+    result = _is_retail_interior("https://example.com/interior.jpg", client)
+    assert result is True
+
+
+def test_no_with_period():
+    client = _mock_client("NO.")
+    result = _is_retail_interior("https://example.com/product.jpg", client)
+    assert result is False
+
+
 def test_filter_keeps_interiors():
     client = _mock_client("YES")
     images = [{"image_url": f"https://example.com/img-{i}.jpg"} for i in range(5)]

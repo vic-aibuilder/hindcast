@@ -68,7 +68,7 @@ def _is_retail_interior(image_url: str, client: anthropic.Anthropic) -> bool:
                     }
                 ],
             )
-            answer = response.content[0].text.strip().upper()
+            answer = response.content[0].text.strip().rstrip(".").upper()
             return answer == "YES"
 
         except anthropic.BadRequestError:
