@@ -109,7 +109,15 @@ def filter_to_interiors(
     Filter a list of image dicts to retail interiors only.
 
     Runs vision checks in parallel using ThreadPoolExecutor.
-    Only checks up to max_to_check images to control cost and latency.
+    Only checks up to max_to_check images — images beyond this
+    cap are DROPPED without inspection. This is intentional:
+    extraction caps at 40 downstream anyway, so images beyond
+    position 60 would never be extracted regardless. The cap
+    controls cost and latency, not quality.
+
+    Order matters: retrieval agent should rank relevant images
+    first. The consolidate layer's round-robin interleave helps
+    ensure varied sources appear in the first 60.
 
     Args:
         images:       List of image dicts with image_url field.
