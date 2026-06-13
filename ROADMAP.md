@@ -3,7 +3,7 @@
 > Feature-freeze / build-complete target: **June 18–19**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
 > Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
-> Last updated: **June 12, 2026**
+> Last updated: **June 13, 2026**
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
@@ -29,13 +29,13 @@ dominate `images` — resolving **#27 Item 2** (full-extracted-corpus denominato
   derives from title, omits when unknown (PR #31). **Data half — pending team call:**
   accept derived attribution for the demo, or capture real `designer/year/project`
   columns at retrieval (Gary).
-- **P1s:** pattern-image term matching (Victor); retrieval junk filter (Gary).
+- **P1s:** pattern-image term matching → #41 (Victor); retrieval junk filter → #38 (Gary).
 - Then: cache pre-warm + demo hardening.
 
 | Layer | Status |
 |---|---|
 | Backend pipeline | Wired, runs E2E. Round-trip fixed (#26). Saturation/synthesis denominate over the extracted set, not a 500-row window (#30, + denominator/isolation tests). ~108 extracted images → 6 grounded patterns/slice (June 12; sneaker re-verified on this branch). |
-| Frontend | Live `POST /query`; renders `retrieval_log` + patterns. `corpus_size` now reflects analyzed (extracted) images; per-image `year` no longer fabricated (#27 item 3 display). **Open P1:** pattern images are a positional slice of retrieval, not matched to each pattern's terms. |
+| Frontend | Live `POST /query`; renders `retrieval_log` + patterns. `corpus_size` now reflects analyzed (extracted) images; per-image `year` no longer fabricated (#27 item 3 display). **Open P1:** pattern images are a positional slice of retrieval, not matched to each pattern's terms (#41). |
 | Seed corpus | **Extracted (June 12):** 108 images, 1,080 schema rows, valid JSON round-trip confirmed. (~64–65 sneaker / ~43–44 fashion — split varies with the 1 failed image + per-source cap.) |
 | Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; seed extraction + synthesis E2E verified June 12. |
 
@@ -43,33 +43,25 @@ dominate `images` — resolving **#27 Item 2** (full-extracted-corpus denominato
 
 ## Known issues / blockers (discovered June 9 — live E2E run)
 
-Ranked. The first two severed the analytical core (output *looked* data-driven but
-was not) — both are now resolved in #26; the two P1s remain open.
+The first two severed the analytical core (output *looked* data-driven but was not) —
+both **resolved in #26**. The two P1s remain open; full detail and discussion live in
+the linked issues. (Post-mortem write-ups for the resolved P0s belong in `CHANGELOG.md`.)
 
-- **P0 — Schema never reaches synthesis (storage round-trip).** ✅ **Resolved in #26.**
-  Owner: Gary (`pipeline/storage.py`). The extractor emits a *nested*
-  `{category: {dimension: value}}` schema, but `save_extraction` was written for a
-  *flat* schema and stored each category as `str(value)` → a stringified dict that
-  `_aggregate` saw as a string and dropped. **Was:** 37 stored sneaker extractions →
-  **0** non-zero term counts; patterns confabulated from priming, not data.
-  **Fix (#26):** `json.dumps`/`json.loads` the nested category block on write/read so
-  it round-trips (verified: 33 non-zero counts on a round-trip test). Legacy corrupt
-  rows are cleared by `purge_legacy_extractions()` — re-extraction required to repopulate.
-- **P0-assist — Aggregator fails silently.** ✅ **Resolved in #26.** Owner: Christian
-  (`src/synthesizer.py`). `_aggregate` did `continue` on a shape mismatch instead of
-  raising — which is *why* P0 went unnoticed. **Fix (#26):** it now raises `ValueError`
-  on a non-dict category, surfacing this class of break on the first run.
-- **P1 — Pattern images are unrelated to the pattern.** Owner: **Victor**
-  (`frontend/src/api.ts`). `adaptQueryResponse` slices the global retrieved-image
-  list by position (`offset = i * 8`) and bolts 8 images onto each pattern — no link
-  to the pattern's `dominant_terms`. The synthesizer already matches images to terms
-  in `_count_images_for_pattern`; it just discards *which* ones.
-- **P1 — Retrieval returns unfiltered junk.** Owner: **Gary** (`retrieval/agent.py`,
-  `retrieval/tavily.py`). Tavily `include_images=True` dumps every image on each
-  result page (logos, related-article thumbnails, author headshots, non-NYC stores)
-  with no relevance filter, plus a fallback that uses the page URL itself as an
-  "image" (`agent.py:168`). This is what put a HYPEBEAST logo card, an IKEA Oxford
-  St storefront, and a Nike Dubai store in the grid.
+- **P0 — Schema round-trip (storage).** ✅ Resolved in #26 (Gary, `pipeline/storage.py`).
+  Nested schema was stored as a stringified dict and dropped by `_aggregate`; fixed with a
+  `json.dumps`/`loads` round-trip. Legacy rows purged via `purge_legacy_extractions()` —
+  re-extraction required.
+- **P0-assist — Aggregator failed silently.** ✅ Resolved in #26 (Christian,
+  `src/synthesizer.py`). `_aggregate` now raises `ValueError` on a non-dict category
+  instead of `continue`-ing.
+- **P1 — Pattern images not matched to pattern → [#41](https://github.com/vic-aibuilder/hindcast/issues/41)**
+  (Victor, `frontend/src/api.ts`). Positional slicing (`offset = i * 8`) instead of
+  term-matched images; `_count_images_for_pattern` already matches but discards which.
+- **P1 — Retrieval returns unfiltered junk → [#38](https://github.com/vic-aibuilder/hindcast/issues/38)**
+  (Gary, `retrieval/`). Tavily `include_images=True` dumps logos/headshots/non-NYC stores
+  with no relevance filter, plus a URL-as-image fallback (`agent.py:168`) — what put a
+  HYPEBEAST logo card and a Nike Dubai store in the grid. #39 was a partial URL-pattern
+  mitigation only. *(Root-cause detail still to be added to #38.)*
 
 ---
 
@@ -152,8 +144,8 @@ was not) — both are now resolved in #26; the two P1s remain open.
 
 **Role 3 — Christian**
 - [x] Seed corpus extraction: run extractor over slice 2 seed images (44/44, June 12)
-- [ ] Swap schema to contemporary fashion dimensions (shared v2.5 vocab today; slice-specific dims TBD)
-  Note: calibration block work (above) may have addressed much of the gap this item was meant to solve — recommend team review before committing to vocab additions.
+- [ ] Swap schema to contemporary fashion dimensions (shared v2.5 vocab today; slice-specific dims TBD) → #40
+  Note: this is the *extraction-vocab* layer — distinct from the synthesis-time calibration added in #37 (next item). Calibration changes how findings are *interpreted*, not what gets *extracted*, so it does not close this. Tracked in #40.
 - [x] Update synthesis prompt with slice/category-specific calibration references for both sub-slices (sneaker_streetwear + contemporary_fashion baselines added to `_SUB_SLICE_CONTEXT` in `src/synthesizer.py`, tested via synthesis-only re-runs on existing seed extractions — both slices show category-aware contrast framing)
 - [x] End-to-end test query for slice 2 — seed-corpus synthesis verified, 6 patterns (June 12)
 
