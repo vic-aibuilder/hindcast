@@ -65,8 +65,10 @@ def _make_extraction(
     formality: str = "casual",
     reference: str = "hospitality",
     abstract_qualities: list[str] | None = None,
+    image_id: int = 1,
 ) -> dict:
     return {
+        "image_id": image_id,
         "material": {
             "wood": wood or [],
             "metal": metal or [],
@@ -310,15 +312,16 @@ class TestFormatAggregation:
 class TestCountImagesForPattern:
     def test_single_term_match(self):
         corpus = [
-            _make_extraction(metal=["stainless steel"]),
-            _make_extraction(metal=[]),
-            _make_extraction(metal=["stainless steel"]),
+            _make_extraction(metal=["stainless steel"], image_id=101),
+            _make_extraction(metal=[], image_id=102),
+            _make_extraction(metal=["stainless steel"], image_id=103),
         ]
-        count = _count_images_for_pattern(corpus, ["stainless steel"])
+        count, image_ids = _count_images_for_pattern(corpus, ["stainless steel"])
         assert count == 2
+        assert image_ids == [101, 103]
 
     def test_empty_dominant_terms_returns_zero(self):
-        assert _count_images_for_pattern(_corpus(5), []) == 0
+        assert _count_images_for_pattern(_corpus(5), []) == (0, [])
 
     def test_threshold_majority_required(self):
         # dominant_terms has 4 terms; threshold 0.5 → min 2 required
@@ -330,7 +333,7 @@ class TestCountImagesForPattern:
             ),  # 3 ✓
         ]
         terms = ["stainless steel", "blackened steel", "brass", "copper"]
-        count = _count_images_for_pattern(corpus, terms, threshold=0.5)
+        count, _ = _count_images_for_pattern(corpus, terms, threshold=0.5)
         assert count == 2
 
     def test_string_dim_term_matched(self):
@@ -338,17 +341,17 @@ class TestCountImagesForPattern:
             _make_extraction(primary_geometry="rectilinear / grid"),
             _make_extraction(primary_geometry="mixed"),
         ]
-        count = _count_images_for_pattern(corpus, ["rectilinear / grid"])
+        count, _ = _count_images_for_pattern(corpus, ["rectilinear / grid"])
         assert count == 1
 
     def test_term_not_in_corpus_returns_zero(self):
         corpus = _corpus(5, metal=[])
-        count = _count_images_for_pattern(corpus, ["perforated metal"])
+        count, _ = _count_images_for_pattern(corpus, ["perforated metal"])
         assert count == 0
 
     def test_all_images_match_when_term_universal(self):
         corpus = _corpus(8, wall_finish=["exposed brick"])
-        count = _count_images_for_pattern(corpus, ["exposed brick"])
+        count, _ = _count_images_for_pattern(corpus, ["exposed brick"])
         assert count == 8
 
     def test_deduplication_across_dims(self):
@@ -357,7 +360,7 @@ class TestCountImagesForPattern:
         corpus = [
             _make_extraction(color_temperature="warm", lighting_temp="warm"),
         ]
-        count = _count_images_for_pattern(corpus, ["warm"])
+        count, _ = _count_images_for_pattern(corpus, ["warm"])
         assert count == 1
 
     def test_threshold_default_is_constant(self):
