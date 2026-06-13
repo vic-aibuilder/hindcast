@@ -134,6 +134,20 @@ def test_count_extracted_images_counts_distinct_extracted_only():
     assert count_extracted_images_for_sub_slice("sneaker_streetwear") == 1
 
 
+def test_get_extracted_schemas_tags_image_id():
+    """Each extracted schema carries its source image_id for evidence mapping."""
+    image_id = _one_image()
+    save_extraction(
+        image_id,
+        {"material": {"metal": ["steel"]}, "color": {"temperature": "cool"}},
+        "sneaker_streetwear",
+    )
+
+    schemas = get_extracted_schemas_for_sub_slice("sneaker_streetwear")
+    assert len(schemas) == 1
+    assert schemas[0]["image_id"] == image_id
+
+
 def test_extraction_queries_isolate_by_sub_slice():
     """A fashion extraction must not leak into sneaker counts/schemas (denominator integrity)."""
     sneaker_id = _one_image()
