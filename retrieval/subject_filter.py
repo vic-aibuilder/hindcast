@@ -46,15 +46,22 @@ def _is_retail_interior(image_url: str, client: anthropic.Anthropic) -> bool:
                             {
                                 "type": "text",
                                 "text": (
-                                    "Does this image show the interior of a retail "
-                                    "store or brand space — meaning a photograph "
-                                    "taken inside a physical shop, boutique, or "
-                                    "brand environment showing the space itself?\n\n"
-                                    "Reply YES or NO only.\n\n"
-                                    "Reply NO for: product photos, street style, "
-                                    "exterior building shots, logo images, social "
-                                    "media collages, people portraits, or any image "
-                                    "that is not clearly inside a retail space."
+                                    "Does this image show the INTERIOR of a retail store or brand "
+                                    "space — meaning you can see walls, floor, ceiling, and fixtures "
+                                    "inside a physical shop or boutique?\n\n"
+                                    "Reply YES only if the image is clearly taken from INSIDE a store "
+                                    "and shows the architectural space itself.\n\n"
+                                    "Reply NO for ALL of these:\n"
+                                    "- People portraits or group photos\n"
+                                    "- Exterior building facades\n"
+                                    "- Logo-only images or brand splash screens\n"
+                                    "- Product photos without a visible store interior\n"
+                                    "- Street photography\n"
+                                    "- Social media collages or Pinterest grids\n"
+                                    "- YouTube thumbnails\n"
+                                    "- Any image where a retail interior space is not the "
+                                    "primary subject\n\n"
+                                    "Reply YES or NO only. No other text."
                                 ),
                             },
                         ],
@@ -62,7 +69,7 @@ def _is_retail_interior(image_url: str, client: anthropic.Anthropic) -> bool:
                 ],
             )
             answer = response.content[0].text.strip().upper()
-            return answer.startswith("YES")
+            return answer == "YES"
 
         except anthropic.BadRequestError:
             if attempt == 0:
