@@ -340,6 +340,14 @@
   grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
+.pattern__empty {
+  font-size: 13px;
+  font-style: italic;
+  color: var(--muted);
+  letter-spacing: 0.02em;
+  padding: 18px 0;
+  border-top: 1px dashed #cfc9bf;
+}
 .pattern__fig {
   display: flex;
   flex-direction: column;
