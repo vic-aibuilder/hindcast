@@ -153,7 +153,8 @@ was not) — both are now resolved in #26; the two P1s remain open.
 **Role 3 — Christian**
 - [x] Seed corpus extraction: run extractor over slice 2 seed images (44/44, June 12)
 - [ ] Swap schema to contemporary fashion dimensions (shared v2.5 vocab today; slice-specific dims TBD)
-- [ ] Update synthesis prompt with slice 2 reference patterns (sub-slice context block exists in `src/synthesizer.py`; dedicated calibration reference still needed)
+  Note: calibration block work (above) may have addressed much of the gap this item was meant to solve — recommend team review before committing to vocab additions.
+- [x] Update synthesis prompt with slice/category-specific calibration references for both sub-slices (sneaker_streetwear + contemporary_fashion baselines added to `_SUB_SLICE_CONTEXT` in `src/synthesizer.py`, tested via synthesis-only re-runs on existing seed extractions — both slices show category-aware contrast framing)
 - [x] End-to-end test query for slice 2 — seed-corpus synthesis verified, 6 patterns (June 12)
 
 > **Risk framing:** if timeline pressure hits, sneaker/streetwear (slice 1) is the
