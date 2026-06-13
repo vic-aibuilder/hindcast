@@ -35,6 +35,7 @@ class SaturationPattern(TypedDict):
     description: str
     dominant_terms: list[str]
     image_count: int
+    image_ids: list[int]
 
 
 # ---------------------------------------------------------------------------
@@ -301,7 +302,7 @@ def _count_images_for_pattern(
     extractions: list[dict],
     dominant_terms: list[str],
     threshold: float = _PATTERN_MATCH_THRESHOLD,
-) -> int:
+) -> tuple[int, list[int]]:
     """
     Count extractions that contain at least *threshold* fraction of *dominant_terms*.
 
@@ -312,15 +313,20 @@ def _count_images_for_pattern(
     duplicates across dimensions are deduplicated via a set.
     """
     if not dominant_terms:
-        return 0
+        return 0, []
 
     term_set = set(dominant_terms)
     min_matches = max(1, round(len(dominant_terms) * threshold))
-    matched_images = 0
+    matched_image_ids: list[int] = []
 
     for extraction in extractions:
+        image_id = extraction.get("image_id")
+        if not isinstance(image_id, int):
+            continue
         matched_terms: set[str] = set()
         for cat, dims in VOCABULARY.items():
+            if cat == "image_id":
+                continue
             cat_data = extraction.get(cat)
             if not isinstance(cat_data, dict):
                 continue
@@ -336,9 +342,9 @@ def _count_images_for_pattern(
                         matched_terms.add(value)
 
         if len(matched_terms) >= min_matches:
-            matched_images += 1
+            matched_image_ids.append(image_id)
 
-    return matched_images
+    return len(matched_image_ids), matched_image_ids
 
 
 # ---------------------------------------------------------------------------
@@ -446,7 +452,9 @@ def synthesize(
     patterns: list[SaturationPattern] = []
     for p in raw_patterns:
         dominant_terms: list[str] = p.get("dominant_terms", [])
-        computed_count = _count_images_for_pattern(extractions, dominant_terms)
+        computed_count, matched_image_ids = _count_images_for_pattern(
+            extractions, dominant_terms
+        )
         patterns.append(
             SaturationPattern(
                 title=_normalize_pattern_title(p.get("title", "")),
@@ -454,6 +462,7 @@ def synthesize(
                 dominant_terms=dominant_terms,
                 # prefer computed count; fall back to Claude's estimate if computation is 0
                 image_count=computed_count or p.get("image_count", 0),
+                image_ids=matched_image_ids,
             )
         )
 
