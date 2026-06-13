@@ -112,6 +112,15 @@ def run_query(brief: str, sub_slice: str) -> dict:
         retrieval_log.extend(agent_result["log"])
         retrieval_log.append(f"retrieval complete — {len(images)} images returned.")
 
+        # ── Step 3.5: Subject filter — drop non-interiors ────────────────────────
+        retrieval_log.append("filtering to retail interiors...")
+        from retrieval.subject_filter import filter_to_interiors
+
+        images = filter_to_interiors(images, client=client, max_to_check=60)
+        retrieval_log.append(
+            f"subject filter complete — {len(images)} confirmed interiors."
+        )
+
         # ── Step 3: Save to database ──────────────────────────────────────────
         retrieval_log.append("saving images to database...")
         brief_hash = hash_brief(brief, sub_slice)
