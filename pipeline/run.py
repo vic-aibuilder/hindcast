@@ -12,6 +12,7 @@ from __future__ import annotations
 import os
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Any
 
 from anthropic import Anthropic
 from dotenv import load_dotenv
@@ -61,6 +62,35 @@ def _source_breakdown(images: list[dict]) -> dict[str, int]:
         src = img.get("source") or "unknown"
         counts[src] += 1
     return dict(counts.most_common())
+
+
+def _evidence_images_for_pattern_ids(image_ids: list[int]) -> list[dict[str, Any]]:
+    """
+    Fetch image metadata rows for pattern evidence IDs.
+    """
+    if not image_ids:
+        return []
+    from pipeline.storage import get_connection
+
+    conn = get_connection()
+    placeholders = ",".join("?" * len(image_ids))
+    rows = conn.execute(
+        f"SELECT * FROM images WHERE id IN ({placeholders})",  # nosec B608
+        image_ids,
+    ).fetchall()
+    conn.close()
+
+    by_id = {row["id"]: dict(row) for row in rows}
+    ordered = [by_id[i] for i in image_ids if i in by_id]
+    return [
+        {
+            "image_url": r.get("image_url"),
+            "source_url": r.get("source_url"),
+            "title": r.get("title"),
+            "source": r.get("source"),
+        }
+        for r in ordered
+    ]
 
 
 # ── Main pipeline ─────────────────────────────────────────────────────────────
@@ -191,6 +221,16 @@ def run_query(brief: str, sub_slice: str) -> dict:
 
     # ── Step 8: Assemble result ───────────────────────────────────────────────
     extracted_corpus_size = count_extracted_images_for_sub_slice(sub_slice)
+    for pattern in patterns:
+        matched_ids = pattern.get("image_ids", [])
+        evidence_images = _evidence_images_for_pattern_ids(matched_ids)
+        pattern["evidence_images"] = evidence_images
+        pattern["image_count"] = len(evidence_images)
+        pattern.pop("image_ids", None)
+        if pattern["image_count"] != len(pattern["evidence_images"]):
+            raise RuntimeError(
+                "pattern image_count mismatch: image_count != len(evidence_images)"
+            )
 
     if source_breakdown:
         breakdown = ", ".join(f"{k}: {v}" for k, v in source_breakdown.items())

@@ -297,6 +297,9 @@ def get_extracted_schemas_for_sub_slice(sub_slice: str) -> list[dict]:
     for image_id in image_ids:
         schema = get_extractions_for_image(image_id)
         if schema:
+            # Preserve source image linkage so synthesis can return
+            # pattern-matched evidence image IDs.
+            schema["image_id"] = image_id
             schemas.append(schema)
     return schemas
 
