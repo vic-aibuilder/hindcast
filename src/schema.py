@@ -46,7 +46,15 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "slate",
             "Ceppo di Gré stone",
         ],
-        "other": ["white Corian"],
+        "other": [
+            "white Corian",
+            "lime wash",
+            "terrazzo",
+            "tadelakt",
+            "venetian plaster",
+            "raw silk panel",
+            "bouclé panel",
+        ],
         "glass": ["clear", "frosted", "translucent", "mirror"],
         "tile": ["round tile", "square tile", "linear tile"],
         "soft_fabric": [
@@ -56,6 +64,10 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "felt",
             "foam",
             "leather",
+            "bouclé",
+            "mohair",
+            "linen",
+            "cashmere",
         ],
         "wall_finish": [
             "raw plaster",
