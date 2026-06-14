@@ -1,4 +1,4 @@
-# Hindcast — Definition Layer · Schema v2.5
+# Hindcast — Definition Layer · Schema v2.6
 
 **Partner:** Snarkitecture — Alex Mustonen
 **Built from:** full meeting transcript (May 28, 2026)
@@ -6,6 +6,7 @@
 **v2.3 update:** Jun 1, 2026 — vocabulary additions from Alex Mustonen calibration document: `blonde wood`, `chrome rail`, `matte black rail` (Material/metal), `bleached white / bright white` (Material/wall_finish), `architectural plant` (Form/statement_form), `sparse product display` (Contemporary Fashion/display density)
 **v2.4 update:** Jun 1, 2026 — three new base categories added (8–10): Layout Archetype, Typography/Signage, Brand Expression Density. Schema now covers ten shared base categories.
 **v2.5 update:** Jun 3, 2026 — Phaidon monograph voice-training vocabulary synced from `src/schema.py`: `bleached white oak`, `quilted stainless steel`, `raw / honed / unfilled travertine`, `Carrara marble`, `Ceppo di Gré stone`, `whitewashed brick`, `white Corian` (Material/other), `triangular fin system`, `gradient wall` (Form/statement_form), `archive room` (Atmosphere/reference), `antechamber / entry sequence`, `forced perspective corridor` (Layout Archetype/layout)
+**v2.6 update:** Jun 14, 2026 — added quiet-luxury material vocabulary synced from `src/schema.py`: `terrazzo`, `raw silk panel` (Material/other); `lime wash`, `tadelakt`, `venetian plaster` (Material/wall_finish); `bouclé`, `mohair`, `linen`, `cashmere` (Material/soft_fabric)
 **Companion doc:** Hindcast Builder Brief v4
 **Code source of truth:** `src/schema.py`
 
@@ -58,9 +59,9 @@ The scope questions Alex raised in the meeting have been decided by the team:
 | **Stone** | travertine, **raw / honed / unfilled travertine**, limestone, marble, **Carrara marble**, terrazzo, concrete, slate, **Ceppo di Gré stone** | *Note if cold-to-touch / hard — Alex used this as a warmth cue* · raw travertine = Stampd floor · Ceppo di Gré = Valextra floor |
 | **Glass** | clear, frosted, translucent, mirror | *See Opacity below* |
 | **Tile** | round tile, square tile, linear tile | *"Round tiles, square tiles, linear tiles"* |
-| **Soft / fabric** | upholstery, soft furnishing, carpet, felt, foam, leather | *"Upholstery… soft furniture" flagged as a saturation signal* |
-| **Wall finish** | raw plaster, painted plaster, fluted plaster, exposed brick, **whitewashed brick**, **bleached white / bright white**, drywall | *Exposed brick = Alex's example of an oversaturated default* · bleached white = DTC "clean" default · whitewashed brick = Stampd wall register |
-| **Other** | **white Corian** | Solid-surface and composite materials outside wood/metal/stone — list dim |
+| **Soft / fabric** | upholstery, soft furnishing, carpet, felt, foam, leather, bouclé, mohair, linen, cashmere | *"Upholstery… soft furniture" flagged as a saturation signal* |
+| **Wall finish** | raw plaster, painted plaster, fluted plaster, lime wash, tadelakt, venetian plaster, exposed brick, **whitewashed brick**, **bleached white / bright white**, drywall | *Exposed brick = Alex's example of an oversaturated default* · bleached white = DTC "clean" default · whitewashed brick = Stampd wall register |
+| **Other** | **white Corian**, terrazzo, raw silk panel | Solid-surface and composite materials outside wood/metal/stone — list dim |
 
 Material also carries pattern and color sub-attributes — Alex noted these "play into material."
 
@@ -251,4 +252,4 @@ The algorithm connection — the Filterworld thesis (he called the author "Kyle 
 
 ---
 
-*Hindcast Definition Layer — Schema v2.5 · internal build doc · synced to `src/schema.py` Jun 3, 2026*
+*Hindcast Definition Layer — Schema v2.6 · internal build doc · synced to `src/schema.py` Jun 14, 2026*

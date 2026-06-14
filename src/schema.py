@@ -1,5 +1,5 @@
 """
-Hindcast controlled vocabulary — Schema v2.5.
+Hindcast controlled vocabulary — Schema v2.6.
 
 Single source of truth for the per-image schema dimensions and allowed values.
 Importable by the extractor, synthesizer, retrieval pipeline, and tests.
@@ -8,6 +8,9 @@ v2.3: blonde wood, chrome rail, matte black rail, bleached white / bright white,
        architectural plant — from Alex Mustonen calibration doc
 v2.4: layout_archetype, typography_signage, brand_expression_density — base cats 8–10
 v2.5: Phaidon monograph voice-training terms — Kith, Stampd, Veilance, Valextra
+v2.6: added quiet luxury material vocab: terrazzo, raw silk panel to material.other;
+      lime wash, tadelakt, venetian plaster to material.wall_finish;
+      bouclé, mohair, linen, cashmere to material.soft_fabric
 """
 
 from __future__ import annotations
@@ -48,12 +51,8 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
         ],
         "other": [
             "white Corian",
-            "lime wash",
             "terrazzo",
-            "tadelakt",
-            "venetian plaster",
             "raw silk panel",
-            "bouclé panel",
         ],
         "glass": ["clear", "frosted", "translucent", "mirror"],
         "tile": ["round tile", "square tile", "linear tile"],
@@ -73,6 +72,9 @@ VOCABULARY: dict[str, dict[str, list[str]]] = {
             "raw plaster",
             "painted plaster",
             "fluted plaster",
+            "lime wash",
+            "tadelakt",
+            "venetian plaster",
             "exposed brick",
             "whitewashed brick",
             "bleached white / bright white",
