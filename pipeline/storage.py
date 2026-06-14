@@ -51,14 +51,11 @@ def _migrate_add_attribution_columns(conn: sqlite3.Connection) -> None:
     Idempotent migration — adds designer/year/project to images if missing.
     Required because CREATE TABLE IF NOT EXISTS is a no-op on existing DBs.
     """
-    existing = {
-        row[1]
-        for row in conn.execute("PRAGMA table_info(images)").fetchall()
-    }
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(images)").fetchall()}
     migrations = [
         ("designer", "ALTER TABLE images ADD COLUMN designer TEXT"),
-        ("year",     "ALTER TABLE images ADD COLUMN year INTEGER"),
-        ("project",  "ALTER TABLE images ADD COLUMN project TEXT"),
+        ("year", "ALTER TABLE images ADD COLUMN year INTEGER"),
+        ("project", "ALTER TABLE images ADD COLUMN project TEXT"),
     ]
     for col, sql in migrations:
         if col not in existing:
@@ -122,8 +119,7 @@ def init_db() -> None:
 
             CREATE INDEX IF NOT EXISTS idx_cache_brief_hash
                 ON brief_cache(brief_hash);
-        """
-        )
+        """)
         # Migration: add attribution columns to existing databases
         _migrate_add_attribution_columns(conn)
     conn.close()

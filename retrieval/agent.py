@@ -273,7 +273,9 @@ def _extract_metadata(images: list[dict], client: Anthropic) -> list[dict]:
             img["project"] = None
 
     if failure_count:
-        print(f"_extract_metadata: {failure_count}/{len(images)} images failed to parse")
+        print(
+            f"_extract_metadata: {failure_count}/{len(images)} images failed to parse"
+        )
 
     return images
 
