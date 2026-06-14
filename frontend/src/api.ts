@@ -66,8 +66,16 @@ function deriveYear(title?: string, sourceUrl?: string): number | undefined {
 function toPatternImages(images: CorpusImage[]): PatternImage[] {
   return images.map(img => ({
     url: img.image_url,
-    project: img.project ?? (img.title?.slice(0, 80) || 'Untitled project'),
-    designer: img.designer ?? (img.source?.replace(/^www\./, '') || 'Unknown source'),
+    // Real attribution from the retrieval metadata pass (#33b/#48).
+    // project: prefer the extracted name; fall back to the image title, which
+    //   is real source text (not fabrication) — better a true-but-imprecise
+    //   label than a sparse caption. Omit only when both are absent.
+    // designer: no fallback. The old one showed the publication domain, which
+    //   mislabeled a magazine as the designer — omit when not extracted.
+    project: img.project ?? (img.title?.slice(0, 80) || undefined),
+    designer: img.designer ?? undefined,
+    // Year keeps the source_url path fallback — per the #33 contract the
+    // frontend owns it, catching nulls the metadata pass couldn't fill.
     year: img.year ?? deriveYear(img.title, img.source_url),
   }))
 }
