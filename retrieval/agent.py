@@ -225,6 +225,8 @@ def _extract_metadata(images: list[dict], client: Anthropic) -> list[dict]:
         "No explanation, no markdown, no preamble — raw JSON only."
     )
 
+    failure_count = 0
+
     for img in images:
         title = img.get("title", "") or ""
         source_url = img.get("source_url", "") or ""
@@ -250,14 +252,28 @@ def _extract_metadata(images: list[dict], client: Anthropic) -> list[dict]:
                 messages=[{"role": "user", "content": prompt}],
             )
             raw = response.content[0].text.strip()
+            # Strip ```json fences if model wraps response
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+                raw = raw.strip()
             parsed = json.loads(raw)
             img["designer"] = parsed.get("designer")
-            img["year"] = parsed.get("year")
+            raw_year = parsed.get("year")
+            try:
+                img["year"] = int(raw_year) if raw_year is not None else None
+            except (ValueError, TypeError):
+                img["year"] = None
             img["project"] = parsed.get("project")
         except Exception:
+            failure_count += 1
             img["designer"] = None
             img["year"] = None
             img["project"] = None
+
+    if failure_count:
+        print(f"_extract_metadata: {failure_count}/{len(images)} images failed to parse")
 
     return images
 
