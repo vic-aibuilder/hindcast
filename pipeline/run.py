@@ -17,7 +17,7 @@ from typing import Any
 from anthropic import Anthropic
 from dotenv import load_dotenv
 
-from retrieval.agent import run as run_retrieval_agent
+from retrieval.agent import run as run_retrieval_agent, _extract_metadata
 from pipeline.storage import (
     init_db,
     save_images,
@@ -152,6 +152,12 @@ def run_query(brief: str, sub_slice: str) -> dict:
         images = filter_to_interiors(images, client=client, max_to_check=60)
         retrieval_log.append(
             f"subject filter complete — {len(images)} confirmed interiors."
+        )
+
+        # Scope metadata pass to ≤40 candidates that will actually be extracted + displayed
+        retrieval_log.append("running metadata extraction on display candidates...")
+        images[:MAX_EXTRACTION_BATCH] = _extract_metadata(
+            images[:MAX_EXTRACTION_BATCH], client
         )
 
         # ── Step 3: Save to database ──────────────────────────────────────────

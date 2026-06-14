@@ -382,7 +382,6 @@ def run(brief: str, sub_slice: str, client: Anthropic | None = None) -> dict:
             break
 
     unique_images = _consolidate_images(all_images)
-    unique_images = _extract_metadata(unique_images, client)
 
     reasoning_log.append(
         f"Retrieval complete: {len(unique_images)} unique images "
