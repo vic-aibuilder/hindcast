@@ -211,6 +211,75 @@ def _execute_tool(tool_name: str, tool_input: dict) -> tuple[str, list[dict]]:
         return f"Unknown tool: {tool_name}", []
 
 
+def _extract_metadata(images: list[dict], client: Anthropic) -> list[dict]:
+    """
+    Run a single LLM pass over each image to extract designer, year, project.
+    Mutates and returns the image list with designer/year/project fields added.
+    Returns null for any field that cannot be confidently extracted.
+    """
+    system = (
+        "You extract structured attribution metadata from design publication titles "
+        "and URLs. Return ONLY valid JSON with exactly three keys: "
+        '"designer" (string or null), "year" (integer or null), "project" (string or null). '
+        "Never invent or guess. If you are not confident, return null for that field. "
+        "No explanation, no markdown, no preamble — raw JSON only."
+    )
+
+    failure_count = 0
+
+    for img in images:
+        title = img.get("title", "") or ""
+        source_url = img.get("source_url", "") or ""
+
+        if not title and not source_url:
+            img["designer"] = None
+            img["year"] = None
+            img["project"] = None
+            continue
+
+        prompt = (
+            f"Title: {title}\n"
+            f"URL: {source_url}\n\n"
+            "Extract: designer name, year (integer), project/store name. "
+            "Return null for any field you cannot confidently extract."
+        )
+
+        try:
+            response = client.messages.create(
+                model=MODEL,
+                max_tokens=100,
+                system=system,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = response.content[0].text.strip()
+            # Strip ```json fences if model wraps response
+            if raw.startswith("```"):
+                raw = raw.split("```")[1]
+                if raw.startswith("json"):
+                    raw = raw[4:]
+                raw = raw.strip()
+            parsed = json.loads(raw)
+            img["designer"] = parsed.get("designer")
+            raw_year = parsed.get("year")
+            try:
+                img["year"] = int(raw_year) if raw_year is not None else None
+            except (ValueError, TypeError):
+                img["year"] = None
+            img["project"] = parsed.get("project")
+        except Exception:
+            failure_count += 1
+            img["designer"] = None
+            img["year"] = None
+            img["project"] = None
+
+    if failure_count:
+        print(
+            f"_extract_metadata: {failure_count}/{len(images)} images failed to parse"
+        )
+
+    return images
+
+
 # ── Main agent loop ───────────────────────────────────────────────────────────
 
 
@@ -313,6 +382,7 @@ def run(brief: str, sub_slice: str, client: Anthropic | None = None) -> dict:
             break
 
     unique_images = _consolidate_images(all_images)
+    unique_images = _extract_metadata(unique_images, client)
 
     reasoning_log.append(
         f"Retrieval complete: {len(unique_images)} unique images "

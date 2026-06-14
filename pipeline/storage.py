@@ -46,6 +46,22 @@ def get_connection() -> sqlite3.Connection:
 # ── Schema bootstrap ──────────────────────────────────────────────────────────
 
 
+def _migrate_add_attribution_columns(conn: sqlite3.Connection) -> None:
+    """
+    Idempotent migration — adds designer/year/project to images if missing.
+    Required because CREATE TABLE IF NOT EXISTS is a no-op on existing DBs.
+    """
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(images)").fetchall()}
+    migrations = [
+        ("designer", "ALTER TABLE images ADD COLUMN designer TEXT"),
+        ("year", "ALTER TABLE images ADD COLUMN year INTEGER"),
+        ("project", "ALTER TABLE images ADD COLUMN project TEXT"),
+    ]
+    for col, sql in migrations:
+        if col not in existing:
+            conn.execute(sql)
+
+
 def init_db() -> None:
     """
     Create all tables if they don't already exist.
@@ -64,7 +80,10 @@ def init_db() -> None:
                 retrieval_method TEXT,
                 channel         TEXT,
                 brief_hash      TEXT,
-                created_at      TEXT    NOT NULL
+                created_at      TEXT    NOT NULL,
+                designer        TEXT,
+                year            INTEGER,
+                project         TEXT
             );
 
             CREATE TABLE IF NOT EXISTS schema_extractions (
@@ -101,6 +120,8 @@ def init_db() -> None:
             CREATE INDEX IF NOT EXISTS idx_cache_brief_hash
                 ON brief_cache(brief_hash);
         """)
+        # Migration: add attribution columns to existing databases
+        _migrate_add_attribution_columns(conn)
     conn.close()
 
 
@@ -146,8 +167,9 @@ def save_images(images: list[dict], sub_slice: str, brief_hash: str) -> list[int
                     INSERT INTO images
                         (image_url, source_url, title, source,
                          sub_slice, retrieval_method, channel,
-                         brief_hash, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         brief_hash, created_at,
+                         designer, year, project)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         img.get("image_url", ""),
@@ -159,6 +181,9 @@ def save_images(images: list[dict], sub_slice: str, brief_hash: str) -> list[int
                         img.get("channel", ""),
                         brief_hash,
                         now,
+                        img.get("designer"),
+                        img.get("year"),
+                        img.get("project"),
                     ),
                 )
                 inserted_ids.append(cursor.lastrowid)
