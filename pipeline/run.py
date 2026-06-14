@@ -88,6 +88,9 @@ def _evidence_images_for_pattern_ids(image_ids: list[int]) -> list[dict[str, Any
             "source_url": r.get("source_url"),
             "title": r.get("title"),
             "source": r.get("source"),
+            "designer": r.get("designer"),
+            "year": r.get("year"),
+            "project": r.get("project"),
         }
         for r in ordered
     ]

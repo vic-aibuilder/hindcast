@@ -64,7 +64,10 @@ def init_db() -> None:
                 retrieval_method TEXT,
                 channel         TEXT,
                 brief_hash      TEXT,
-                created_at      TEXT    NOT NULL
+                created_at      TEXT    NOT NULL,
+                designer        TEXT,
+                year            INTEGER,
+                project         TEXT
             );
 
             CREATE TABLE IF NOT EXISTS schema_extractions (
@@ -146,8 +149,9 @@ def save_images(images: list[dict], sub_slice: str, brief_hash: str) -> list[int
                     INSERT INTO images
                         (image_url, source_url, title, source,
                          sub_slice, retrieval_method, channel,
-                         brief_hash, created_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                         brief_hash, created_at,
+                         designer, year, project)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     """,
                     (
                         img.get("image_url", ""),
@@ -159,6 +163,9 @@ def save_images(images: list[dict], sub_slice: str, brief_hash: str) -> list[int
                         img.get("channel", ""),
                         brief_hash,
                         now,
+                        img.get("designer"),
+                        img.get("year"),
+                        img.get("project"),
                     ),
                 )
                 inserted_ids.append(cursor.lastrowid)
