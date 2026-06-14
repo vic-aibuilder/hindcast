@@ -220,7 +220,7 @@ def _extract_metadata(images: list[dict], client: Anthropic) -> list[dict]:
     system = (
         "You extract structured attribution metadata from design publication titles "
         "and URLs. Return ONLY valid JSON with exactly three keys: "
-        "\"designer\" (string or null), \"year\" (integer or null), \"project\" (string or null). "
+        '"designer" (string or null), "year" (integer or null), "project" (string or null). '
         "Never invent or guess. If you are not confident, return null for that field. "
         "No explanation, no markdown, no preamble — raw JSON only."
     )
