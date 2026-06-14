@@ -42,12 +42,25 @@ interface ApiPattern {
   evidence_images?: CorpusImage[]
 }
 
-// Pull a 4-digit year out of the title only when one is actually present.
-// Returns undefined rather than fabricating a year — real years arrive via
-// img.year once retrieval captures structured attribution (#27 item 3).
-function deriveYear(title?: string): number | undefined {
-  const match = title?.match(/\b(20\d{2})\b/)
-  return match ? Number(match[1]) : undefined
+// Derive a 4-digit year for an image without fabricating one (#33).
+// Precedence:
+//   1. the date in source_url's path (e.g. /2024/02/… → 2024) — the
+//      publication year, the most consistent proxy we have;
+//   2. a year mentioned in the title, as a fallback;
+//   3. undefined — we omit the year rather than invent one.
+// Years outside 2000..currentYear are rejected as noise (street numbers,
+// collection codes, future-dated typos). Real structured years override
+// this via img.year once retrieval captures attribution (#33 option b / #34).
+function extractYear(text?: string, pattern: RegExp = /\b(20\d{2})\b/): number | undefined {
+  const match = text?.match(pattern)
+  if (!match) return undefined
+  const year = Number(match[1])
+  return year >= 2000 && year <= new Date().getFullYear() ? year : undefined
+}
+
+function deriveYear(title?: string, sourceUrl?: string): number | undefined {
+  // Prefer a year in a URL path segment (/2024/…); fall back to the title.
+  return extractYear(sourceUrl, /\/(20\d{2})(?=\/)/) ?? extractYear(title)
 }
 
 function toPatternImages(images: CorpusImage[]): PatternImage[] {
@@ -55,7 +68,7 @@ function toPatternImages(images: CorpusImage[]): PatternImage[] {
     url: img.image_url,
     project: img.project ?? (img.title?.slice(0, 80) || 'Untitled project'),
     designer: img.designer ?? (img.source?.replace(/^www\./, '') || 'Unknown source'),
-    year: img.year ?? deriveYear(img.title),
+    year: img.year ?? deriveYear(img.title, img.source_url),
   }))
 }
 
