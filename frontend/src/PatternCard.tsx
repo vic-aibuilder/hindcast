@@ -25,14 +25,24 @@ export default function PatternCard({ pattern, index, total }: PatternCardProps)
         </p>
       ) : (
         <div className="pattern__grid">
-          {pattern.images.map((img, i) => (
-            <figure key={i} className="pattern__fig">
-              <img className="pattern__img" src={img.url} alt={img.project} loading="lazy" />
-              <figcaption className="pattern__cap">
-                {img.project} · {img.designer}{img.year ? ` · ${img.year}` : ''}
-              </figcaption>
-            </figure>
-          ))}
+          {pattern.images.map((img, i) => {
+            // Build the caption from whatever attribution we actually have —
+            // omitted fields drop out cleanly instead of leaving stray " · ".
+            const caption = [img.project, img.designer, img.year]
+              .filter(Boolean)
+              .join(' · ')
+            return (
+              <figure key={i} className="pattern__fig">
+                <img
+                  className="pattern__img"
+                  src={img.url}
+                  alt={img.project ?? 'Saturated example'}
+                  loading="lazy"
+                />
+                {caption && <figcaption className="pattern__cap">{caption}</figcaption>}
+              </figure>
+            )
+          })}
         </div>
       )}
     </article>
