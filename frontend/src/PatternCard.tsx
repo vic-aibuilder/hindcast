@@ -8,7 +8,25 @@ interface PatternCardProps {
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
+// Descriptions are exactly 3 sentences in a single string (synthesizer spec),
+// with the final sentence always the data observation. Honor real paragraph
+// breaks if any exist; otherwise lift that closing observation out so it can
+// render as a distinct, muted data line set apart from the prose above it.
+function splitDescription(description: string): { body: string[]; dataLine: string | null } {
+  const paras = description.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
+  if (paras.length > 1) return { body: paras, dataLine: null }
+  const sentences = description.split(/(?<=[.])\s+/).map((s) => s.trim()).filter(Boolean)
+  if (sentences.length > 1) {
+    return {
+      body: [sentences.slice(0, -1).join(' ')],
+      dataLine: sentences[sentences.length - 1],
+    }
+  }
+  return { body: [description], dataLine: null }
+}
+
 export default function PatternCard({ pattern, index, total }: PatternCardProps) {
+  const { body, dataLine } = splitDescription(pattern.description)
   return (
     <article className="pattern">
       <div className="pattern__header">
@@ -16,7 +34,12 @@ export default function PatternCard({ pattern, index, total }: PatternCardProps)
           {pad(index)} / {pad(total)}
         </div>
         <h2 className="pattern__title">{pattern.title}</h2>
-        <p className="pattern__desc">{pattern.description}</p>
+        {body.map((para, i) => (
+          <p key={i} className="pattern__desc">
+            {para}
+          </p>
+        ))}
+        {dataLine && <p className="pattern__data">{dataLine}</p>}
         {pattern.observation && <p className="pattern__obs">{pattern.observation}</p>}
       </div>
       {pattern.images.length === 0 ? (
