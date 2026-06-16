@@ -10,6 +10,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Root docs: README.md, PRD.md, ARCHITECTURE.md, AGENTS.md, CLAUDE.md, ROADMAP.md.
 - Definition layer: docs/schema.md (Schema v2.2, verbatim).
 - GitHub config: CI workflow, issue templates, PR template, CODEOWNERS, setup notes.
+- Deploy config: `Procfile` + `.python-version` (Railway/FastAPI), `netlify.toml` (Vite
+  frontend), env-driven CORS (`ALLOWED_ORIGINS`) and port (`$PORT`) in `api.py`, and
+  `docs/DEPLOY.md`. Stack: Netlify (frontend) + Railway (backend).
 
 ### Changed
 - Pattern descriptions: lift the closing data-observation sentence into a distinct muted

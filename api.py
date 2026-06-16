@@ -6,6 +6,8 @@ Single query endpoint: POST /query
 
 from __future__ import annotations
 
+import os
+
 import uvicorn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,9 +17,18 @@ from pipeline.run import run_query
 
 app = FastAPI(title="Hindcast API")
 
+# Comma-separated allowed origins. Defaults to the local Vite dev server; on
+# the host (Railway), set ALLOWED_ORIGINS to the deployed Netlify origin —
+# e.g. "https://hindcast.netlify.app".
+_allowed_origins = [
+    o.strip()
+    for o in os.getenv("ALLOWED_ORIGINS", "http://localhost:5173").split(",")
+    if o.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=_allowed_origins,
     allow_methods=["POST", "GET"],
     allow_headers=["*"],
 )
@@ -51,4 +62,5 @@ async def health() -> dict:
 
 
 if __name__ == "__main__":
-    uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)  # nosec B104
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run("api:app", host="0.0.0.0", port=port, reload=True)  # nosec B104

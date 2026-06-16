@@ -1,0 +1,15 @@
+# Netlify build config for the Vite/React frontend.
+# Set VITE_API_URL in the Netlify dashboard to the deployed Railway backend URL
+# (e.g. https://hindcast-api.up.railway.app). Without it, the build falls back
+# to http://localhost:8000 (see frontend/src/api.ts).
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+# SPA fallback so client-side routes resolve to index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
