@@ -34,7 +34,7 @@ from src.synthesizer import synthesize, SaturationPattern
 
 load_dotenv()
 
-CACHE_MIN_IMAGES = 30
+CACHE_MIN_IMAGES = 5
 MAX_EXTRACTION_BATCH = 40
 
 # Concurrency for the schema-extraction step. Each unit is one Claude vision
