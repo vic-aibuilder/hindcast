@@ -29,7 +29,11 @@ class QueryRequest(BaseModel):
 
 
 @app.post("/query")
-async def query(request: QueryRequest) -> dict:
+def query(request: QueryRequest) -> dict:
+    # Sync (not async) on purpose: run_query() is blocking (network I/O,
+    # extraction, SQLite), so FastAPI runs this handler in its threadpool and
+    # the event loop stays free to serve /health and overlap queries (#54).
+    # Do NOT re-add `async` — see tests/test_api.py.
     if request.sub_slice not in [
         "sneaker_streetwear",
         "contemporary_fashion",

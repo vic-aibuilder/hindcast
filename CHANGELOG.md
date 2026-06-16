@@ -21,6 +21,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Loading screen: dropped the inaccurate "First run may take 1–5 minutes." copy.
 
 ### Fixed
+- `/query` no longer blocks the event loop: the handler is now a sync `def`, so FastAPI
+  runs the blocking pipeline in its threadpool and `/health` stays responsive (and queries
+  can overlap) instead of the whole server freezing mid-query (#54). Robust multi-user
+  concurrency tracked separately in #66.
 - Schema round-trip + aggregator (P0/P0-assist): nested schema was stored as a
   stringified dict and dropped by `_aggregate`, which also failed silently on non-dict
   categories. Legacy rows purged (`purge_legacy_extractions()`), requiring re-extraction (#26).
