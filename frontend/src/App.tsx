@@ -112,11 +112,6 @@ export default function App() {
             · NYC · 2025–present
           </div>
           <hr className="rule" />
-          <AgentLog
-            messages={state.logs}
-            label="Pipeline log"
-          />
-          <hr className="rule" />
           <OutputLayout result={state.result} />
         </section>
       )}

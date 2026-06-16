@@ -11,6 +11,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Definition layer: docs/schema.md (Schema v2.2, verbatim).
 - GitHub config: CI workflow, issue templates, PR template, CODEOWNERS, setup notes.
 
+### Changed
+- Pattern descriptions: lift the closing data-observation sentence into a distinct muted
+  data line with clearer paragraph spacing, so longer descriptions are scannable (#29).
+
+### Removed
+- Output page: removed the post-query "Pipeline log" panel from the results view; the
+  loading-screen reasoning log is unchanged (#29).
+- Loading screen: dropped the inaccurate "First run may take 1–5 minutes." copy.
+
 ### Fixed
 - Schema round-trip + aggregator (P0/P0-assist): nested schema was stored as a
   stringified dict and dropped by `_aggregate`, which also failed silently on non-dict

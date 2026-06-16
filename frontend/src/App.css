@@ -328,6 +328,15 @@
   color: #2a2a28;
   margin-bottom: 6px;
 }
+.pattern__desc + .pattern__desc {
+  margin-top: 18px;
+}
+.pattern__data {
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--muted);
+  margin-top: 18px;
+}
 .pattern__obs {
   font-size: 12px;
   font-style: italic;
