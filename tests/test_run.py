@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from pipeline.storage import hash_brief, init_db, save_extraction, save_images
-from pipeline.run import run_query
+from pipeline.run import run_query, _evidence_sort_key
 
 
 @pytest.fixture(autouse=True)
@@ -137,3 +137,32 @@ def test_evidence_image_can_be_outside_top_level_images_cap(monkeypatch):
     assert target_id not in top_level_ids
     assert len(evidence) == 1
     assert evidence[0]["image_url"].endswith(f"img-{len(image_ids) - 1}.jpg")
+
+
+def test_evidence_sort_key_groups_by_store_then_interior():
+    """#55: a pattern grid should cluster by store with hero → interior order,
+    undoing the retrieval round-robin interleave."""
+    interleaved = [
+        {"title": "Colbo NYC sneaker boutique — interior 2"},
+        {"title": "Flight Club New York by Slade Architecture — interior 1"},
+        {"title": "Kith Williamsburg Brooklyn — hero"},
+        {"title": "Colbo NYC sneaker boutique — interior 1"},
+        {"title": "Flight Club New York by Slade Architecture — hero"},
+        {"title": "Kith Williamsburg Brooklyn — interior 1"},
+    ]
+    ordered = [img["title"] for img in sorted(interleaved, key=_evidence_sort_key)]
+    assert ordered == [
+        "Colbo NYC sneaker boutique — interior 1",
+        "Colbo NYC sneaker boutique — interior 2",
+        "Flight Club New York by Slade Architecture — hero",
+        "Flight Club New York by Slade Architecture — interior 1",
+        "Kith Williamsburg Brooklyn — hero",
+        "Kith Williamsburg Brooklyn — interior 1",
+    ]
+
+
+def test_evidence_sort_key_prefers_extracted_project_over_title():
+    """When `project` is present it defines the store, overriding the title."""
+    aime = {"title": "zzz placeholder — interior 1", "project": "Aimé Leon Dore"}
+    brain_dead = {"title": "aaa placeholder — hero", "project": "Brain Dead"}
+    assert _evidence_sort_key(aime) < _evidence_sort_key(brain_dead)

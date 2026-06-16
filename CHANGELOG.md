@@ -32,5 +32,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Off-subject retrieval filtered via a vision subject check (fail-open), removing
   logos/headshots/non-NYC stores from the grid. Filter checks only the first 60 candidates,
   so junk past that still reaches the grid — follow-up in #56 (#38, June 13).
+- Pattern evidence grids now group by store (hero → interior order) instead of showing the
+  retrieval round-robin interleave — display-only sort in `_evidence_images_for_pattern_ids` (#55).
 - Per-image `year` no longer fabricated — derived from title, omitted when unknown (#33).
 - Docs synced to the SQLite storage layer and real seed counts (#27).
