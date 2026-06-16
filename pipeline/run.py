@@ -10,6 +10,7 @@ Victor's frontend calls POST /query → api.py → run_query() here.
 from __future__ import annotations
 
 import os
+import re
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
@@ -64,6 +65,33 @@ def _source_breakdown(images: list[dict]) -> dict[str, int]:
     return dict(counts.most_common())
 
 
+def _evidence_sort_key(img: dict[str, Any]) -> tuple[str, int, str]:
+    """
+    Sort key to group a pattern's evidence images by store, then interior order.
+
+    Store identity: the extracted ``project`` when present, else the part of the
+    title before the ' — ' separator (seed titles are 'Store — interior N').
+    Interior order: 'hero' first, then 'interior 1', 'interior 2', …; anything
+    without an interior marker sorts last within its store.
+    """
+    title = (img.get("title") or "").strip()
+    project = img.get("project")
+    if project:
+        store, remainder = project.strip(), title
+    else:
+        parts = re.split(r"\s*—\s*", title, maxsplit=1)
+        store = parts[0].strip()
+        remainder = parts[1] if len(parts) > 1 else ""
+
+    remainder_l = remainder.lower()
+    if "hero" in remainder_l:
+        order = 0
+    else:
+        m = re.search(r"interior\s+(\d+)", remainder_l)
+        order = int(m.group(1)) if m else 999
+    return (store.lower(), order, title.lower())
+
+
 def _evidence_images_for_pattern_ids(image_ids: list[int]) -> list[dict[str, Any]]:
     """
     Fetch image metadata rows for pattern evidence IDs.
@@ -82,7 +110,7 @@ def _evidence_images_for_pattern_ids(image_ids: list[int]) -> list[dict[str, Any
 
     by_id = {row["id"]: dict(row) for row in rows}
     ordered = [by_id[i] for i in image_ids if i in by_id]
-    return [
+    evidence = [
         {
             "image_url": r.get("image_url"),
             "source_url": r.get("source_url"),
@@ -94,6 +122,10 @@ def _evidence_images_for_pattern_ids(image_ids: list[int]) -> list[dict[str, Any
         }
         for r in ordered
     ]
+    # Group each pattern's grid by store ("all Colbo, then all Flight Club")
+    # instead of the retrieval round-robin interleave (#55). Display-only.
+    evidence.sort(key=_evidence_sort_key)
+    return evidence
 
 
 # ── Main pipeline ─────────────────────────────────────────────────────────────
