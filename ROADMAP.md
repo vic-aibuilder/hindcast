@@ -34,8 +34,8 @@ Full presentation dry-run — slides + spoken walkthrough + **live demo of slice
 GitHub issue.
 
 **Role 1 — Victor**
-- [ ] **#29** — frontend polish: pipeline log redesign + pattern paragraph spacing
-- [ ] **#55** — group pattern evidence images by store (display ordering; fix in `pipeline/run.py`)
+- [x] **#29** — frontend polish: output pipeline log removed + pattern description spacing — done (PR #62)
+- [x] **#55** — group pattern evidence images by store (display ordering; `pipeline/run.py`) — done (PR #63)
 - [ ] Cross-browser / responsive check — the hosted demo must render correctly on the day
 - [ ] Deploy backend (FastAPI) + frontend (Vite build) to a hosted URL — set Tavily/Anthropic
   keys on the host, open CORS, and point the frontend API base off `localhost:8000`
@@ -44,9 +44,10 @@ GitHub issue.
     probe freezes the server mid-query. Decide whether #54 must be fixed before the 17th.
 
 **Role 2 — Gary**
-- [ ] **#56** — enforce 2025–present window + uncapped subject filter; drop pre-2025 stores and off-subject junk (`retrieval/`)
+- [ ] **#60** — cache never hits (`CACHE_MIN_IMAGES` vs subject-filter yield) → every run cold ~3:30. Standalone ~1-line fix; **the fast-demo / pre-warm blocker.** Do first.
+- [ ] **#56** — enforce 2025–present window + uncapped subject filter; drop pre-2025 stores and off-subject junk (`retrieval/`). NB: the 60-image cap is producing *visible* product-shot junk in the demo grid.
 - [ ] Pre-warm a clean sneaker demo query and confirm it serves from cache on reload —
-  verifies **slice-1 caching** works for the day's fast load
+  verifies **slice-1 caching** works for the day's fast load (depends on #60)
 
 **Role 3 — Christian**
 - [ ] Build slide deck — ⚠️ **top schedule risk: nothing exists yet**
@@ -60,7 +61,7 @@ GitHub issue.
 > work (#40 + #53) is deferred.
 
 **Tracked separately as [GitHub issues](https://github.com/vic-aibuilder/hindcast/issues),
-not demo-blocking:** #22, #34, #35, #40, #53, #54.
+not demo-blocking:** #22, #34, #35, #40, #53, #54, #59, #61.
 
 ---
 
