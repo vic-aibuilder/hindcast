@@ -70,7 +70,6 @@ export default function App() {
           <p className="load-title">Reading the landscape…</p>
           <p className="sub" style={{ marginBottom: '1.5rem' }}>
             Running live pipeline — retrieval, extraction, synthesis.
-            First run may take 1–5 minutes.
           </p>
           <AgentLog
             messages={[
