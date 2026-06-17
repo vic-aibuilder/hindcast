@@ -3,10 +3,20 @@
 > **June 17 — Blackstone rehearsal (full presentation dry-run)**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
 > Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
-> Last updated: **June 16, 2026**
+> Last updated: **June 17, 2026**
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
+
+---
+
+## ⚠️ Demo-day operating rules — read before any live run
+
+The demo is **live** at [hindcast.netlify.app](https://hindcast.netlify.app). Three rules, learned the hard way:
+
+1. **One person queries at a time.** Only the presenter runs queries; everyone else just watches the screen. Concurrent use is **#66** — it's what crashed the site on the night of 6/16 (it drained the API key and every query 500'd, surfacing as a misleading CORS error).
+2. **Use the pre-warmed brief verbatim** (sneaker/streetwear). It's a ~33s cache hit; any wording change triggers a slow cold run.
+3. **API budget is finite.** The backend runs on a personal funded Anthropic key with a spend cap — no cold/concurrent hammering. (The original shared school key hit its cap and is locked out until July 1.)
 
 ---
 
