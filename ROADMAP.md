@@ -43,26 +43,14 @@ Full presentation dry-run — slides + spoken walkthrough + **live demo of slice
 (sneaker)**. Only the work required for that lands here; everything else is tracked as a
 GitHub issue.
 
-**Role 1 — Victor**
-- [x] **#29** — frontend polish: output pipeline log removed + pattern description spacing (PR #62)
-- [x] **#55** — group pattern evidence images by store (`pipeline/run.py`) (PR #63)
-- [x] **#54** — `/query` no longer blocks the event loop; `/health` stays responsive (PR #67)
-- [x] **#69** — hide pre-2025 evidence images from the grid (display-side half of #56)
-- [x] **Deploy** — FastAPI → Railway, Vite build → Netlify; seeded on a volume, CORS wired, demo brief pre-warmed. **LIVE at hindcast.netlify.app**
-- [ ] Cross-browser / responsive check on the live site — **the one remaining item**
+The demo-critical build is **done and shipped** — see [Current status](#current-status)
+and the [CHANGELOG](CHANGELOG.md) for everything that landed (#29, #54, #55, #60, the
+display-side #56 / #69, and the deploy). Only the remaining to-dos live here:
 
-**Role 2 — Gary**
-- [x] **#60** — cache fix (`CACHE_MIN_IMAGES` 30→5): repeat/pre-warmed briefs serve from cache (PR #65)
-- [x] Pre-warm the sneaker demo query + confirm cache hit — validated ~33s on the live backend
-- _#56 (subject-filter over-drop) re-scoped + parked — not demo-blocking, see issues list below._
+- [ ] **Cross-browser / responsive check** on the live site — Victor
+- [ ] **Full-team dry run / rehearsal** — June 17, whole team
 
-**Role 3 — Christian**
-- [x] Slide deck — done
-- [x] Speech / presentation script — done
-
-**Team**
-- [x] Harden the demo path: one clean pre-warmed run, no live-retrieval dependency on stage
-- [ ] Full-team dry run / rehearsal — **June 17**
+_Parked, non-demo-blocking: #56 (subject-filter over-drop, Gary) → see issues list below._
 
 > Slice 1 (sneaker) is what goes on screen on the 17th. Slice 2 is the stretch; its
 > work (#40 + #53) is deferred.
