@@ -78,6 +78,13 @@ function toPatternImages(images: CorpusImage[]): PatternImage[] {
     // frontend owns it, catching nulls the metadata pass couldn't fill.
     year: img.year ?? deriveYear(img.title, img.source_url),
   }))
+  // Locked window is 2025–present: hide images whose (derived) year is
+  // pre-2025 from the grid (e.g. Supreme 2018, Flight Club 2016, Kith 2023/24
+  // surfaced via the source_url path). Year-unknown images are kept — we don't
+  // drop what we can't date. Display-only: synthesis still spans the full
+  // corpus server-side, so percentages are unaffected (#56, demo-safe half;
+  // hard retrieval enforcement + seed re-source is post-demo).
+  .filter(img => img.year === undefined || img.year >= 2025)
 }
 
 export function adaptQueryResponse(data: QueryResponse): HindcastResult {
