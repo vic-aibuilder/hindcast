@@ -33,6 +33,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   runs the blocking pipeline in its threadpool and `/health` stays responsive (and queries
   can overlap) instead of the whole server freezing mid-query (#54). Robust multi-user
   concurrency tracked separately in #66.
+- Cache now actually serves: `CACHE_MIN_IMAGES` lowered 30 → 5 so repeat/pre-warmed briefs
+  hit cache and skip the cold retrieval pipeline (cold ~3:30 → warm ~33s). The subject
+  filter leaves only ~5–18 images/brief, which the old 30 threshold rejected — forcing
+  every run cold (#60).
 - Schema round-trip + aggregator (P0/P0-assist): nested schema was stored as a
   stringified dict and dropped by `_aggregate`, which also failed silently on non-dict
   categories. Legacy rows purged (`purge_legacy_extractions()`), requiring re-extraction (#26).
