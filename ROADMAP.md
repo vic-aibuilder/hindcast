@@ -3,7 +3,7 @@
 > **June 17 — Blackstone rehearsal (full presentation dry-run)**
 > Demo Day: **Wednesday, June 24, 6 PM @ Blackstone**
 > Team: Victor (Role 1) · Gary (Role 2) · Christian (Role 3)
-> Last updated: **June 15, 2026**
+> Last updated: **June 16, 2026**
 
 The build is sequenced slice-first: sneaker/streetwear end-to-end as a complete
 demo-ready proof, then contemporary fashion adapted from the same pipeline.
@@ -12,18 +12,18 @@ demo-ready proof, then contemporary fashion adapted from the same pipeline.
 
 ## Current status
 
-Pipeline runs end-to-end on **both slices**; synthesis is data-grounded on real
-extractions (June 12 E2E — 6 grounded patterns/slice). Every analytical-core blocker is
-now resolved (see [CHANGELOG](CHANGELOG.md) for the list). A June 14 sneaker test run was
-solid but surfaced two new **demo-visible** issues (#55, #56), now on the essential list
-below.
+**Deployed and live** — a hosted, seeded, pre-warmed demo at
+[hindcast.netlify.app](https://hindcast.netlify.app). The cache fix (#60), the event-loop
+fix (#54), and the demo polish (#29, #55) all shipped this week. The one remaining
+demo-visible item — pre-2025 stores in the grid — is handled for the rehearsal by a
+display-side filter (#69); the honest retrieval-side fix is parked post-demo (#56, #70).
 
 | Layer | Status |
 |---|---|
-| Backend pipeline | Runs E2E. Denominates over the extracted set (#30). ~108 extracted images → 6 grounded patterns/slice. |
-| Frontend | Live `POST /query`; renders `retrieval_log` + patterns with term-matched evidence images (#41). |
-| Seed corpus | 108 images, 1,080 schema rows, valid JSON round-trip (June 12). |
-| Slice 2 plumbing | Publication lists + Are.na queries + synthesizer sub-slice context in code; E2E verified June 12. |
+| Backend | **Live on Railway** (FastAPI). Cache fix #60 (cold ~3:30 → warm ~33s); `/query` event-loop fix shipped (#54). |
+| Frontend | **Live on Netlify** — `POST /query`, term-matched evidence grids (#41), grouped by store (#55), pre-2025 hidden (#69). |
+| Seed corpus | 130 images / 1,280 extractions, seeded on the Railway persistent volume. |
+| Demo | Pre-warmed sneaker brief → ~33s cache hit, no live-retrieval dependency on stage. |
 
 ---
 
@@ -34,34 +34,31 @@ Full presentation dry-run — slides + spoken walkthrough + **live demo of slice
 GitHub issue.
 
 **Role 1 — Victor**
-- [x] **#29** — frontend polish: output pipeline log removed + pattern description spacing — done (PR #62)
-- [x] **#55** — group pattern evidence images by store (display ordering; `pipeline/run.py`) — done (PR #63)
-- [ ] Cross-browser / responsive check — the hosted demo must render correctly on the day
-- [ ] Deploy backend (FastAPI) + frontend (Vite build) to a hosted URL — set Tavily/Anthropic
-  keys on the host, open CORS, and point the frontend API base off `localhost:8000`
-  (with team; no host chosen yet)
-  - ⚠️ Hosting exposes **#54** (blocking event loop): a concurrent request or a health
-    probe freezes the server mid-query. Decide whether #54 must be fixed before the 17th.
+- [x] **#29** — frontend polish: output pipeline log removed + pattern description spacing (PR #62)
+- [x] **#55** — group pattern evidence images by store (`pipeline/run.py`) (PR #63)
+- [x] **#54** — `/query` no longer blocks the event loop; `/health` stays responsive (PR #67)
+- [x] **#69** — hide pre-2025 evidence images from the grid (display-side half of #56)
+- [x] **Deploy** — FastAPI → Railway, Vite build → Netlify; seeded on a volume, CORS wired, demo brief pre-warmed. **LIVE at hindcast.netlify.app**
+- [ ] Cross-browser / responsive check on the live site — **the one remaining item**
 
 **Role 2 — Gary**
-- [ ] **#60** — cache never hits (`CACHE_MIN_IMAGES` vs subject-filter yield) → every run cold ~3:30. Standalone ~1-line fix; **the fast-demo / pre-warm blocker.** Do first.
-- [ ] **#56** — enforce 2025–present window + uncapped subject filter; drop pre-2025 stores and off-subject junk (`retrieval/`). NB: the 60-image cap is producing *visible* product-shot junk in the demo grid.
-- [ ] Pre-warm a clean sneaker demo query and confirm it serves from cache on reload —
-  verifies **slice-1 caching** works for the day's fast load (depends on #60)
+- [x] **#60** — cache fix (`CACHE_MIN_IMAGES` 30→5): repeat/pre-warmed briefs serve from cache (PR #65)
+- [x] Pre-warm the sneaker demo query + confirm cache hit — validated ~33s on the live backend
+- _#56 (subject-filter over-drop) re-scoped + parked — not demo-blocking, see issues list below._
 
 **Role 3 — Christian**
-- [ ] Build slide deck — ⚠️ **top schedule risk: nothing exists yet**
-- [ ] Write the speech — ⚠️ **net-new, risk**
+- [x] Slide deck — done
+- [x] Speech / presentation script — done
 
 **Team**
-- [ ] Harden the demo path: one clean run, no edge cases exposed
-- [ ] Full-team dry run / rehearsal
+- [x] Harden the demo path: one clean pre-warmed run, no live-retrieval dependency on stage
+- [ ] Full-team dry run / rehearsal — **June 17**
 
 > Slice 1 (sneaker) is what goes on screen on the 17th. Slice 2 is the stretch; its
 > work (#40 + #53) is deferred.
 
 **Tracked separately as [GitHub issues](https://github.com/vic-aibuilder/hindcast/issues),
-not demo-blocking:** #22, #34, #35, #40, #53, #54, #59, #61.
+not demo-blocking:** #22, #34, #35, #40, #53, #56, #59, #61, #66, #70.
 
 ---
 
