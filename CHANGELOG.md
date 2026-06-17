@@ -24,6 +24,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Loading screen: dropped the inaccurate "First run may take 1–5 minutes." copy.
 
 ### Fixed
+- Pattern grids now hide pre-2025 evidence images (e.g. Supreme 2018, Flight Club 2016,
+  Kith 2023/24 surfaced via the `source_url` year) so the grid matches the locked
+  2025–present window. Display-only — year-unknown images are kept and synthesis still
+  spans the full corpus, so percentages are unchanged (#56, demo-safe half; hard retrieval
+  enforcement + seed re-source is post-demo).
 - `/query` no longer blocks the event loop: the handler is now a sync `def`, so FastAPI
   runs the blocking pipeline in its threadpool and `/health` stays responsive (and queries
   can overlap) instead of the whole server freezing mid-query (#54). Robust multi-user
