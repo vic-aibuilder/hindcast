@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import pytest
-
 from retrieval.sources import (
     is_evidence_eligible,
     is_seed_row,
