@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from pipeline.storage import hash_brief, init_db, save_extraction, save_images
-from pipeline.run import run_query, _evidence_sort_key
+from pipeline.run import run_query, _evidence_sort_key, _scoped_evidence_ids
 
 
 @pytest.fixture(autouse=True)
@@ -166,3 +166,47 @@ def test_evidence_sort_key_prefers_extracted_project_over_title():
     aime = {"title": "zzz placeholder — interior 1", "project": "Aimé Leon Dore"}
     brain_dead = {"title": "aaa placeholder — hero", "project": "Brain Dead"}
     assert _evidence_sort_key(aime) < _evidence_sort_key(brain_dead)
+
+
+def test_scoped_evidence_excludes_ids_outside_query_batch(monkeypatch):
+    """Pattern evidence is limited to this query's image batch (#74)."""
+    sub_slice = "sneaker_streetwear"
+    all_ids = _seed_images(sub_slice, count=3)
+    in_query_id, outside_id = all_ids[0], all_ids[2]
+
+    save_extraction(
+        in_query_id,
+        {"material": {"metal": ["stainless steel"]}},
+        sub_slice,
+    )
+    save_extraction(
+        outside_id,
+        {"material": {"metal": ["stainless steel"]}},
+        sub_slice,
+    )
+
+    cached_images = [
+        {
+            "id": all_ids[0],
+            "image_url": f"https://example.com/{sub_slice}/img-0.jpg",
+            "source_url": "https://example.com/source-0",
+            "title": f"{sub_slice} image 0",
+            "source": "example.com",
+            "retrieval_method": "seed",
+        },
+        {
+            "id": all_ids[1],
+            "image_url": f"https://example.com/{sub_slice}/img-1.jpg",
+            "source_url": "https://example.com/source-1",
+            "title": f"{sub_slice} image 1",
+            "source": "example.com",
+            "retrieval_method": "seed",
+        },
+    ]
+
+    scoped = _scoped_evidence_ids(
+        [in_query_id, outside_id],
+        query_ids={img["id"] for img in cached_images},
+        sub_slice=sub_slice,
+    )
+    assert scoped == [in_query_id]

@@ -29,6 +29,7 @@ from pipeline.storage import (
     hash_brief,
 )
 from corpus.cache import check as cache_check, store as cache_store
+from retrieval.sources import is_evidence_eligible
 from src.extractor import extract
 from src.synthesizer import synthesize, SaturationPattern
 
@@ -36,6 +37,7 @@ load_dotenv()
 
 CACHE_MIN_IMAGES = 5
 MAX_EXTRACTION_BATCH = 40
+MAX_EVIDENCE_IMAGES = 15
 
 # Concurrency for the schema-extraction step. Each unit is one Claude vision
 # call; we fan these out because they dominate query latency. Kept modest to
@@ -90,6 +92,52 @@ def _evidence_sort_key(img: dict[str, Any]) -> tuple[str, int, str]:
         m = re.search(r"interior\s+(\d+)", remainder_l)
         order = int(m.group(1)) if m else 999
     return (store.lower(), order, title.lower())
+
+
+def _query_image_ids(images: list[dict]) -> set[int]:
+    """Image IDs belonging to this query's retrieval/cache batch."""
+    return {img["id"] for img in images if isinstance(img.get("id"), int)}
+
+
+def _scoped_evidence_ids(
+    matched_ids: list[int],
+    *,
+    query_ids: set[int],
+    sub_slice: str,
+) -> list[int]:
+    """
+    Keep evidence IDs that belong to this query and pass junk filters.
+
+    Synthesis still reads the full extracted corpus for saturation signal, but
+    pattern grids only show images from the current brief's batch (#74).
+    """
+    if not matched_ids or not query_ids:
+        return []
+
+    from pipeline.storage import get_connection
+
+    conn = get_connection()
+    placeholders = ",".join("?" * len(matched_ids))
+    rows = conn.execute(
+        f"SELECT * FROM images WHERE id IN ({placeholders})",  # nosec B608
+        matched_ids,
+    ).fetchall()
+    conn.close()
+
+    eligible: list[int] = []
+    for row in rows:
+        row_dict = dict(row)
+        image_id = row_dict["id"]
+        if image_id not in query_ids:
+            continue
+        if not is_evidence_eligible(row_dict, sub_slice):
+            continue
+        eligible.append(image_id)
+
+    # Preserve synthesizer match order; cap at PRD target (8–15).
+    order = {image_id: idx for idx, image_id in enumerate(matched_ids)}
+    eligible.sort(key=lambda i: order.get(i, len(matched_ids)))
+    return eligible[:MAX_EVIDENCE_IMAGES]
 
 
 def _evidence_images_for_pattern_ids(image_ids: list[int]) -> list[dict[str, Any]]:
@@ -271,9 +319,13 @@ def run_query(brief: str, sub_slice: str) -> dict:
 
     # ── Step 8: Assemble result ───────────────────────────────────────────────
     extracted_corpus_size = count_extracted_images_for_sub_slice(sub_slice)
+    query_ids = _query_image_ids(images)
     for pattern in patterns:
         matched_ids = pattern.get("image_ids", [])
-        evidence_images = _evidence_images_for_pattern_ids(matched_ids)
+        scoped_ids = _scoped_evidence_ids(
+            matched_ids, query_ids=query_ids, sub_slice=sub_slice
+        )
+        evidence_images = _evidence_images_for_pattern_ids(scoped_ids)
         pattern["evidence_images"] = evidence_images
         pattern["image_count"] = len(evidence_images)
         pattern.pop("image_ids", None)
